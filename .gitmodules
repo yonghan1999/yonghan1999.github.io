@@ -1,0 +1,4 @@
+
+[submodule "themes/maupassant"]
+path = themes/maupassant
+url = https://github.com/yonghan1999/maupassant-hexo
