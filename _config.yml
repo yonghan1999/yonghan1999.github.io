@@ -4,7 +4,7 @@
 
 # Site
 title: Yuuki
-subtitle: 'Yuuki的小站'
+subtitle: 'Yuukit的小站'
 description: ''
 keywords:
 author: Yong Han
@@ -102,4 +102,6 @@ theme: maupassant
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ''
+  type: 'git'
+  repo: https://github.com/yonghan1999/yonghan1999.github.io
+  branch: gh-pages
