@@ -103,5 +103,5 @@ theme: maupassant
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: 'git'
-  repo: https://github.com/yonghan1999/yonghan1999.github.io
+  repo: git@github.com:yonghan1999/yonghan1999.github.io.git
   branch: gh-pages
