@@ -1,0 +1,113 @@
+<!DOCTYPE html><html lang="zh"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><title>Looking forward to interview | Yuuki</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 6.0.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Looking forward to interview</h1><a id="logo" href="/.">Yuuki</a><p class="description">Yuukit的小站</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/atom.xml"><i class="fa fa-rss"> RSS</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Looking forward to interview</h1><div class="post-meta">2020-09-20<span> | </span><span class="category"><a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></span><script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> Hits</span></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 4.2k</span><span class="post-meta-item-text"> Words</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i><span class="post-count"> 14</span><span class="post-meta-item-text"> Minutes</span></span></span></div><div class="post-content"><h2 id="Java-基础"><a href="#Java-基础" class="headerlink" title="Java 基础"></a>Java 基础</h2><ul>
+<li><p>介绍一下 volatile？</p>
+<blockquote>
+<p>volatile 关键字是用来保证有序性和可见性的。这跟 Java 内存模型有关。比如我们所写的 代码，不一定是按照我们自己书写的顺序来执行的，编译器会做重排序，CPU 也会做重排序的， 这样的重排序是为了减少流水线的阻塞的，引起流水阻塞，比如数据相关性，提高 CPU 的执行效 率。需要有一定的顺序和规则来保证，不然程序员自己写的代码都不知带对不对了，所以有 happens-before 规则，其中有条就是 volatile 变量规则：对一个变量的写操作先行发生于后面 对这个变量的读操作；有序性实现的是通过插入内存屏障来保证的。可见性：首先 Java 内存模 型分为，主内存，工作内存。比如线程 A 从主内存把变量从主内存读到了自己的工作内存中，做 了加 1 的操作，但是此时没有将 i 的最新值刷新会主内存中，线程 B 此时读到的还是 i 的旧值。 加了volatile关键字的代码生成的汇编代码发现，会多出一个lock前缀指令。 Lock指令对Intel 平台的 CPU，早期是锁总线，这样代价太高了，后面提出了缓存一致性协议，MESI，来保证了多 核之间数据不一致性问题。</p>
+</blockquote>
+</li>
+<li><p>锁有了解吗？ 说一下 Synchronized 和 lock</p>
+<blockquote>
+<p>synchronized 是 Java 的关键字，当它用来修饰一个方法或者一个代码块的时候，能够保证 在同一时刻最多只有一个线程执行该段代码。JDK1.5 以后引入了自旋锁、锁粗化、轻量级锁， 偏向锁来有优化关键字的性能。<br>Lock 是一个接口，而 synchronized 是 Java 中的关键字，synchronized 是内置的语言实现； synchronized 在发生异常时，会自动释放线程占有的锁，因此不会导致死锁现象发生；而 Lock 在发生异常时，如果没有主动通过 unLock()去释放锁，则很可能造成死锁现象，因此使用 Lock 时需要在 finally 块中释放锁；Lock 可以让等待锁的线程响应中断，而 synchronized 却不行， 使用 synchronized 时，等待的线程会一直等待下去，不能够响应中断；通过 Lock 可以知道有没 有成功获取锁，而 synchronized 却无法办到。</p>
+</blockquote>
+</li>
+<li><p>Java 里面的 final 关键字的作用</p>
+<blockquote>
+<p>当用 final 修饰一个类时，表明这个类不能被继承。也就是说，如果一个类你永远不会让他被继承，就可以用 final 进行修饰。final 类中的成员变量可以更具需要设定为 final，但是要注意 final 类中的所有成员方法都会被隐式的指定为final方法。</p>
+<p>对于一个 final 变量，如果是基本数据类型的变量，则其数值一旦在初始化之后就不能再被改变；如果是引用类型变量，则在对其初始化之后便不能再让其指向另一个对象。</p>
+</blockquote>
+</li>
+<li><p>Java 有哪些特性，举个多态的例子。</p>
+<blockquote>
+<p>封装、继承、多态。多态：指允许不同类的对象对同一消息做出响应。即同一消息可以根据 发送对象的不同而采用多种不同的行为方式。（发送消息就是函数调用）</p>
+</blockquote>
+</li>
+<li><p>String 为啥不可变？</p>
+<blockquote>
+<p>不可变对象是指一个对象的状态在对象被创建之后就不再变化。不可改变的意思就是说：不 能改变对象内的成员变量，包括基本数据类型的值不能改变，引用类型的变量不能指向其他的对 象，引用类型指向的对象的状态也不能改变。<br>String 不可变是因为在 JDK 中 String 类被声明为一个 final 类，且类内部的 value 字 节数组也是 final 的，只有当字符串是不可变时字符串池才有可能实现，字符串池的实现可以 在运行时节约很多 heap 空间，因为不同的字符串变量都指向池中的同一个字符串；如果字符串 是可变的则会引起很严重的安全问题，譬如数据库的用户名密码都是以字符串的形式传入来获得 数据库的连接，或者在 socket 编程中主机名和端口都是以字符串的形式传入，因为字符串是不 可变的，所以它的值是不可改变的，否则黑客们可以钻到空子改变字符串指向的对象的值造成安 全漏洞；因为字符串是不可变的，所以是多线程安全的，同一个字符串实例可以被多个线程共享， 这样便不用因为线程安全问题而使用同步，字符串自己便是线程安全的；因为字符串是不可变的 所以在它创建的时候 hashcode 就被缓存了，不变性也保证了 hash 码的唯一性，不需要重新计 算，这就使得字符串很适合作为 Map 的键，字符串的处理速度要快过其它的键对象，这就是 HashMap 中的键往往都使用字符串的原因。</p>
+</blockquote>
+</li>
+<li><p>请列举你所知道的 Object 类的方法</p>
+<blockquote>
+<p>Object()默认构造方法。clone() 创建并返回此对象的一个副本。equals(Object obj) 指 示某个其他对象是否与此对象“相等”。finalize()当垃圾回收器确定不存在对该对象的更多引 用时，由对象的垃圾回收器调用此方法。getClass()返回一个对象的运行时类。hashCode()返回 该对象的哈希码值。 notify()唤醒在此对象监视器上等待的单个线程。 notifyAll()唤醒在此 对象监视器上等待的所有线程。toString()返回该对象的字符串表示。wait()导致当前的线程等 待，直到其他线程调用此对象的 notify() 方法或 notifyAll() 方法。wait(long timeout)导 致当前的线程等待，直到其他线程调用此对象的 notify() 方法或 notifyAll() 方法，或者超 过指定的时间量。wait(long timeout, int nanos) 导致当前的线程等待，直到其他线程调用此 对象的 notify() 方法或 notifyAll() 方法，或者其他某个线程中断当前线程，或者已超过某 个实际时间量。</p>
+</blockquote>
+</li>
+<li><p>StringBuffer 和 StringBuilder 有什么区别？底层区别？</p>
+<blockquote>
+<p>StringBuffer 线程安全，StringBuilder 线程不安全，底层实现上的话，StringBuffer 其 实就是比 StringBuilder 多了 Synchronized 修饰符。</p>
+</blockquote>
+</li>
+<li><p>类加载机制，双亲委派模型，好处是什么？</p>
+<blockquote>
+<p><strong>双亲委派模式</strong>是在Java 1.2后引入的，其工作原理的是，如果一个类加载器收到了类加载请求，它并不会自己先去加载，而是把这个请求委托给父类的加载器去执行，如果父类加载器还存在其父类加载器，则进一步向上委托，依次递归，请求最终将到达顶层的启动类加载器，如果父类加载器可以完成类加载任务，就<strong>成功返回</strong>，倘若父类加载器无法完成此加载任务，<strong>子加载器才会尝试自己去加载</strong>，这就是<strong>双亲委派模式</strong>。</p>
+<p>使用双亲委派模型的好处在于 Java 类随着它的类加载器一起具备了一种带有优先级的层次 关系。例如类 java.lang.Object，它存在在 rt.jar 中，无论哪一个类加载器要加载这个类，最 终都是委派给处于模型最顶端的 Bootstrap ClassLoader 进行加载，因此 Object 类在程序的各 种类加载器环境中都是同一个类。相反，如果没有双亲委派模型而是由各个类加载器自行加载的 话，如果用户编写了一个 java.lang.Object 的同名类并放在 ClassPath 中，那系统中将会出现多个不同的 Object 类，程序将混乱。因此，如果开发者尝试编写一个与 rt.jar 类库中重名的 Java 类，可以正常编译，但是永远无法被加载运行。</p>
+</blockquote>
+</li>
+<li><p>解释 extends 和 super 泛型限定符-上界不存下界不取</p>
+<blockquote>
+<ul>
+<li>上界 &lt;? extend Fruit&gt; ，表示所有继承 Fruit 的子类，但是具体是哪个子类，无法确 定，所以调用 add 的时候，要 add 什么类型，谁也不知道。但是 get 的时候，不管是什么子类， 不管追溯多少辈，肯定有个父类是 Fruit，所以，我都可以用最大的父类 Fruit 接着，也就是把 所有的子类向上转型为 Fruit。</li>
+<li>下界 &lt;? super Apple&gt;， 表示Apple的所有父类，包括Fruit， 一直可以追溯到老祖宗Object 。 那么当我 add 的时候，我不能 add Apple 的父类，因为不能确定 List 里面存放的到底是哪个父 类。但是我可以 add Apple 及其子类。因为不管我的子类是什么类型，它都可以向上转型为 Apple 及其所有的父类甚至转型为 Object 。但是当我 get 的时候，Apple 的父类这么多，我用什么接 着呢，除了 Object，其他的都接不住。</li>
+</ul>
+</blockquote>
+</li>
+<li><p>谈谈如何通过反射创建对象？</p>
+<blockquote>
+<ul>
+<li>方法 1：通过类对象调用 newInstance() 方法，例如：String.class.newInstance()</li>
+<li>方法 2：通过类对象的 getConstructor() 或 getDeclaredConstructor() 方法获得构造器 （Constructor）对象并调用其 newInstance()方法创建对象，例如： String.class.getConstructor(String.class).newInstance(“Hello”);</li>
+</ul>
+</blockquote>
+</li>
+<li><p>hashMap 内部具体如何实现的？</p>
+<blockquote>
+<p>Hashmap 基于数组实现的，通过对 key 的 hashcode &amp; 数组的长度得到在数组中位置，如当 前数组有元素，则数组当前元素 next 指向要插入的元素，这样来解决 hash 冲突的，形成了拉链 式的结构。put 时在多线程情况下，会形成环从而导致死循环。数组长度一般是 2n，从 0 开始编 号，所以 hashcode &amp; （2n-1），（2n-1）每一位都是 1，这样会让散列均匀。需要注意的是， HashMap 在 JDK1.8 的版本中引入了红黑树结构做优化，当链表元素个数大于等于 8 时，链表转 换成树结构；若桶中链表元素个数小于等于 6 时，树结构还原成链表。因为红黑树的平均查找长 度是 log(n)，长度为 8 的时候，平均查找长度为 3，如果继续使用链表，平均查找长度为 8&#x2F;2&#x3D;4， 这才有转换为树的必要。链表长度如果是小于等于 6，6&#x2F;2&#x3D;3，虽然速度也很快的，但是转化为 树结构和生成树的时间并不会太短。还有选择 6 和 8，中间有个差值 7 可以有效防止链表和树频 繁转换。假设一下，如果设计成链表个数超过 8 则链表转换成树结构，链表个数小于 8 则树结构 转换成链表，如果一个 HashMap 不停的插入、删除元素，链表个数在 8 左右徘徊，就会频繁的发 生树转链表、链表转树，效率会很低。</p>
+</blockquote>
+</li>
+<li><p>如果 hashMap 的 key 是一个自定义的类，怎么办？</p>
+<blockquote>
+<p>使用 HashMap，如果 key 是自定义的类，就必须重写 hashcode()和 equals()。</p>
+</blockquote>
+</li>
+<li><p>Concurrenthashmap 有什么优势， 1.7， 1.8 区别？</p>
+<blockquote>
+<p>Concurrenthashmap 线程安全的， 1.7 是在 jdk1.7 中采用 Segment + HashEntry 的方式进 行实现的， lock 加在 Segment 上面。 1.7size 计算是先采用不加锁的方式，连续计算元素的个数， 最多计算 3 次：1、如果前后两次计算结果相同，则说明计算出来的元素个数是准确的；2、如果 前后两次计算结果都不同，则给每个 Segment 进行加锁，再计算一次元素的个数；<br>1.8 中放弃了 Segment 臃肿的设计，取而代之的是采用 Node + CAS + Synchronized 来 保证并发安全进行实现，1.8 中使用一个 volatile 类型的变量 baseCount 记录元素的个数，当 插入新数据或则删除数据时，会通过 addCount()方法更新 baseCount，通过累加 baseCount 和 CounterCell 数组中的数量，即可得到元素的总个数；</p>
+</blockquote>
+</li>
+<li><p>线程池运行流程，参数，策略</p>
+<blockquote>
+<p>线程池主要就是指定线程池核心线程数大小，最大线程数，存储的队列，拒绝策略，空闲线 程存活时长。当需要任务大于核心线程数时候，就开始把任务往存储任务的队列里，当存储队列 满了的话，就开始增加线程池创建的线程数量，如果当线程数量也达到了最大，就开始执行拒绝 策略，比如说记录日志，直接丢弃，或者丢弃最老的任务。</p>
+</blockquote>
+</li>
+<li><p>Java 中有常用的几种线程池</p>
+<blockquote>
+<p>1、newFixedThreadPool 创建一个指定工作线程数量的线程池。每当提交一个任务就创建一 个工作线程，如果工作线程数量达到线程池初始的最大数，则将提交的任务存入到池队列中。<br>2、newCachedThreadPool 创建一个可缓存的线程池。这种类型的线程池特点是：<br>1).工作线程的创建数量几乎没有限制(其实也有限制的,数目为 Interger. MAX_VALUE), 这样可灵活的往线程池中添加线程。<br>2).如果长时间没有往线程池中提交任务，即如果工作线程空闲了指定的时间(默认为 1 分钟)，则该工作线程将自动终止。终止后，如果你又提交了新的任务，则线程池重新创建一个 工作线程。<br>3、newSingleThreadExecutor 创建一个单线程化的 Executor，即只创建唯一的工作者线程 来执行任务，如果这个线程异常结束，会有另一个取代它，保证顺序执行(我觉得这点是它的特 色)。单工作线程最大的特点是可保证顺序地执行各个任务，并且在任意给定的时间不会有多个 线程是活动的 。<br>4、newScheduleThreadPool 创建一个定长的线程池，而且支持定时的以及周期性的任务执 行，类似于 Timer。(这种线程池原理暂还没完全了解透彻)</p>
+</blockquote>
+</li>
+<li><p>概括的解释下线程的几种可用状态。</p>
+<blockquote>
+<ol>
+<li><p>新建( new )：新创建了一个线程对象。 </p>
+</li>
+<li><p>可运行( runnable )：线程对象创建后，其他线程(比如 main 线程）调用了该对象 的 start ()方法。该状态的线程位于可运行线程池中，等待被线程调度选中，获 取 cpu 的使用权 。 </p>
+</li>
+<li><p>运行( running )：可运行状态( runnable )的线程获得了 cpu 时间片（ timeslice ） ， 执行程序代码。</p>
+</li>
+<li><p>阻塞( block )：阻塞状态是指线程因为某种原因放弃了 cpu 使用权，也即让出了 cpu timeslice ，暂时停止运行。直到线程进入可运行( runnable )状态，才有 机会再次获得 cpu timeslice 转到运行( running )状态。</p>
+<blockquote>
+<p> 阻塞的情况分三种：</p>
+<p>(一). 等待阻塞：运行( running )的线程执行 o . wait ()方法， JVM 会把该线程放 入等待 队列( waitting queue )中。 </p>
+<p>(二). 同步阻塞：运行( running )的线程在获取对象的同步锁时，若该同步锁 被别的线程占用， 则 JVM 会把该线程放入锁池( lock pool )中。</p>
+<p>(三). 其他阻塞: 运行( running )的线程执行 Thread . sleep ( long ms )或 t . join () 方法，或者发出了 I &#x2F; O 请求时， JVM 会把该线程置为阻塞状态。 当 sleep ()状态超时、join ()等待线程终止或者超时、或者 I &#x2F; O 处理完毕时，线程重新转入可运行( runnable )状态。</p>
+</blockquote>
+</li>
+<li><p>死亡( dead )：线程 run ()、 main () 方法执行结束，或者因异常退出了 run ()方法，则 该线程结束生命周期。死亡的线程不可再次复生。</p>
+</li>
+</ol>
+</blockquote>
+</li>
+<li><p>讲一下非公平锁和公平锁在 reetrantlock 里的实现。</p>
+<blockquote>
+<p>如果一个锁是公平的，那么锁的获取顺序就应该符合请求的绝对时间顺序，FIFO。对于非公 平锁，只要 CAS 设置同步状态成功，则表示当前线程获取了锁，而公平锁还需要判断当前节点是 否有前驱节点，如果有，则表示有线程比当前线程更早请求获取锁，因此需要等待前驱线程获取 并释放锁之后才能继续获取锁。</p>
+</blockquote>
+</li>
+</ul>
+</div><script type="text/javascript" src="/js/share.js?v=1.0.0" async></script><a class="article-share-link" data-url="https://hanblog.fun/2020/09/20/2020-9-20-Looking-forward-to-interview/" data-id="ckzwvu0dd003s18t0ffr02i2s" data-qrcode="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACtklEQVR42u3aQW7jMAwF0N7/0jPbAtPI/4tSmgGeV4GT2nxciCylr6/4+vPt+n7n38+v/mp9vXpm8pYDFx4eHt4g9PWL8xeswQkmSe46Zjw8PLzbvDaUdYhtmvZ+E6UVDw8P72N465flz0yKTd5e4+Hh4f0vvHVhyJf1vafh4eHh/RavfVyCXL8lSXFSVI7NWvDw8PBiXjuW/YTPV/b38PDw8Ma76vlSni/N7Yg2LwY/xICHh4d3gbc3GjgbVj4I3owTDw8P7yivDa5tc/PxazK6rQ8Q4OHh4V3grYPIR7GTJX5ygCAqGHh4eHhHeUkBSO63m2F7Q411GXj4XwEPDw/vLby2eLQVaZKgaDMMDw8P7wIvLwDzEcNecG3pelke8PDw8A7x9trolpo/vxjOJt/i4eHhvZHXku4VklGK8fDw8C7w1kv5qeFCexirjeQhTjw8PLxrvPzKl/I9fJug4tAVHh4e3pjXNq/5ojw5XtD+5mW0eHh4eNd4+YGASShJgdnbHot29vDw8PAu8NqtrORwQLsZ1j7/4XAYHh4e3ht5+YAgaanzAwSTAvPDfTw8PLwLvFNHSCeHTfca97oRx8PDw7vA22tz21b4bMrqdODh4eEd5bXDiLydnbTX+VDjIa14eHh4R3nJQtxudOUJahvr9g4eHh7ePV47LMjb673U5AWpHkDg4eHhHeUlm175K9uDVvm1efQKDw8P7y28A7PhEtM+bVQY8PDw8AawyXLcbo/lpWLvmdGZMjw8PLwt3qnisTeKTcrA3nDkcG3Ew8PDGze47aB2PlwYFRs8PDy8a7x8UU5KSDuwmNSuh3Tj4eHhfQCvLRt7BxT2knigMODh4eFd47WjirZFbhv0om7g4eHhHeK1obQj2sm3eynGw8PDu8eb/MPfLvQT9qnhBR4eHt6A9xe8I9pPnG4DDAAAAABJRU5ErkJggg==">Share</a><div class="tags"><a href="/tags/Java/"><i class="fa fa-tag"></i>Java</a></div><div class="post-nav"><a class="pre" href="/2020/09/24/2020-9-24-Spring/">面试 Spring 问题（无解答）</a><a class="next" href="/2020/07/14/2020-7-14-Multithreading-leetcode/">多线程</a></div><script src="https://utteranc.es/client.js" repo="yonghan1999/message" issue-term="message" theme="github-light" crossorigin="anonymous" async> </script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://hanblog.fun"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Demo/">Demo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Redis/">Redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/tags/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 15px;">Java设计模式</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 15px;">日志</a> <a href="/tags/%E7%A8%8B%E5%BA%8F/" style="font-size: 15px;">程序</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" style="font-size: 15px;">编译原理</a> <a href="/tags/OS/" style="font-size: 15px;">OS</a> <a href="/tags/NodeJS/" style="font-size: 15px;">NodeJS</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Interview/" style="font-size: 15px;">Interview</a> <a href="/tags/mybatis/" style="font-size: 15px;">mybatis</a> <a href="/tags/LeetCode/" style="font-size: 15px;">LeetCode</a> <a href="/tags/gitee-jekyll/" style="font-size: 15px;">gitee jekyll</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/tools/" style="font-size: 15px;">tools</a> <a href="/tags/Vue/" style="font-size: 15px;">Vue</a> <a href="/tags/Network-TCP/" style="font-size: 15px;">Network TCP</a> <a href="/tags/Git/" style="font-size: 15px;">Git</a> <a href="/tags/RabbitMQ/" style="font-size: 15px;">RabbitMQ</a> <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" style="font-size: 15px;">并发编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 15px;">记录</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Spring-Interview/" style="font-size: 15px;">Spring Interview</a> <a href="/tags/python/" style="font-size: 15px;">python</a> <a href="/tags/SpringSecurity/" style="font-size: 15px;">SpringSecurity</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 15px;">网络小工具</a> <a href="/tags/LaTeX/" style="font-size: 15px;">LaTeX</a> <a href="/tags/macOS/" style="font-size: 15px;">macOS</a> <a href="/tags/MacOS/" style="font-size: 15px;">MacOS</a> <a href="/tags/Network/" style="font-size: 15px;">Network</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Objective-c/" style="font-size: 15px;">Objective-c</a> <a href="/tags/IOS/" style="font-size: 15px;">IOS</a> <a href="/tags/%E5%88%86%E4%BA%AB/" style="font-size: 15px;">分享</a> <a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">学习</a> <a href="/tags/%E7%AC%94%E8%AE%B0/" style="font-size: 15px;">笔记</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2022/02/20/hello-world/">Hexo 静态博客搭建笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/08/05/2021-08-05-proxychais-can-not-proxy-ping/">proxychais 无法代理 ping 命令的原因</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/29/2021-7-29-python-argparse-%E5%8F%AF%E9%80%89%E5%8F%82%E6%95%B0/">python3 argparse 可选参数</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/27/2021-7-27-Git%E4%B8%ADreset%E5%91%BD%E4%BB%A4%E7%9A%84%E5%8F%82%E6%95%B0/">Git中reset命令的参数</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/25/2021-7-25-sqflite/">Flutter 插件 sqflite</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/20/2021-07-20-Spring-Security-JWT/">Spring Security JWT(Json Web Token) 登录实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/17/2021-07-17-SpringSecurity-%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%88%B7%E8%A7%92%E8%89%B2%E5%88%97%E8%A1%A8/">SpringSecurity 动态加载用户角色列表</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/09/2021-07-09-iOS-uialertcontroller/">iOS 提示框</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/08/2021-7-8-IOS%E4%B8%AD%E9%A1%B5%E9%9D%A2%E7%9A%84%E8%B7%B3%E8%BD%AC/">IOS 中页面的跳转</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/07/2021-7-3-foundation%E6%A1%86%E6%9E%B6%E7%9A%84%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/">Foundation Framework</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Links</i></div></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2022 <a href="/." rel="nofollow">Yuuki.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=1.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="Copy Successed!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>

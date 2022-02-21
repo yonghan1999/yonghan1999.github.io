@@ -1,0 +1,168 @@
+<!DOCTYPE html><html lang="zh"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><title>个人总结 -- 并发查漏补缺 | Yuuki</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 6.0.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">个人总结 -- 并发查漏补缺</h1><a id="logo" href="/.">Yuuki</a><p class="description">Yuukit的小站</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/atom.xml"><i class="fa fa-rss"> RSS</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">个人总结 -- 并发查漏补缺</h1><div class="post-meta">2020-07-03<span> | </span><span class="category"><a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></span><script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> Hits</span></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 6.4k</span><span class="post-meta-item-text"> Words</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-clock-o"></i><span class="post-count"> 22</span><span class="post-meta-item-text"> Minutes</span></span></span></div><div class="post-content"><h2 id="Java-内存区域与内存溢出异常"><a href="#Java-内存区域与内存溢出异常" class="headerlink" title="Java 内存区域与内存溢出异常"></a>Java 内存区域与内存溢出异常</h2><p><img src="https://i.loli.net/2020/07/09/UoVPxf2RHJ83Tpz.png" alt="运行时数据区.png"></p>
+<h2 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h2><h3 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h3><p>程序计数器（Program Counter Register）是一块较小的内存空间，它可以看作是当前线程所执行的字节码的行号指示器。在Java虚拟机的概念模型里，字节码解释器工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令，它是程序控制流的指示器，分支、循环、跳转、异常处理、线程恢复等基础功能都需要依赖这个计数器来完成。</p>
+<h3 id="Java虚拟机栈"><a href="#Java虚拟机栈" class="headerlink" title="Java虚拟机栈"></a>Java虚拟机栈</h3><ul>
+<li>栈帧<ul>
+<li>每个方法被执行的时候，Java 虚拟就都会同步创建一个<strong>栈帧</strong>用于存储局部变量表、操作数栈、动态连接、方法出口等信息。</li>
+</ul>
+</li>
+<li>局部变量表<ul>
+<li>局部变量表存放了编译期可知的各种Java虚拟机基本数据类型（boolean、byte、char、short、int、float、long、double）、对象引用（reference 类型，它并不等同于对象本身，可能是一个指向对象起始地址的引用指针，也可能是指向一个代表对象的句柄或者其他与此对象相关的位置）和 returnAddress 类型（指向了一条字节码指令的地址）。</li>
+</ul>
+</li>
+<li>在《 Java 虚拟机规范》中，对这个内存区域规定了两类异常状况：如果线程请求的栈深度大于虚拟机所允许的深度，将抛出 <strong>StackOverflowError</strong> 异常；如果 Java 虚拟机栈容量可以动态扩展[2]，当栈扩展时无法申请到足够的内存会抛出 <strong>OutOfMemoryError</strong> 异常。</li>
+</ul>
+<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>本地方法栈（Native Method Stacks）与虚拟机栈所发挥的作用是非常相似的，其区别只是虚拟机栈为虚拟机执行Java方法（也就是字节码）服务，而本地方法栈则是为虚拟机使用到的本地（Native）方法服务。</p>
+<h3 id="Java-堆"><a href="#Java-堆" class="headerlink" title="Java 堆"></a>Java 堆</h3><p>Java堆是被所有线程共享的一块内存区域，在虚拟机启动时创建。此内存区域的唯一目的就是存放对象实例，Java世界里“几乎”所有的对象实例都在这里分配内存。</p>
+<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>Java 方法区是被所有线程共享的一块内存区域。存储虚拟机加载的类信息，常量，静态变量，即时编译器编译后的代码等数据。</p>
+<p>如果方法区无法满足新的内存分配需求时，将抛出 <strong>OutOfMemoryError</strong> 异常。</p>
+<h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><p>运行时常量池 是方法区的一部分。Class文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项信息是常量池表（Constant Pool Table），用于存放编译期生成的各种字面量与符号引用，这部分内容将在类加载后存放到方法区的运行时常量池中。</p>
+<p>既然运行时常量池是方法区的一部分，自然受到方法区内存的限制，当常量池无法再申请到内存时会抛出 <strong>OutOfMemoryError</strong> 异常。</p>
+<h3 id="直接内存"><a href="#直接内存" class="headerlink" title="直接内存"></a>直接内存</h3><h2 id="HotSpot-虚拟机对象探秘"><a href="#HotSpot-虚拟机对象探秘" class="headerlink" title="HotSpot 虚拟机对象探秘"></a>HotSpot 虚拟机对象探秘</h2><h3 id="对象创建"><a href="#对象创建" class="headerlink" title="对象创建"></a>对象创建</h3><ul>
+<li>分配内存<ul>
+<li>指针碰撞</li>
+<li>空闲列表</li>
+</ul>
+</li>
+<li>线程安全<ul>
+<li>加锁同步</li>
+<li>本地线程分配缓存</li>
+</ul>
+</li>
+</ul>
+<h3 id="对象的内存布局"><a href="#对象的内存布局" class="headerlink" title="对象的内存布局"></a>对象的内存布局</h3><p>在HotSpot虚拟机里，对象在堆内存中的存储布局可以划分为三个部分：对象头（Header）、实例数据（Instance Data）和对齐填充（Padding）。</p>
+<ul>
+<li>对象头 （Header）<ul>
+<li>是用于存储对象自身的运行时数据，如哈希码（HashCode）、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳等。</li>
+<li>另外一部分是类型指针，即对象指向它的类型元数据的指针，Java虚拟机通过这个指针来确定该对象是哪个类的实例。</li>
+</ul>
+</li>
+<li>实例数据（Instance Data）</li>
+<li>对齐填充（Padding）</li>
+</ul>
+<h3 id="对象的访问定位"><a href="#对象的访问定位" class="headerlink" title="对象的访问定位"></a>对象的访问定位</h3><p>主流的访问方式主要有使用句柄和直接指针两种：</p>
+<ul>
+<li>如果使用句柄访问的话，Java堆中将可能会划分出一块内存来作为句柄池，reference中存储的就是对象的句柄地址，而句柄中包含了对象实例数据与类型数据各自具体的地址信息。</li>
+<li>如果使用直接指针访问的话，Java堆中对象的内存布局就必须考虑如何放置访问类型数据的相关信息，reference中存储的直接就是对象地址，如果只是访问对象本身的话，就不需要多一次间接访问的开销。</li>
+</ul>
+<p>这两种对象访问方式各有优势，使用句柄来访问的最大好处就是reference中存储的是稳定句柄地址，在对象被移动（垃圾收集时移动对象是非常普遍的行为）时只会改变句柄中的实例数据指针，而reference本身不需要被修改。</p>
+<h1 id="垃圾收集器与内存分配策略"><a href="#垃圾收集器与内存分配策略" class="headerlink" title="垃圾收集器与内存分配策略"></a>垃圾收集器与内存分配策略</h1><h2 id="对象已死"><a href="#对象已死" class="headerlink" title="对象已死"></a>对象已死</h2><h3 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h3><h3 id="可达性分析法"><a href="#可达性分析法" class="headerlink" title="可达性分析法"></a>可达性分析法</h3><p>可达性分析法的基本思路就是通过一系列称为“GC Roots”的根对象作为起始节点集，从这些节点开始，根据引用关系向下搜索，搜索过程所走过的路径称为“引用链”（Reference Chain），如果某个对象到GC Roots间没有任何引用链相连，或者用图论的话来说就是从GC Roots到这个对象不可达时，则证明此对象是不可能再被使用的。</p>
+<h2 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h2><h3 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记 - 清除算法"></a>标记 - 清除算法</h3><h3 id="标记-复制算法"><a href="#标记-复制算法" class="headerlink" title="标记 - 复制算法"></a>标记 - 复制算法</h3><h3 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记 - 整理算法"></a>标记 - 整理算法</h3><h3 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h3><p>根据分代的不同选择不同的垃圾收集算法</p>
+<h2 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h2><h3 id="Serial-收集器"><a href="#Serial-收集器" class="headerlink" title="Serial 收集器"></a>Serial 收集器</h3><ul>
+<li>最基本，发展最悠久的；</li>
+<li>单线程工作的收集器；（它的“单线程”的意义并不仅仅是说明它只会使用一个处理器或一条收集线程去完成垃圾收集工作，更重要的是强调在它进行垃圾收集时，必须暂停其他所有工作线程，直到它收集结束。）</li>
+<li>简单高效</li>
+</ul>
+<h3 id="ParNew-收集器"><a href="#ParNew-收集器" class="headerlink" title="ParNew 收集器"></a>ParNew 收集器</h3><p>ParNew收集器实质上是Serial收集器的多线程并行版本</p>
+<h3 id="Parallel-Scavenge-收集器"><a href="#Parallel-Scavenge-收集器" class="headerlink" title="Parallel Scavenge 收集器"></a>Parallel Scavenge 收集器</h3><ul>
+<li>基于<strong>标记 - 复制算法</strong></li>
+<li>多线程收集器</li>
+<li>可控制的吞吐量</li>
+</ul>
+<p>Parallel Scavenge收集器的特点是它的关注点与其他收集器不同，CMS等收集器的关注点是尽可能地缩短垃圾收集时用户线程的停顿时间，而Parallel Scavenge收集器的目标则是达到一个可控制的吞吐量（Throughput）。</p>
+<h3 id="Parallel-Old-收集器"><a href="#Parallel-Old-收集器" class="headerlink" title="Parallel Old 收集器"></a>Parallel Old 收集器</h3><p>Parallel Old 是 Parallel Scavenge 收集器的老年代版本，支持多线程并发收集，基于标记 - 真理算法实现。</p>
+<h3 id="CMS-收集器-（Concurrent-Mark-Sweep）"><a href="#CMS-收集器-（Concurrent-Mark-Sweep）" class="headerlink" title="CMS 收集器 （Concurrent Mark Sweep）"></a>CMS 收集器 （Concurrent Mark Sweep）</h3><p><strong>工作过程：</strong></p>
+<ul>
+<li>初始标记</li>
+<li>并发标记</li>
+<li>重新标记</li>
+<li>并发标记</li>
+</ul>
+<p><strong>明显缺点：</strong></p>
+<ul>
+<li>对处理器资源非常敏感。</li>
+<li>无法处理浮动垃圾，有可能出现 “ Concurrent Model Failuer” 失败进而道义另一次完全的 ”Stop The World“ 的 Full GC 的产生。</li>
+<li>大量空间碎片。CMS 是一款基于 ”标记 - 清除“ 算法实现的收集器。</li>
+</ul>
+<h3 id="Garbage-First-收集器"><a href="#Garbage-First-收集器" class="headerlink" title="Garbage First 收集器"></a>Garbage First 收集器</h3><p>G1采用了分区(Region)的思路，将整个堆空间分成若干个大小相等的内存区域，每次分配对象空间将逐段地使用内存。在每个分区内部又被分成了若干个大小为512 Byte卡片(Card)，标识堆内存最小可用粒度所有分区的卡片将会记录在全局卡片表(Global Card Table)中，分配的对象会占用物理上连续的若干个卡片，当查找对分区内对象的引用时便可通过记录卡片来查找该引用对象。</p>
+<p> <strong>优势：</strong></p>
+<ul>
+<li>并行与并发</li>
+<li>分代收集</li>
+<li>空间整合</li>
+<li>可预测的停顿</li>
+</ul>
+<p><strong>工作过程：</strong></p>
+<ul>
+<li>初始标记</li>
+<li>并发标记</li>
+<li>最终标记</li>
+<li>筛选挥手</li>
+</ul>
+<h3 id="内存分配策略"><a href="#内存分配策略" class="headerlink" title="内存分配策略"></a>内存分配策略</h3><ul>
+<li>优先分配 eden</li>
+<li>大对象直接分配到老年代</li>
+<li>长期存活的对象分配到老年代</li>
+<li>空间分配担保</li>
+<li>动态对象年龄判断</li>
+</ul>
+<h3 id="逃逸分析与栈上分配"><a href="#逃逸分析与栈上分配" class="headerlink" title="逃逸分析与栈上分配"></a>逃逸分析与栈上分配</h3><p> <strong>逃逸分析</strong>：就是分析出对象的作用域。当一个对象在方法体内声明后，该对象的引用被其他外部所引用时该对象就发生了逃逸，反之就会在栈帧中为对象分配内存空间。</p>
+<p><strong>栈上分配</strong>：主要是指在Java程序的执行过程中，在方法体中声明的变量以及创建的对象，将直接从该线程所使用的栈中分配空间。 一般而言，创建对象都是从堆中来分配的，这里是指在栈上来分配空间给新创建的对象。</p>
+<h1 id="虚拟机性能监控、故障处理工具"><a href="#虚拟机性能监控、故障处理工具" class="headerlink" title="虚拟机性能监控、故障处理工具"></a>虚拟机性能监控、故障处理工具</h1><h3 id="jps"><a href="#jps" class="headerlink" title="jps"></a>jps</h3><p>作用：用于查看虚拟机运行了那些进程，并输出这些进程LVMID，即进程id，它是使用最频繁的一个命令，因为其它工具需要依赖jps。首先需要jps输出jvm正在运行的的进程id；然后其它工具根据进程id进行监控对应的进程运行情况。</p>
+<h3 id="jmap"><a href="#jmap" class="headerlink" title="jmap"></a>jmap</h3><p>作用：内存映像工具，可用生成堆内存转存快照dump，它还可以查询finalize执行队列，java堆和永久代的详细信息，例如：空间利用率，当前用的是那种收集器等。</p>
+<h3 id="jstat"><a href="#jstat" class="headerlink" title="jstat"></a>jstat</h3><p>作用：用于jvm虚拟机统计信息监控的，主要用于监控jvm内存使用率。</p>
+<h3 id="jinfo"><a href="#jinfo" class="headerlink" title="jinfo"></a>jinfo</h3><p>作用：实时查看java配置信息工具，它也可以实时调整虚拟机各项配置参数的值。</p>
+<h3 id="jConsole"><a href="#jConsole" class="headerlink" title="jConsole"></a>jConsole</h3><h3 id="VisualVM"><a href="#VisualVM" class="headerlink" title="VisualVM"></a>VisualVM</h3><h1 id="类文件结构"><a href="#类文件结构" class="headerlink" title="类文件结构"></a>类文件结构</h1><h2 id="平台无关性"><a href="#平台无关性" class="headerlink" title="平台无关性"></a>平台无关性</h2><p>Java虚拟机不和包括Java在内的任何语言绑定 它只与“Class文件”这种特定的二进制文件格式所关联 Class文件中包含了Java虚拟机指令集和符号表以及若干其他辅助信息 基于安全方面的考虑 Java虚拟机规范要求在Class文件中使用许多强制性的语法和结构化约束 但任一门功能性语言都可以表示为一个能被Java虚拟机所接受的有效的Class文件。</p>
+<h2 id="Class-类文件的结构"><a href="#Class-类文件的结构" class="headerlink" title="Class 类文件的结构"></a>Class 类文件的结构</h2><p>Class文件是一组以8位字节为基础单位的二进制流 各个数据项目严格按照顺序紧凑地排列在Class文件之中 中间没有添加任何分隔符 这使得整个Class文件中存储的内容几乎全部是程序运行的必要数据 没有空隙存在 当遇到需要占用8位字节以上空间的数据项时 则会按照高位在前的方式分割成若干个8位字节进行存储</p>
+<h3 id="魔数与-Class-文件的版本"><a href="#魔数与-Class-文件的版本" class="headerlink" title="魔数与 Class 文件的版本"></a>魔数与 Class 文件的版本</h3><p>每个Class文件的头4个字节称为魔数（Magic Number） 它的唯一作用是确定这个文件是否为一个能被虚拟机接受的Class文件。</p>
+<h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><p>紧接着主次版本号之后的是常量池入口 常量池可以理解为Class文件之中的资源仓库 它是Class文件结构中与其他项目关联最多的数据类型 也是占用Class文件空间最大的数据项目之一 同时它还是在Class文件中第一个出现的表类型数据项目。</p>
+<h3 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h3><p>在常量池结束之后 紧接着的两个字节代表访问标志（access_flags） 这个标志用于识别一些类或者接口层次的访问信息 包括：这个Class是类还是接口 是否定义为public类型 是否定义为abstract类型 如果是类的话 是否被声明为final等。</p>
+<h3 id="类索引、父类索引与接口索引集合"><a href="#类索引、父类索引与接口索引集合" class="headerlink" title="类索引、父类索引与接口索引集合"></a><strong>类索引、父类索引与接口索引集合</strong></h3><p>类索引（this_class）和父类索引（super_class）都是一个u2类型的数据 而接口索引集合（interfaces）是一组u2类型的数据的集合 Class文件中由这三项数据来确定这个类的继承关系</p>
+<h3 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a><strong>字段表集合</strong></h3><p>字段表（field_info）用于描述接口或者类中声明的变量 字段（field）包括类级变量以及实例级变量 但不包括在方法内部声明的局部变量</p>
+<h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a><strong>方法表集合</strong></h3><p>Class文件存储格式中对方法的描述与对字段的描述几乎采用了完全一致的方式 方法表的结构如同字段表一样 依次包括了访问标志（access_flags） 名称索引（name_index） 描述符索引（descriptor_index） 属性表集合（attributes）几项</p>
+<h3 id="属性表集合"><a href="#属性表集合" class="headerlink" title="属性表集合"></a><strong>属性表集合</strong></h3><p>在Class文件 字段表 方法表都可以携带自己的属性表集合 以用于描述某些场景专有的信息</p>
+<ul>
+<li>Code属性<br>Java程序方法体中的代码经过Javac编译器处理后 最终变为字节码指令存储在Code属性<br>内</li>
+<li>Exceptions属性<br>Exceptions属性的作用是列举出方法中可能抛出的受查异常（Checked Excepitons） 也就是方法描述时在throws关键字后面列举的异常</li>
+<li>LineNumberTable属性<br>LineNumberTable属性用于描述Java源码行号与字节码行号（字节码的偏移量）之间的对应关系</li>
+<li>LocalVariableTable属性<br>LocalVariableTable属性用于描述栈帧中局部变量表中的变量与Java源码中定义的变量之<br>间的关系</li>
+<li>SourceFile属性<br>SourceFile属性用于记录生成这个Class文件的源码文件名称</li>
+<li>ConstantValue属性<br>ConstantValue属性的作用是通知虚拟机自动为静态变量赋值 只有被static关键字修饰的<br>变量（类变量）才可以使用这项属性</li>
+<li>InnerClasses属性<br>InnerClasses属性用于记录内部类与宿主类之间的关联 如果一个类中定义了内部类 那编译器将会为它以及它所包含的内部类生成InnerClasses属性</li>
+<li>Deprecated及Synthetic属性<br>Deprecated和Synthetic两个属性都属于标志类型的布尔属性 只存在有和没有的区别 没有属性值的概念<br>Deprecated属性用于表示某个类 字段或者方法 已经被程序作者定为不再推荐使用 它可以通过在代码中使用@deprecated注释进行设置<br>Synthetic属性代表此字段或者方法并不是由Java源码直接产生的 而是由编译器自行添加的</li>
+<li>StackMapTable属性<br>这个属性会在虚拟机类加载的字节码验证阶段被新类型检查验证器（Type Checker）使用 目的在于代替以前比较消耗性能的基于数据流分析的类型推导验证器</li>
+<li>Signature属性<br>任何类 接口 初始化方法或成员的泛型签名如果包含了类型变量（Type Variables）或参数化类型（Parameterized Types） 则Signature属性会为它记录泛型签名信息</li>
+<li>BootstrapMethods属性<br>这个属性用于保存invokedynamic指令引用的引导方法限定符</li>
+</ul>
+<h3 id="字节码指令简介"><a href="#字节码指令简介" class="headerlink" title="字节码指令简介"></a>字节码指令简介</h3><p>Java虚拟机的指令由一个字节长度的 代表着某种特定操作含义的数字（称为操作码 Opcode）以及跟随其后的零至多个代表此操作所需参数（称为操作数 Operands）而构成 由于Java虚拟机采用面向操作数栈而不是寄存器的架构 所以大多数的指令都不包含操作数 只有一个操作码</p>
+<h3 id="字节码与数据类型"><a href="#字节码与数据类型" class="headerlink" title="字节码与数据类型"></a><strong>字节码与数据类型</strong></h3><p>在Java虚拟机的指令集中 大多数的指令都包含了其操作所对应的数据类型信息 例如 iload指令用于从局部变量表中加载int型的数据到操作数栈中 而fload指令加载的则是float类型的数据 这两条指令的操作在虚拟机内部可能会是由同一段代码来实现的 但在Class文件中它们必须拥有各自独立的操作码</p>
+<p><strong>加载和存储指令</strong></p>
+<p>加载和存储指令用于将数据在栈帧中的局部变量表和操作数栈之间来回传输</p>
+<p><strong>运算指令</strong></p>
+<p>运算或算术指令用于对两个操作数栈上的值进行某种特定运算 并把结果重新存入到操作栈顶</p>
+<p><strong>类型转换指令</strong></p>
+<p>类型转换指令可以将两种不同的数值类型进行相互转换 这些转换操作一般用于实现用户代码中的显式类型转换操作 或者用来处理字节码指令集中数据类型相关指令无法与数据类型一一对应的问题</p>
+<p><strong>对象创建与访问指令</strong></p>
+<p>虽然类实例和数组都是对象 但Java虚拟机对类实例和数组的创建与操作使用了不同的字节码指令 对象创建后 就可以通过对象访问指令获取对象实例或者数组实例中的字段或者数组元素</p>
+<p><strong>操作数栈管理指令</strong></p>
+<p>如同操作一个普通数据结构中的堆栈那样 Java虚拟机提供了一些用于直接操作操作数栈的指令</p>
+<p><strong>控制转移指令</strong></p>
+<p>控制转移指令可以让Java虚拟机有条件或无条件地从指定的位置指令而不是控制转移指令的下一条指令继续执行程序 从概念模型上理解 可以认为控制转移指令就是在有条件或无条件地修改PC寄存器的值</p>
+<p><strong>方法调用和返回指令</strong><br>invokevirtual指令用于调用对象的实例方法 根据对象的实际类型进行分派（虚方法分派） 这也是Java语言中最常见的方法分派方式<br>invokeinterface指令用于调用接口方法 它会在运行时搜索一个实现了这个接口方法的对象 找出适合的方法进行调用<br>invokespecial指令用于调用一些需要特殊处理的实例方法 包括实例初始化方法 私有方法和父类方法<br>invokestatic指令用于调用类方法（static方法）<br>invokedynamic指令用于在运行时动态解析出调用点限定符所引用的方法 并执行该方法 前面4条调用指令的分派逻辑都固化在Java虚拟机内部 而invokedynamic指令的分派逻辑是由用户所设定的引导方法决定的</p>
+<p> <strong>异常处理指令</strong><br>在Java程序中显式抛出异常的操作（throw语句）都由athrow指令来实现 除了用throw语句显式抛出异常情况之外 Java虚拟机规范还规定了许多运行时异常会在其他Java虚拟机指令检测到异常状况时自动抛出 而在Java虚拟机中 处理异常（catch语句）不是由字节码指令来实现的（很久之前曾经使用jsr和ret指令来实现 现在已经不用了） 而是采用异常表来完成的</p>
+<p><strong>同步指令</strong><br>Java虚拟机可以支持方法级的同步和方法内部一段指令序列的同步 这两种同步结构都是使用管程（Monitor）来支持的同步一段指令集序列通常是由Java语言中的synchronized语句块来表示的 Java虚拟机的指令集中有monitorenter和monitorexit两条指令来支持synchronized关键字的语义 正确实现synchronized关键字需要Javac编译器与Java虚拟机两者共同协作支持</p>
+<p><strong>公有设计和私有实现</strong><br>Java虚拟机规范描绘了Java虚拟机应有的共同程序存储格式：Class文件格式以及字节码指令集 这些内容与硬件 操作系统及具体的Java虚拟机实现之间是完全独立的 虚拟机实现者可能更愿意把它们看做是程序在各种Java平台实现之间互相安全地交互的手段<br>虚拟机实现的方式主要有以下两种：<br>将输入的Java虚拟机代码在加载或执行时翻译成另外一种虚拟机的指令集<br>将输入的Java虚拟机代码在加载或执行时翻译成宿主机CPU的本地指令集（即JIT代码生<br>成技术）</p>
+<h1 id="虚拟机类加载机制"><a href="#虚拟机类加载机制" class="headerlink" title="虚拟机类加载机制"></a>虚拟机类加载机制</h1><p>虚拟机把描述类的数据从 Class 文件加载到内存， 并对数据进行校验，解析和初始化，最终形成可以被虚拟机直接使用的 Java 类型， 这就是虚拟机的类加载机制。</p>
+<h1 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h1><h2 id="JDK-提供的并发容器总结"><a href="#JDK-提供的并发容器总结" class="headerlink" title="JDK 提供的并发容器总结"></a>JDK 提供的并发容器总结</h2><p>JDK 提供的这些容器大部分在 <code>java.util.concurrent</code> 包中。</p>
+<ul>
+<li><strong>ConcurrentHashMap:</strong> 线程安全的 HashMap</li>
+<li><strong>CopyOnWriteArrayList:</strong> 线程安全的 List，在读多写少的场合性能非常好，远远好于 Vector.</li>
+<li><strong>ConcurrentLinkedQueue:</strong> 高效的并发队列，使用链表实现。可以看做一个线程安全的 LinkedList，这是一个非阻塞队列。</li>
+<li><strong>BlockingQueue:</strong> 这是一个接口，JDK 内部通过链表、数组等方式实现了这个接口。表示阻塞队列，非常适合用于作为数据共享的通道。</li>
+<li><strong>ConcurrentSkipListMap:</strong> 跳表的实现。这是一个 Map，使用跳表的数据结构进行快速查找。</li>
+</ul>
+<h2 id="ConcurrentHashMap-和-HashMap-的区别"><a href="#ConcurrentHashMap-和-HashMap-的区别" class="headerlink" title="ConcurrentHashMap 和 HashMap 的区别"></a>ConcurrentHashMap 和 HashMap 的区别</h2><p>ConcurrentHashMap 和 Hashtable 的区别主要体现在实现线程安全的方式上不同。</p>
+<ul>
+<li><strong>底层数据结构：</strong> JDK1.7 的 ConcurrentHashMap 底层采用 <strong>分段的数组+链表</strong> 实现，JDK1.8 采用的数据结构跟 HashMap1.8 的结构一样，数组+链表&#x2F;红黑二叉树。Hashtable 和 JDK1.8 之前的 HashMap 的底层数据结构类似都是采用 <strong>数组+链表</strong> 的形式，数组是 HashMap 的主体，链表则是主要为了解决哈希冲突而存在的；</li>
+<li><strong>实现线程安全的方式（重要）：</strong> ① <strong>在 JDK1.7 的时候，ConcurrentHashMap（分段锁）</strong> 对整个桶数组进行了分割分段(Segment)，每一把锁只锁容器其中一部分数据，多线程访问容器里不同数据段的数据，就不会存在锁竞争，提高并发访问率。 <strong>到了 JDK1.8 的时候已经摒弃了 Segment 的概念，而是直接用 Node 数组+链表+红黑树的数据结构来实现，并发控制使用 synchronized 和 CAS 来操作。（JDK1.6 以后 对 synchronized 锁做了很多优化）</strong> 整个看起来就像是优化过且线程安全的 HashMap，虽然在 JDK1.8 中还能看到 Segment 的数据结构，但是已经简化了属性，只是为了兼容旧版本；② <strong>Hashtable(同一把锁)</strong> :使用 synchronized 来保证线程安全，效率非常低下。当一个线程访问同步方法时，其他线程也访问同步方法，可能会进入阻塞或轮询状态，如使用 put 添加元素，另一个线程不能使用 put 添加元素，也不能使用 get，竞争会越来越激烈效率越低。</li>
+</ul>
+<h2 id="何谓悲观锁与乐观锁"><a href="#何谓悲观锁与乐观锁" class="headerlink" title="何谓悲观锁与乐观锁"></a>何谓悲观锁与乐观锁</h2><blockquote>
+<p>乐观锁对应于生活中乐观的人总是想着事情往好的方向发展，悲观锁对应于生活中悲观的人总是想着事情往坏的方向发展。这两种人各有优缺点，不能不以场景而定说一种人好于另外一种人。</p>
+</blockquote>
+<h4 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h4><p>总是假设最坏的情况，每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会阻塞直到它拿到锁（<strong>共享资源每次只给一个线程使用，其它线程阻塞，用完后再把资源转让给其它线程</strong>）。传统的关系型数据库里边就用到了很多这种锁机制，比如行锁，表锁等，读锁，写锁等，都是在做操作之前先上锁。Java中<code>synchronized</code>和<code>ReentrantLock</code>等独占锁就是悲观锁思想的实现。</p>
+<h4 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h4><p>总是假设最好的情况，每次去拿数据的时候都认为别人不会修改，所以不会上锁，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据，可以使用版本号机制和CAS算法实现。<strong>乐观锁适用于多读的应用类型，这样可以提高吞吐量</strong>，像数据库提供的类似于<strong>write_condition机制</strong>，其实都是提供的乐观锁。在Java中<code>java.util.concurrent.atomic</code>包下面的原子变量类就是使用了乐观锁的一种实现方式<strong>CAS</strong>实现的。</p>
+<h4 id="两种锁的使用场景"><a href="#两种锁的使用场景" class="headerlink" title="两种锁的使用场景"></a>两种锁的使用场景</h4><p>从上面对两种锁的介绍，我们知道两种锁各有优缺点，不可认为一种好于另一种，像<strong>乐观锁适用于写比较少的情况下（多读场景）</strong>，即冲突真的很少发生的时候，这样可以省去了锁的开销，加大了系统的整个吞吐量。但如果是多写的情况，一般会经常产生冲突，这就会导致上层应用会不断的进行retry，这样反倒是降低了性能，所以<strong>一般多写的场景下用悲观锁就比较合适。</strong></p>
+<h3 id="乐观锁常见的两种实现方式"><a href="#乐观锁常见的两种实现方式" class="headerlink" title="乐观锁常见的两种实现方式"></a>乐观锁常见的两种实现方式</h3><blockquote>
+<p><strong>乐观锁一般会使用版本号机制或CAS算法实现。</strong></p>
+</blockquote>
+<p>（………………………………………………）</p>
+</div><script type="text/javascript" src="/js/share.js?v=1.0.0" async></script><a class="article-share-link" data-url="https://hanblog.fun/2020/07/03/2020-7-4-summary-jvm/" data-id="ckzwvu0dc003p18t0173jf9l3" data-qrcode="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACK0lEQVR42u3awQ6CQAyEYd7/pfGqIa4znWrc8nMiBhY+D6Xd9jjk43w6nn+5nrvXX8+vq7UdMGDA2JZxLo/1NcrK71bQwdLTYcCAcQOG8hIKaR2IlQBdWwEGDBgw3HM3oCvPhQEDBowk4K6TPOVeJU2EAQMGjDzhW6d9+V/TVovDgAFjQ4a+6/7786/0N2DAgLEV4zQPN41zWwi1AwYMGLMZeoCLyks5iUzeBwYMGLMZtREH/Xp3RGxdBts5LAwYMDZnuOmgjk8aDEqItzNcGDBgbMuo7WUpi+qP1EfEauUxDBgwZjD0QFlrNCbB1EDCgAFjNCPfVnODo/s1iL4SMGDA2JzhbmzVNt3cglbZSXtZAQYMGKMZyiu6SWFt5KuLDQMGjKmMpCVQ29XTN9TsMQsYMGCMY9ReN0/jlPBtD1vAgAFjKENJwpJf9FZo12AHDBgw5jG6BimM5mIQLd/+ZTBgwBjNcMNlb8cwL2I/fDdgwIAxiFErNaM8NB7CMHJbGDBgjGPUxiyUl9BLWb392dYegAEDxiYMd1RCHwJzt+HcIQ8YMGDcjaHf5qaMSbopPREGDBhDGbVg5xao7jU2FQYMGKMZbnMx2cR3A6uemMKAAeMODD01zMcvkvTxcG+DAQPGOEZtwKJW+irru28LAwYMGF0DE0laCQMGDBgJQ08fG4Yq1kUsDBgwRjOSFuZvit6vD1vAgAHjjxlde1nuA2qFa9TUhAEDxn6MB0voIuBpC8GuAAAAAElFTkSuQmCC">Share</a><div class="tags"><a href="/tags/Java/"><i class="fa fa-tag"></i>Java</a></div><div class="post-nav"><a class="pre" href="/2020/07/03/2020-7-3-summary-java/">个人总结 -- Java基础查漏补缺</a><a class="next" href="/2020/07/02/2020-7-2-design-patterns/">设计模式 -- 工厂模式</a></div><script src="https://utteranc.es/client.js" repo="yonghan1999/message" issue-term="message" theme="github-light" crossorigin="anonymous" async> </script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://hanblog.fun"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Demo/">Demo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Redis/">Redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/tags/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 15px;">Java设计模式</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 15px;">日志</a> <a href="/tags/%E7%A8%8B%E5%BA%8F/" style="font-size: 15px;">程序</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" style="font-size: 15px;">编译原理</a> <a href="/tags/OS/" style="font-size: 15px;">OS</a> <a href="/tags/NodeJS/" style="font-size: 15px;">NodeJS</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Interview/" style="font-size: 15px;">Interview</a> <a href="/tags/mybatis/" style="font-size: 15px;">mybatis</a> <a href="/tags/LeetCode/" style="font-size: 15px;">LeetCode</a> <a href="/tags/gitee-jekyll/" style="font-size: 15px;">gitee jekyll</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/tools/" style="font-size: 15px;">tools</a> <a href="/tags/Vue/" style="font-size: 15px;">Vue</a> <a href="/tags/Network-TCP/" style="font-size: 15px;">Network TCP</a> <a href="/tags/Git/" style="font-size: 15px;">Git</a> <a href="/tags/RabbitMQ/" style="font-size: 15px;">RabbitMQ</a> <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" style="font-size: 15px;">并发编程</a> <a href="/tags/%E8%AE%B0%E5%BD%95/" style="font-size: 15px;">记录</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Spring-Interview/" style="font-size: 15px;">Spring Interview</a> <a href="/tags/python/" style="font-size: 15px;">python</a> <a href="/tags/SpringSecurity/" style="font-size: 15px;">SpringSecurity</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E5%B0%8F%E5%B7%A5%E5%85%B7/" style="font-size: 15px;">网络小工具</a> <a href="/tags/LaTeX/" style="font-size: 15px;">LaTeX</a> <a href="/tags/macOS/" style="font-size: 15px;">macOS</a> <a href="/tags/MacOS/" style="font-size: 15px;">MacOS</a> <a href="/tags/Network/" style="font-size: 15px;">Network</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Objective-c/" style="font-size: 15px;">Objective-c</a> <a href="/tags/IOS/" style="font-size: 15px;">IOS</a> <a href="/tags/%E5%88%86%E4%BA%AB/" style="font-size: 15px;">分享</a> <a href="/tags/%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">学习</a> <a href="/tags/%E7%AC%94%E8%AE%B0/" style="font-size: 15px;">笔记</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2022/02/20/hello-world/">Hexo 静态博客搭建笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/08/05/2021-08-05-proxychais-can-not-proxy-ping/">proxychais 无法代理 ping 命令的原因</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/29/2021-7-29-python-argparse-%E5%8F%AF%E9%80%89%E5%8F%82%E6%95%B0/">python3 argparse 可选参数</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/27/2021-7-27-Git%E4%B8%ADreset%E5%91%BD%E4%BB%A4%E7%9A%84%E5%8F%82%E6%95%B0/">Git中reset命令的参数</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/25/2021-7-25-sqflite/">Flutter 插件 sqflite</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/20/2021-07-20-Spring-Security-JWT/">Spring Security JWT(Json Web Token) 登录实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/17/2021-07-17-SpringSecurity-%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD%E7%94%A8%E6%88%B7%E8%A7%92%E8%89%B2%E5%88%97%E8%A1%A8/">SpringSecurity 动态加载用户角色列表</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/09/2021-07-09-iOS-uialertcontroller/">iOS 提示框</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/08/2021-7-8-IOS%E4%B8%AD%E9%A1%B5%E9%9D%A2%E7%9A%84%E8%B7%B3%E8%BD%AC/">IOS 中页面的跳转</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/07/2021-7-3-foundation%E6%A1%86%E6%9E%B6%E7%9A%84%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/">Foundation Framework</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Links</i></div></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2022 <a href="/." rel="nofollow">Yuuki.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=1.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="Copy Successed!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>
