@@ -105,3 +105,6 @@ deploy:
   type: 'git'
   repo: git@github.com:yonghan1999/yonghan1999.github.io.git
   branch: gh-pages
+
+google_search : false
+self_search : true
