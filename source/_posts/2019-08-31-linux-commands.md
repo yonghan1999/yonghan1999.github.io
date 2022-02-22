@@ -2,7 +2,6 @@
 layout: post
 title: Linux常用命令
 date: 2019-08-31
-categories: 技术
 tags: linux
 ---
 

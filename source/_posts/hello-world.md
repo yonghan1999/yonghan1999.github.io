@@ -1,14 +1,13 @@
 ---
 title: Hexo 静态博客搭建笔记
-tags:
-  - 分享
-  - 学习
-  - 笔记
+tags: Hexo
 ---
 
-> Jekyll 被我抛弃的一天
->
-> Hexo主题和插件真的是太多了，香
+
+
+Jekyll 被我抛弃的一天,Hexo主题和插件真的是太多了，香
+
+
 
 ### Intro
 
