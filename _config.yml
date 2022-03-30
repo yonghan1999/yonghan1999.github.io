@@ -106,8 +106,6 @@ deploy:
   repo: git@github.com:yonghan1999/yonghan1999.github.io.git
   branch: gh-pages
 
-google_search : false
-self_search : true
 disqus:
   enable: false ## If you want to use Disqus comment system, please set the value to true.
   shortname: ## Your disqus_shortname, e.g. username
