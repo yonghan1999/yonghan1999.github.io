@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 记一次 Mysql 查询条件中字符串尾部有空格也能匹配上的问题
+title: 记一次 Mysql 查询条件中字符串尾部空格问题
 date: 2022-03-19
 tags: MySql
 ---
