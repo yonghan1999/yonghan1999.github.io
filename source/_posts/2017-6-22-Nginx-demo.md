@@ -25,7 +25,7 @@ public class Singleton {
     /* 私有构造方法，防止被实例化 */  
     private Singleton() {  
     }  
-  
+     
     /* 静态工程方法，创建实例 */  
     public static Singleton getInstance() {  
         if (instance == null) {  
