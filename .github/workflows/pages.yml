@@ -9,7 +9,7 @@ jobs:
   pages:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@a81bbbf8298c0fa03ea29cdc473d45769f953675
+      - uses: actions/checkout@3
       - name: Use Node.js 16.x
         uses: actions/setup-node@v2
         with:
