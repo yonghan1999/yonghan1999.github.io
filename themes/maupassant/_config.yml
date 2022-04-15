@@ -41,8 +41,8 @@ minivaline: ## See: https://github.com/MiniValine/MiniValine
   lang:
 waline: ## See: https://waline.js.org/
   enable: false ## If you want to use Waline comment system, please set the value to true.
-  serverURL: https://app.ledger.hanblog.fun ## Your server url, e.g. https://your-domain.vercel.app
-  pageSize: 30 ## The desired number of comments shown in each page.
+  serverURL: ## Your server url, e.g. https://your-domain.vercel.app
+  pageSize: ## The desired number of comments shown in each page.
 utterances: ## See: https://utteranc.es
   enable: true ## If you want to use Utterances comment system, please set the value to true.
   repo: yonghan1999/message ## The repository utterances will connect to, e.g. tufu9441/comments
@@ -63,10 +63,10 @@ baidu_analytics: ## Your Baidu Analytics tracking id, e.g. 8006843039519956000
 fancybox: false ## If you want to use fancybox please set the value to true.
 show_category_count: false ## If you want to show the count of categories in the sidebar widget please set the value to true.
 toc_number: true ## If you want to add list number to toc please set the value to true.
-shareto: true ## If you want to use the share button please set the value to true, and you must have hexo-helper-qrcode installed.
-busuanzi: true ## If you want to use Busuanzi page views please set the value to true.
-wordcount: true ## If you want to display the word counter and the reading time expected to spend of each post please set the value to true, and you must have hexo-wordcount installed.
-widgets_on_small_screens: true ## Set to true to enable widgets on small screens.
+shareto: false ## If you want to use the share button please set the value to true, and you must have hexo-helper-qrcode installed.
+busuanzi: false ## If you want to use Busuanzi page views please set the value to true.
+wordcount: false ## If you want to display the word counter and the reading time expected to spend of each post please set the value to true, and you must have hexo-wordcount installed.
+widgets_on_small_screens: false ## Set to true to enable widgets on small screens.
 canvas_nest:
   enable: false ## If you want to use dynamic background please set the value to true, you can also fill the following parameters to customize the dynamic effect, or just leave them blank to keep the default effect.
   color: ## RGB value of the color, e.g. "100,99,98"
@@ -85,10 +85,10 @@ post_copyright:
   enable: false ## If you want to display the copyright info after each post, please set the value to true and fill the following items on your need.
   author: ## Your author name, e.g. tufu9441
   copyright_text: ## Your copyright text, e.g. The author owns the copyright, please indicate the source reproduced.
-love: false ## If you want the love to appear when you click anywhere, set the value to true.
+love: false ## If you want the peach heart to appear when you click anywhere, set the value to true.
 plantuml: ## Using PlantUML to generate UML diagram, must install hexo-filter-plantuml (https://github.com/miao1007/hexo-filter-plantuml).
-  render: "PlantUMLServer" ## Local or PlantUMLServer.
-  outputFormat: "svg" ## Common options: svg/png
+  render: "PlantUMLServer" ##  Local or PlantUMLServer.
+  outputFormat: "svg" ## common options: svg/png
 copycode: true ## If you want to enable one-click copy of the code blocks, set the value to true.
 dark: false ## If you want to toggle between light/dark themes, set the value to true.
 totop: true ## If you want to use the rocketship button to return to the top, set the value to true.
