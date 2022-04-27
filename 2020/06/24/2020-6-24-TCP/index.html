@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Yuuki的小站">
+    <meta name="author" content="yuuki">
+    
+    <title>
+        
+            浅谈 TCP 协议（一） |
+        
+        Yuuki的小站
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"hanblog.fun","root":"/","language":"zh-CN"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"https://image.hanblog.fun/images/2022/04/27/4C3184D2-02DF-4942-8888-017A5E2E06BE.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":false,"preload":false},"code_copy":{"enable":false,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="https://image.hanblog.fun/images/2022/04/27/4C3184D2-02DF-4942-8888-017A5E2E06BE.jpg">
+                </a>
+            
+            <a class="logo-title" href="/">
+                Yuuki的小站
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">浅谈 TCP 协议（一）</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://image.hanblog.fun/images/2022/04/27/4C3184D2-02DF-4942-8888-017A5E2E06BE.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">yuuki</span>
+                        
+                            <span class="author-label">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2020-06-24 00:00:00</span>
+        <span class="mobile">2020-06-24 00:00</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Network-TCP/">Network TCP</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="传输控制协议-TCP-概述"><a href="#传输控制协议-TCP-概述" class="headerlink" title="传输控制协议 TCP 概述"></a>传输控制协议 TCP 概述</h2><p>TCP 协议比较复杂，这里只对 TCP 协议进行一般介绍。</p>
+<h3 id="TCP-最主要的特点"><a href="#TCP-最主要的特点" class="headerlink" title="TCP 最主要的特点"></a>TCP 最主要的特点</h3><ul>
+<li>TCP 是<strong>面向连接的运输层协议</strong>。也就是说，应用程序在使用 TCP 协议之前，必须先建立 TCP 连接。在数据传输完毕后，必须释放已经建立的 TCP 连接。</li>
+<li>每一条 TCP 连接只能有两个<strong>端点（endpoint）</strong>。每一条 TCP 连接只能是点对点（一对一）。</li>
+<li>TCP 提供<strong>可靠交付</strong>的服务。通过 TCP 连接传送的数据，无差错、不丢失、不重复并且按序到达。</li>
+<li>TPC 提供<strong>全双工通信</strong>。</li>
+<li><strong>面向字节流</strong>。TCP 中的 “流” 指的是<strong>流入到进程或从进程流出的字节序列</strong>。“面向字节流” 的含义是：虽然应用程序和 TCP 的交互是一次一个数据块（大小不等），但 TCP 把应用程序交下来的数据仅仅看成一连串的<strong>无结构的字节流</strong>。TCP 并不知道所传达的字节流的含义。TCP 不保证接收方应用程序所收到的数据块和发送方应用程序所发出的数据块具有大小对应的关系，但接收方应用程序收到的字节流必须和发送方应用程序发出的字节流完全一样。</li>
+</ul>
+<h3 id="TCP的连接"><a href="#TCP的连接" class="headerlink" title="TCP的连接"></a>TCP的连接</h3><p>TCP 把连接作为<strong>最基本的抽象</strong>。每一条 TCP 连接有两个<strong>端点</strong>。这个端点叫做<strong>套接字（socket）或插口</strong>。根据 RFC 973 的定义：端口号拼接到（concatenated with）IP 地址即构成了套接字。每一条 TCP连接唯一的被通信两端的两个端点（即两个套接字）所确定。即：</p>
+<blockquote>
+<p>TCP连接 ::&#x3D; {socket<sub>1</sub>,socket<sub>2</sub>} &#x3D;&#x3D; {(IP<sub>1</sub>:port<sub>1</sub>),(IP<sub>2</sub>:port<sub>2</sub>)}</p>
+</blockquote>
+<p>总之，TCP 连接就是由协议软件所提供的一种抽象。有的时候我们为了方便说，在一个应用进程和另一个应用进程之间建立了一条 TCP 连接，但请记住：<strong>TCP 连接的端点是个很抽象的套接字</strong>，即（IP : 端口号）。也应记住：同一个 IP 地址可以有多个不同的 TCP 连接，而同一个端口号也可以出现在多个不同的 TCP 连接中。</p>
+<h3 id="可靠传输的工作原理"><a href="#可靠传输的工作原理" class="headerlink" title="可靠传输的工作原理"></a>可靠传输的工作原理</h3><p>TCP 发送的报文段是交个 IP 层传送的。但 IP 层只能提供尽最大努力交付的服务，因此，TCP 必须采取适当的措施来使得两个运输层之间的通信编的可靠。</p>
+<h4 id="停止等待协议"><a href="#停止等待协议" class="headerlink" title="停止等待协议"></a>停止等待协议</h4><blockquote>
+<p>在计算机网络发展的初期，通信链路不太可靠，因此在链路层传送数据时都要采用可靠的通信协议。其中最简单的协议就是 “停止等待协议”。</p>
+</blockquote>
+<p>停止等待”就是每发送完一个分组就停止发送，等待对方的确认。在收到确认后再发送下一个分组。</p>
+<ol>
+<li><p>无差错情况</p>
+<p><img src="https://i.loli.net/2020/06/24/dVTsOIlxbZ7fNnv.png" alt="stop-waiting-for-agreement.png"></p>
+</li>
+<li><p>出差错情况</p>
+<ul>
+<li><p>问题 1</p>
+<ul>
+<li><img src="https://i.loli.net/2020/06/24/Ek8NrpLUzDCoRTc.jpg" alt="超时重传.jpg"></li>
+<li>在接收方 B 会出现两种情况：<br>（1）B 接收 M1 时检测出了差错，就丢弃 M1，其他什么也不做（不通知 A 收到有差错的分组）。</li>
+</ul>
+</li>
+</ul>
+<p> （2）M1 在传输过程中丢失了，这时 B 当然什么都不知道，也什么都不做。</p>
+<blockquote>
+<p>解决方法：<code>超时重传</code></p>
+<p>A 为每一个已发送的分组都设置了一个<code>超时计时器</code>。</p>
+<p>A 只要在超时计时器到期之前收到了相应的确认，就撤销该超时计时器，继续发送下一个分组 M2 。若A在超时计时器规定时间内没有收到B的确认，就认为分组错误或丢失，就重发该分组。</p>
+</blockquote>
+<ul>
+<li><p>问题 2</p>
+<ul>
+<li><img src="https://i.loli.net/2020/06/24/uma8iSIAvrXNgOK.png" alt="确认丢失-确认迟到.png"></li>
+<li>若分组正确到达B，但B回送的确认丢失或延迟了，A未收到B的确认，会超时重发。B 可能会收到重复的 M1 。B如何知道收到了重复的分组，需要丢弃呢？</li>
+</ul>
+<blockquote>
+<p>解决方法：<code>编号</code><br>A为每一个发送的分组都进行编号。若B收到了编号相同的分组，则认为收到了重复分组，丢弃重复的分组，并回送确认。<br>B为发送的确认也进行编号，指示该确认是对哪一个分组的确认。<br>A根据确认及其编号，可以确定它是对哪一个分组的确认，避免重发发送。若为重复的确认，则将其丢弃。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ol>
+<p>像上述的这种可靠的传输协议常称为<strong>自动重传协议 ARQ（Automatic Repeat reQuest）</strong>。</p>
+<p>停止等待协议的优点是简单，缺点是信道的利用率太低。为了提高传输效率，发送方可以不适用低效率的停止等待协议，而是采用<strong>流水线传输</strong>。</p>
+<p><img src="https://i.loli.net/2020/06/24/ewpIb3yqOj2FClN.png" alt="流水线传输.png"></p>
+<p>流水线传输就是发送方可以连续发送多个分组，不必每发完一个分组就停顿下来等待对方的确认。这样可使信道上一直有数据不断地在传送，从而提高信道的利用率。</p>
+<p>流水线传输时，会使用到<strong>连续 ARQ 协议</strong>和<strong>滑动窗口协议</strong>。</p>
+<h3 id="连续-ARQ-协议"><a href="#连续-ARQ-协议" class="headerlink" title="连续 ARQ 协议"></a>连续 ARQ 协议</h3><p>滑动窗口协议比较复杂，是TCP协议的精髓所在，在这里先给出ARQ协议最基本的概念，但不涉及到许多细节问题。</p>
+<p><img src="https://i.loli.net/2020/06/24/sOvaVgFXkHfuMEm.png" alt="连续ARQ协议的工作原理.png"></p>
+<p>发送方维持的<strong>发送窗口</strong>，他的意义是：位于发送窗口内的 5 个分组都可以连续发送出去，而不需要等待对方确认。从而提高信道的利用率。当发送方每收到一个确认，就把发送窗口向前滑动一个分组的位置。</p>
+<p><strong>累积确认</strong>：接收方不必对收到的分组逐个发送确认，而是在收到几个分组后，对按序到达的最后一个分组发送确认，这就表示：到这个分组为止的所有分组都已正确收到了。累积确认有的优点是：容易实现，即使确认丢失也不必重传。缺点是：不能向发送方反映出接收方已经正确收到的所有分组的信息。</p>
+<p><strong>Go-back-N</strong>：当接收方检测出时序的信息后，要求发送方重发最后一个正确接受的信息帧之后的所有未被确认的帧；或者当发送方发送了n个帧后，若发现该n帧的前一帧在计时器超时区间内仍未返回其确认信息，则该帧被判定为出错或丢失，此时发送方不得不重新发送该出错帧及其后的n帧。</p>
+<h3 id="以字节为单位的滑动窗口"><a href="#以字节为单位的滑动窗口" class="headerlink" title="以字节为单位的滑动窗口"></a>以字节为单位的滑动窗口</h3><iframe src="//player.bilibili.com/player.html?aid=52231781&bvid=BV194411h71z&cid=91418414&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+
+<h3 id="超时重传时间的选择"><a href="#超时重传时间的选择" class="headerlink" title="超时重传时间的选择"></a>超时重传时间的选择</h3><ul>
+<li>重传机制是 TCP 中最重要和最复杂的问题之一。</li>
+<li>TCP <strong>每发送</strong>一个报文段，就对这个报文段设置一次计时器。只要计时器设置的重传时间到但还没有收到确认，就要重传这一报文段。</li>
+</ul>
+<h4 id="往返时延的方差很大"><a href="#往返时延的方差很大" class="headerlink" title="往返时延的方差很大"></a>往返时延的方差很大</h4><p>由于 TCP 的下层是一个互联网环境，IP 数据报所选择的路由变化很大。因而运输层的往返时间的方差也很大。</p>
+<p><img src="https://i.loli.net/2020/06/25/DYNgMBvLSiZr2Ht.png" alt="往返时延的方差很大.png"></p>
+<h4 id="加权平均往返时间RTT"><a href="#加权平均往返时间RTT" class="headerlink" title="加权平均往返时间RTT"></a>加权平均往返时间RTT</h4><p>TCP才用了一种自适应算法，它记录一个报文段发出的时间，以及收到相应的确认的时间。这两个时间之差就是报文段的往返时间RTT。</p>
+<p>TCP 保留了 RTT 的一个<strong>加权平均往返时间 RTTs</strong>（这又称为平滑（smooth）的往返时间，因为是加权平均，所以是平滑的）。<br> 第一次测量到 RTT 样本时，<strong>RTTS 值就取为所测量到的 RTT 样本值</strong>。以后每测量到一个新的 RTT 样本，就按下式重新计算一次 RTTS：</p>
+<p><img src="https://i.loli.net/2020/06/25/1eKZqFjdXNw47Jh.png" alt="加权平均公式.png"></p>
+<p>式中，0&#x3D;&lt;a&lt;1。若 a 很接近于零，表示 RTT 值更新较慢(新的RTTs值和旧的RTTs值相比变化不大)。若选择 a 接近于 1，则表示 RTT 值更新较快(新的RTTs值受新的RTT样本的影响较大)。<br> RFC 2988 推荐的 a 值为 1&#x2F;8，即 0.125。</p>
+<h4 id="超时重传时间RTO"><a href="#超时重传时间RTO" class="headerlink" title="超时重传时间RTO"></a>超时重传时间RTO</h4><p>显然，RTO 应略大于上面得出的加权平均往返时间 RTTs<br>RFC 2988 建议使用下式计算 RTO：</p>
+<p><img src="https://i.loli.net/2020/06/25/Z8sumhXpNDdyt4K.png" alt="RTO.png"></p>
+<p>RTTD 是 RTT 的<strong>偏差的</strong>加权平均值，他与RTTs和新的RTT样本之差有关。<br> RFC 2988 建议这样计算 RTTD。第一次测量时，RTTD 值取为测量到的 RTT 样本值的一半。在以后的测量中，则使用下式计算加权平均的 RTTD：</p>
+<p><img src="https://i.loli.net/2020/06/25/Z7bBJtARjTV4F1o.png" alt="RTTD .png"></p>
+<p>β是个小于 1 的系数，其推荐值是 1&#x2F;4，即 0.25。</p>
+<p>然而<strong>往返时间的测量是相当复杂</strong>的：</p>
+<p><img src="https://i.loli.net/2020/06/25/kU3EPGjdmhaZFxt.png" alt="往返时间的测量相当复杂.png"></p>
+<p><strong>Karn 算法</strong>：</p>
+<blockquote>
+<p>为了解决上面那个问题，Karn提出了一个算法.</p>
+<p>在计算平均往返时间 RTT 时，只要**报文段重传了，就不采用其往返时间样本。这样得出的加权平均平均往返时间 RTTS 和超时重传时间 RTO 就较准确。 **</p>
+</blockquote>
+<p>但是，这又有了新的问题、设想出现这样的情况：报文段的时延突然增大了很多。因此在原来得出的重传时间内，不会收到确认报文段。于是就重传报文段。但根据Karn算法，不考虑重传的报文段的往返时间样本。这样，超时重传时间就无法更新。</p>
+<p><strong>修正的 Karn 算法</strong></p>
+<p><img src="https://i.loli.net/2020/06/25/cCwrKIhfF6tlsgD.png" alt="修正的Karn算法.png"></p>
+<p>系数 γ 的典型值是 2 。<br>当不再发生报文段的重传时，才根据报文段的往返时延更新平均往返时延 RTT 和超时重传时间 RTO 的数值。<br>实践证明，这种策略较为合理。</p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Network-TCP/">#Network TCP</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2020/06/24/2020-6-24-TCP-2/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">浅谈 TCP 协议（二）</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2020/06/23/2020-6-23-redis-advaced-tips/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Redis 高级应用</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2022&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">yuuki</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+
+
+
+
+
+<div class="post-scripts">
+    
+</div>
+
+
+
+</body>
+</html>

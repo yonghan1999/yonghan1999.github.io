@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Yuuki的小站">
+    <meta name="author" content="yuuki">
+    
+    <title>
+        
+            Foundation Framework |
+        
+        Yuuki的小站
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"hanblog.fun","root":"/","language":"zh-CN"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"https://image.hanblog.fun/images/2022/04/27/4C3184D2-02DF-4942-8888-017A5E2E06BE.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":false,"preload":false},"code_copy":{"enable":false,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="https://image.hanblog.fun/images/2022/04/27/4C3184D2-02DF-4942-8888-017A5E2E06BE.jpg">
+                </a>
+            
+            <a class="logo-title" href="/">
+                Yuuki的小站
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Foundation Framework</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://image.hanblog.fun/images/2022/04/27/4C3184D2-02DF-4942-8888-017A5E2E06BE.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">yuuki</span>
+                        
+                            <span class="author-label">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2021-07-07 00:00:00</span>
+        <span class="mobile">2021-07-07 00:00</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Objective-c/">Objective-c</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="NSArray"><a href="#NSArray" class="headerlink" title="NSArray"></a>NSArray</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">//创建一个 NSArray</span><br><span class="line">NSArray *colors = @[@&quot;Red&quot;, @&quot;Yellow&quot;, @&quot;Orange&quot;,</span><br><span class="line">                         @&quot;Green&quot;, @&quot;Blue&quot;, @&quot;Violet&quot;];</span><br><span class="line">NSArray *numbers = @[@6,@2,@3,@4,@5];</span><br><span class="line">NSArray *cities = [NSArray arrayWithObjects:@&quot;New Delhi&quot;,</span><br><span class="line">                    @&quot;London&quot;, @&quot;Brisbane&quot;, @&quot;Adelaide&quot;, nil];</span><br><span class="line">//遍历</span><br><span class="line">for (NSString *item in colors) &#123;</span><br><span class="line">    NSLog(@&quot;%@&quot;, item);</span><br><span class="line">&#125;</span><br><span class="line">//普通遍历</span><br><span class="line">for (int i=0; i&lt;[colors count]; i++) &#123;</span><br><span class="line">    NSLog(@&quot;%d: %@&quot;, i, colors[i]);</span><br><span class="line">&#125;</span><br><span class="line">// 简单排序</span><br><span class="line">// 自带的compare:方法，也可以自己写compare:方法</span><br><span class="line">[numbers sortedArrayUsingSelector: @selector(compare:)] // 升序 2，3，4，5，6</span><br><span class="line">//简单排序，反转使其改为降序</span><br><span class="line">[[[numbers sortedArrayUsingSelector: @selector(compare:)] reverseObjectEnumerator] allObjects]//降序 6，5，4，3，2</span><br><span class="line">//查找某个元素，结返回布尔值，存在返回 True，不存在返回 False；</span><br><span class="line">[colors containsObject:@&quot;Red&quot;]</span><br><span class="line">//查找一个元素，若存在返回下标，若不存在返回NSNotFound</span><br><span class="line">NSUInteger index = [colors indexOfObject:@&quot;Red&quot;];</span><br><span class="line">//比较两个数组是否相等，每对元素都是同个 isEqual 进行测试的</span><br><span class="line">[arr1 isEqualToArray:arr2]</span><br><span class="line"></span><br><span class="line">//创建一个 NSMutableArray</span><br><span class="line">NSMutableArray * arrM = [NSMutableArray array];</span><br><span class="line">//添加一个元素</span><br><span class="line">[arrM addObject:@&quot;cwj&quot;];</span><br><span class="line">//将一个 NSArray 添加进一个数组中</span><br><span class="line">[arrM addObjectsFromArray:@[@&quot;abc&quot;,@&quot;def&quot;]];</span><br><span class="line">//插入一个元素到指定下标</span><br><span class="line">[arrM insertObject:@&quot;ghi&quot; atIndex:1];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="NSString、NSMutableString"><a href="#NSString、NSMutableString" class="headerlink" title="NSString、NSMutableString"></a>NSString、NSMutableString</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//初始化一个NSString，stringWithFormat 是个不错的选择</span></span><br><span class="line"><span class="built_in">NSString</span> *sample = <span class="string">@&quot;iOS Tutorials&quot;</span>;</span><br><span class="line"><span class="built_in">NSString</span> *message = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;That&#x27;s a %@ %@ from %d!&quot;</span>,<span class="string">@&quot;qq&quot;</span>, <span class="string">@&quot;message&quot;</span>, <span class="number">2021</span>];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// isEqualToString 比较两个字符串是否相等, hasPrefix 检查前缀, hasSuffix 检查后缀。</span></span><br><span class="line"><span class="built_in">NSString</span> *strName = <span class="string">@&quot;Programming Language&quot;</span>;</span><br><span class="line"><span class="keyword">if</span> ([strName isEqualToString:<span class="string">@&quot;Programming Language&quot;</span>]) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;The name string holds the text Programming Language&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> ([strName hasPrefix:<span class="string">@&quot;Programming&quot;</span>]) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;The first name of the word is Programming&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> ([strName hasSuffix:<span class="string">@&quot;Language&quot;</span>]) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;The second name of the word is Language&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//拼接两个或者多个字符串</span></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Combine two strings：%@&quot;</span>, [sample stringByAppendingString:message]);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Combine multiple strings：%@&quot;</span>, [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%@%@%@&quot;</span>,<span class="string">@&quot;String1&quot;</span>,<span class="string">@&quot;String2&quot;</span>,<span class="string">@&quot;String3&quot;</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">//字符串查询 查询字符串 text 中是否包含字符串 s；</span></span><br><span class="line"><span class="built_in">NSString</span> *text = <span class="string">@&quot;this is a string&quot;</span>;</span><br><span class="line"><span class="built_in">NSString</span> *s = <span class="string">@&quot;is&quot;</span>;</span><br><span class="line"><span class="built_in">NSRange</span> searchResult = [text rangeOfString:s];</span><br><span class="line"><span class="keyword">if</span> (searchResult.location == <span class="built_in">NSNotFound</span>) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Search string was not found&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;location %lu length %lu&quot;</span>,</span><br><span class="line">          searchResult.location,		<span class="comment">//2		???????????? 为什么是 2 ？？？？</span></span><br><span class="line">          searchResult.length);			<span class="comment">//2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 可变 String ???????   使用 setString 对内容进行替换</span></span><br><span class="line"><span class="built_in">NSMutableString</span> *result = [<span class="built_in">NSMutableString</span> stringWithString:<span class="string">@&quot;Mutable String Text&quot;</span>];</span><br><span class="line">[result setString:<span class="string">@&quot;Modified String&quot;</span>];</span><br><span class="line"><span class="built_in">NSRange</span> range = [result rangeOfString:<span class="string">@&quot; String&quot;</span>];</span><br><span class="line"><span class="comment">//删除</span></span><br><span class="line">[result deleteCharactersInRange:range]; <span class="comment">//Modified</span></span><br><span class="line"><span class="comment">//插入</span></span><br><span class="line">[result insertString:<span class="string">@&quot;insert&quot;</span> atIndex:range.location];</span><br><span class="line"><span class="comment">//替换</span></span><br><span class="line">[result stringByReplacingOccurrencesOfString:<span class="string">@&quot;Modified&quot;</span> withString:<span class="string">@&quot;modified&quot;</span>];  <span class="comment">//??????????想实现替换但是这个代码并没有起作用</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//将 NSMutableString 转换成 NSString</span></span><br><span class="line"><span class="built_in">NSString</span> *t = [[result <span class="keyword">copy</span>] autorelease];</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="NSNumber"><a href="#NSNumber" class="headerlink" title="NSNumber"></a>NSNumber</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// NSNumber 常用的数据类型以及使用方法</span></span><br><span class="line"><span class="built_in">NSNumber</span> *aBool = @NO;</span><br><span class="line"><span class="built_in">NSNumber</span> *aChar = @<span class="string">&#x27;z&#x27;</span>;</span><br><span class="line"><span class="built_in">NSNumber</span> *anInt = @<span class="number">2147483647</span>;</span><br><span class="line"><span class="built_in">NSNumber</span> *aUInt = @<span class="number">4294967295</span>U;</span><br><span class="line"><span class="built_in">NSNumber</span> *aLong = @<span class="number">9223372036854775807</span>L;</span><br><span class="line"><span class="built_in">NSNumber</span> *aFloat = @<span class="number">26.99</span>F;</span><br><span class="line"><span class="built_in">NSNumber</span> *aDouble = @<span class="number">26.99</span>;</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;aBool: %@\n aChar: %@\n anInt: %@\n aUInt: %@\n aLong: %@\n aFloat: %@ aDouble: %@&quot;</span>,aBool,aChar,anInt,aUInt,aLong,aFloat,aDouble);</span><br></pre></td></tr></table></figure>
+
+
+
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Objective-c/">#Objective-c</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/07/08/2021-7-8-IOS%E4%B8%AD%E9%A1%B5%E9%9D%A2%E7%9A%84%E8%B7%B3%E8%BD%AC/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">IOS 中页面的跳转</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/05/07/2021-6-27-Android-Studio-Gradle-Proxy-Settings/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Android Studio Gradle 设置代理</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2022&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">yuuki</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+
+
+
+
+
+<div class="post-scripts">
+    
+</div>
+
+
+
+</body>
+</html>

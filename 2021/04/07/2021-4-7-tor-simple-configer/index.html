@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Yuuki的小站">
+    <meta name="author" content="yuuki">
+    
+    <title>
+        
+            tor 的简单配置 |
+        
+        Yuuki的小站
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"hanblog.fun","root":"/","language":"zh-CN"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"https://image.hanblog.fun/images/2022/04/27/4C3184D2-02DF-4942-8888-017A5E2E06BE.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":false,"preload":false},"code_copy":{"enable":false,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="https://image.hanblog.fun/images/2022/04/27/4C3184D2-02DF-4942-8888-017A5E2E06BE.jpg">
+                </a>
+            
+            <a class="logo-title" href="/">
+                Yuuki的小站
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">tor 的简单配置</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://image.hanblog.fun/images/2022/04/27/4C3184D2-02DF-4942-8888-017A5E2E06BE.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">yuuki</span>
+                        
+                            <span class="author-label">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2021-04-07 00:00:00</span>
+        <span class="mobile">2021-04-07 00:00</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Network/">Network</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="Tor-是什么？"><a href="#Tor-是什么？" class="headerlink" title="Tor 是什么？"></a>Tor 是什么？</h3><p>Tor（The Onion Router，洋葱路由器）是实现匿名通信的自由软件。Tor是第二代洋葱路由的一种实现，用户通过Tor可以在因特网上进行匿名交流。<br>而对于爬虫爱好者来说，Tor会隐藏你的真实ip地址，导致被爬网站的网管无法封掉你的ip（当然是在对方觉得精确定位你的ip无价值的情况下）安全是相对的，匿名也是相对的。</p>
+<h3 id="安装-Tor"><a href="#安装-Tor" class="headerlink" title="安装 Tor"></a>安装 Tor</h3><p>如果你用的是 MacOS 并且安装了 Homebrew ，那么你可以通过下面的命令轻松的安装 Tor</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install tor</span><br></pre></td></tr></table></figure>
+
+<p>或者去 <a class="link"   target="_blank" rel="noopener" href="https://www.torproject.org/" >https://www.torproject.org/<i class="fas fa-external-link-alt"></i></a> 寻求其他系统的版本。</p>
+<h3 id="简单配置"><a href="#简单配置" class="headerlink" title="简单配置"></a>简单配置</h3><p>如果你用 Homebrew 安装完成之后，那么你将在<code>/opt/homebrew/etc/tor</code>路径下找到<code>torrc.sample</code>文件，这是一个 Tor 的配置文件模版，我们需要的是删除 <code>.simple</code>后缀，然后在文件中添加以下内容：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">CookieAuthentication <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 代理地址为 127.0.0.1:1087</span></span><br><span class="line"><span class="comment"># HTTPProxy 127.0.0.1:1087</span></span><br><span class="line"><span class="comment"># HTTPSProxy 127.0.0.1:1087</span></span><br><span class="line">Socks5Proxy <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">1086</span></span><br><span class="line"><span class="comment"># 外部程序Tor 的端口</span></span><br><span class="line">SocksPort <span class="number">9050</span></span><br><span class="line"><span class="comment"># 自动切换 ip 的时间</span></span><br><span class="line">MaxCircuitDirtiness <span class="number">10</span> seconds</span><br></pre></td></tr></table></figure>
+
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>你可以直接运行<code>Tor</code>命令启动 Tor</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"># tor</span><br><span class="line">Apr 07 16:21:16.485 [notice] Tor 0.4.5.7 running on Darwin with Libevent 2.1.12-stable, OpenSSL 1.1.1k, Zlib 1.2.11, Liblzma N/A, Libzstd N/A and Unknown N/A as libc.</span><br><span class="line">Apr 07 16:21:16.485 [notice] Tor can&#x27;t help you if you use it wrong! Learn how to be safe at https://www.torproject.org/download/download#warning</span><br><span class="line">Apr 07 16:21:16.486 [notice] Read configuration file &quot;/opt/homebrew/etc/tor/torrc&quot;.</span><br><span class="line">Apr 07 16:21:16.489 [notice] Opening Socks listener on 127.0.0.1:9050</span><br><span class="line">Apr 07 16:21:16.490 [notice] Opened Socks listener connection (ready) on 127.0.0.1:9050</span><br><span class="line">Apr 07 16:21:16.000 [notice] Parsing GEOIP IPv4 file /opt/homebrew/Cellar/tor/0.4.5.7/share/tor/geoip.</span><br><span class="line">Apr 07 16:21:16.000 [notice] Parsing GEOIP IPv6 file /opt/homebrew/Cellar/tor/0.4.5.7/share/tor/geoip6.</span><br><span class="line">Apr 07 16:21:16.000 [notice] Bootstrapped 0% (starting): Starting</span><br><span class="line">Apr 07 16:21:16.000 [notice] Starting with guard context &quot;default&quot;</span><br><span class="line">Apr 07 16:21:17.000 [notice] Bootstrapped 3% (conn_proxy): Connecting to proxy</span><br><span class="line">Apr 07 16:21:17.000 [notice] Bootstrapped 4% (conn_done_proxy): Connected to proxy</span><br><span class="line">Apr 07 16:21:17.000 [notice] Bootstrapped 10% (conn_done): Connected to a relay</span><br><span class="line">Apr 07 16:21:18.000 [notice] Bootstrapped 14% (handshake): Handshaking with a relay</span><br><span class="line">Apr 07 16:21:19.000 [notice] Bootstrapped 15% (handshake_done): Handshake with a relay done</span><br><span class="line">Apr 07 16:21:19.000 [notice] Bootstrapped 75% (enough_dirinfo): Loaded enough directory info to build circuits</span><br><span class="line">Apr 07 16:21:19.000 [notice] Bootstrapped 90% (ap_handshake_done): Handshake finished with a relay to build circuits</span><br><span class="line">Apr 07 16:21:19.000 [notice] Bootstrapped 95% (circuit_create): Establishing a Tor circuit</span><br><span class="line">Apr 07 16:21:20.000 [notice] Bootstrapped 100% (done): Done</span><br></pre></td></tr></table></figure>
+
+<p>MacOS 中你也可以通过<code>brew services start tor</code>来让 Tor 在后台运行。</p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Network/">#Network</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/05/07/2021-6-27-Android-Studio-Gradle-Proxy-Settings/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Android Studio Gradle 设置代理</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/04/05/2021-4-5-sass-error/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Upgrading NodeJS causes Sass compilation error</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2022&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">yuuki</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+
+
+
+
+
+<div class="post-scripts">
+    
+</div>
+
+
+
+</body>
+</html>

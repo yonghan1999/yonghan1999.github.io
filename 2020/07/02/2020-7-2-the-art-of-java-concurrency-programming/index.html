@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Yuuki的小站">
+    <meta name="author" content="yuuki">
+    
+    <title>
+        
+            Java并发编程的艺术读后总结（四） |
+        
+        Yuuki的小站
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"hanblog.fun","root":"/","language":"zh-CN"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"https://image.hanblog.fun/images/2022/04/27/4C3184D2-02DF-4942-8888-017A5E2E06BE.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":false,"preload":false},"code_copy":{"enable":false,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="https://image.hanblog.fun/images/2022/04/27/4C3184D2-02DF-4942-8888-017A5E2E06BE.jpg">
+                </a>
+            
+            <a class="logo-title" href="/">
+                Yuuki的小站
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Java并发编程的艺术读后总结（四）</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://image.hanblog.fun/images/2022/04/27/4C3184D2-02DF-4942-8888-017A5E2E06BE.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">yuuki</span>
+                        
+                            <span class="author-label">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2020-07-02 00:00:00</span>
+        <span class="mobile">2020-07-02 00:00</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="Java-并发编程技术"><a href="#Java-并发编程技术" class="headerlink" title="Java 并发编程技术"></a>Java 并发编程技术</h1><h3 id="线程简介"><a href="#线程简介" class="headerlink" title="线程简介"></a>线程简介</h3><h4 id="什么是线程"><a href="#什么是线程" class="headerlink" title="什么是线程"></a>什么是线程</h4><ul>
+<li><p>进程：现代操作系统运行一个程序时，会为其创建一个进程。（进程可以认为是运行着的程序，活着的程序）。</p>
+</li>
+<li><p>线程：现代操作系统的最新调度单位就是线程，线程也称为轻量级进程（Light Weight Process）。一个进程中可以包含多个线程，这些线程有自己的计数器、堆栈、和局部变量属性，并且能够访问共享的内存变量。</p>
+</li>
+</ul>
+<h4 id="为什么要使用多线程"><a href="#为什么要使用多线程" class="headerlink" title="为什么要使用多线程"></a>为什么要使用多线程</h4><p>使用多线程的原因主要有：</p>
+<ul>
+<li>更多的处理器核心<ul>
+<li>一个线程在同一时刻只能运行在一个处理器上，将逻辑分配到多个核心处理器上更加有效率。</li>
+</ul>
+</li>
+<li>更快的响应时间<ul>
+<li>将数据一致性不强的操作分派给其他线程，使响应用户请求的线程尽快完成，缩短响应时间。</li>
+</ul>
+</li>
+<li><h2 id="更好的编程模型"><a href="#更好的编程模型" class="headerlink" title="更好的编程模型"></a>更好的编程模型</h2></li>
+</ul>
+<h4 id="线程的优先级"><a href="#线程的优先级" class="headerlink" title="线程的优先级"></a>线程的优先级</h4><p>在 Java 线程中， 通过一个整型成员变量 priority 来控制优先级，优先级的范围以 1~10 ，在线程构建的时候可以通过 setPriority(int) 方法来修改优先级，默认优先级是 5，优先级高的线程分配时间片的数量要多于优先级低的线程。</p>
+<blockquote>
+<p>线程的优先级不能作为程序正确性的依赖，因为操作系统可以完全不用理会 Java 线程对于优先级的设定。</p>
+</blockquote>
+<h4 id="线程的状态"><a href="#线程的状态" class="headerlink" title="线程的状态"></a>线程的状态</h4><p>Java 线程在运行的生命周期中可能处于下表所示的 6 种不同的状态，在某一时刻，线程只能处于其中一个状态。</p>
+<p><img src="https://i.loli.net/2020/07/02/Srj4YGLkldW5bKP.png" alt="java线程的状态.png"></p>
+<p><img src="https://i.loli.net/2020/07/02/myu6UdetWCOMSs4.png" alt="Java线程状态变迁.png"></p>
+<h4 id="Daemon-线程"><a href="#Daemon-线程" class="headerlink" title="Daemon 线程"></a>Daemon 线程</h4><p>Daemon线程是一种支持性线程，主要是用在后台程序做一些后台调度与支持性工作。这意味着当JVM中没有非Daemon线程时，JVM将自动退出。</p>
+<p>可以通过调用Thread.setDaemon(true)方法将线程设为Daemon线程。（注：该方法必须在start()或者run()方法前执行，也就是说必须在线程启动前执行）</p>
+<p>Daemon线程被用作，完成支持性工作，但是在java虚拟机退出时，Daemon线程中的finally块并不一定会执行。</p>
+<blockquote>
+<p> 注：在构建Daemon时，不能依靠finally块中的内容来确保执行关闭或清理资源的逻辑。</p>
+</blockquote>
+<h3 id="启动和终止线程"><a href="#启动和终止线程" class="headerlink" title="启动和终止线程"></a>启动和终止线程</h3><h4 id="构造线程"><a href="#构造线程" class="headerlink" title="构造线程"></a>构造线程</h4><p>线程运行前需要先构造一个线程，下面是java.lang.Thread中对线程进行初始化的部分。</p>
+<p>　　<img src="https://i.loli.net/2020/07/02/lYgqbaEsQuhVHG8.png" alt="javaThread.png"></p>
+<p>　　从这里也能看到父线程与子线程的关系：</p>
+<p>　　父线程就是当前线程（开启多线程的线程），子线程会具有与父线程一致的优先级， 守护线程，线程组，还会有父线程的可继承ThreadLocal。还会分配给一个唯一的ID。</p>
+<p>　　init()运行完毕，线程对象就初始化好了，在堆内存中等待运行。</p>
+<h4 id="启动线程"><a href="#启动线程" class="headerlink" title="启动线程"></a>启动线程</h4><p>线程完成初始化后，调用start()方法就可以启动这个线程，线程start()的含义：当前线程同步告知JVM，只要线程规划器空闲，应立即启动调用start()方法的线程。</p>
+<h4 id="理解中断"><a href="#理解中断" class="headerlink" title="理解中断"></a>理解中断</h4><p>中断：一个标识位属性，通过调用线程的interrupt()方法使其进入中断状态。</p>
+<p>线程可以通过检查自身是否被中断来进行响应。</p>
+<p>线程通过方法isInterrupted()来判断是否被中断，也可以调用静态方法Thread.interrupted()对当前线程的中断进行复位。</p>
+<h4 id="过期的-suspend-、resume-和-stop"><a href="#过期的-suspend-、resume-和-stop" class="headerlink" title="过期的 suspend()、resume() 和 stop()"></a>过期的 suspend()、resume() 和 stop()</h4><p>suspend()用于暂停线程、resume()用于恢复线程、stop()用于停止线程，这三个方法都过期了。</p>
+<blockquote>
+<p> 原因：suspend()会导致线程占用资源进入休眠状态，容易导致死锁。stop()不能保证线程资源的正确释放，一旦调用直接结束，可能会导致程序运行在不确定的状态。暂停恢复方法可以用后面的等待&#x2F;通知机制完成。</p>
+</blockquote>
+<h3 id="线程间的通信"><a href="#线程间的通信" class="headerlink" title="线程间的通信"></a>线程间的通信</h3><h4 id="volatile-和-synchronized-关键字"><a href="#volatile-和-synchronized-关键字" class="headerlink" title="volatile 和 synchronized 关键字"></a>volatile 和 synchronized 关键字</h4><p>关键字volatile可以修饰字段（成员变量），就是告知程序，任何对该变量的访问均需要从共享内存中获取，而对它的改变必须同步刷新回共享内存，它能保证所有线程对变量访问的可见性。</p>
+<blockquote>
+<p>注：过多地使用volatile是不必要的，因为它会降低程序执行的效率。（每一个线程都有自己的内存区域，从自己的内存区域对值操作肯定最快的，使用了volatile的话就会对共享内存进行操作，相比之下自然速率就慢了）</p>
+</blockquote>
+<p>关键字synchronized：修饰代码块、方法、静态方法。实质上是对一个对象的监视器（monitor）的获取，而且这个获取过程是排他的，也就是说同一时刻只有一个线程获取由synchronized所保护对象的监视器。任何对象都有自己的监视器，当对象由同步块或者对象的同步方法调用时，执行方法的线程必须先获取对象的监视器才能进入同步块或者同步方法，而没有获取监视器的线程会阻塞在同步块与同步方法的入口，进入BLOCKED状态。</p>
+<p><img src="https://i.loli.net/2020/07/02/8fPlHDgIoC5cUwz.png" alt="img.png"></p>
+<h4 id="等待通知机制"><a href="#等待通知机制" class="headerlink" title="等待通知机制"></a>等待通知机制</h4><p><img src="https://i.loli.net/2020/07/02/yF8mugNbiEnpk1A.png" alt="wait-notify.png"></p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">#并发编程</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2020/07/02/2020-7-2-design-patterns/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">设计模式 -- 工厂模式</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2020/07/01/2020-7-1-design-patterns/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">设计模式简介（一）</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2022&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">yuuki</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+
+
+
+
+
+<div class="post-scripts">
+    
+</div>
+
+
+
+</body>
+</html>

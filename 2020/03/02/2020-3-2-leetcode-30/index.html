@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Yuuki的小站">
+    <meta name="author" content="yuuki">
+    
+    <title>
+        
+            第30题：串联所有单词的子串 |
+        
+        Yuuki的小站
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"hanblog.fun","root":"/","language":"zh-CN"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"https://image.hanblog.fun/images/2022/04/27/4C3184D2-02DF-4942-8888-017A5E2E06BE.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":false,"preload":false},"code_copy":{"enable":false,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="https://image.hanblog.fun/images/2022/04/27/4C3184D2-02DF-4942-8888-017A5E2E06BE.jpg">
+                </a>
+            
+            <a class="logo-title" href="/">
+                Yuuki的小站
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">第30题：串联所有单词的子串</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://image.hanblog.fun/images/2022/04/27/4C3184D2-02DF-4942-8888-017A5E2E06BE.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">yuuki</span>
+                        
+                            <span class="author-label">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2020-03-02 00:00:00</span>
+        <span class="mobile">2020-03-02 00:00</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/LeetCode/">LeetCode</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="解法一"><a href="#解法一" class="headerlink" title="解法一"></a>解法一</h3><p>首先，最直接的思路，判断每个子串是否符合，符合就把下标保存起来，最后返回即可。</p>
+<p><img src="https://i.loli.net/2020/06/27/TwnDrUR8gV3Ozj7.png" alt="1">如上图，利用循环变量 i ，依次后移，判断每个子串是否符合即可。</p>
+<p>怎么判断子串是否符合？这也是这个题的难点了，由于子串包含的单词顺序并不需要固定，如果是两个单词 A，B，我们只需要判断子串是否是 AB 或者 BA 即可。如果是三个单词 A，B，C 也还好，只需要判断子串是否是 ABC，或者 ACB，BAC，BCA，CAB，CBA 就可以了，但如果更多单词呢？那就崩溃了。</p>
+<p>用两个 HashMap 来解决。首先，我们把所有的单词存到 HashMap 里，key 直接存单词，value 存单词出现的个数（因为给出的单词可能会有重复的，所以可能是 1 或 2 或者其他）。然后扫描子串的单词，如果当前扫描的单词在之前的 HashMap 中，就把该单词存到新的 HashMap 中，并判断新的 HashMap 中该单词的 value 是不是大于之前的 HashMap 该单词的 value ，如果大了，就代表该子串不是我们要找的，接着判断下一个子串就可以了。如果不大于，那么我们接着判断下一个单词的情况。子串扫描结束，如果子串的全部单词都符合，那么该子串就是我们找的其中一个。看下具体的例子。</p>
+<p>看下图，我们把 words 存到一个 HashMap 中。</p>
+<p><img src="https://i.loli.net/2020/06/27/ADLQ1xNp8c9Ja2Y.png" alt="2.png"></p>
+<p>然后遍历子串的每个单词。</p>
+<p><img src="https://i.loli.net/2020/06/27/dGcXHF1uYNChRPa.png" alt="3.png"></p>
+<p>第一个单词在 HashMap1 中，然后我们把 foo 存到 HashMap2 中。并且比较此时 foo 的 value 和 HashMap1 中 foo 的 value，1 &lt; 2，所以我们继续扫描。</p>
+<p><img src="https://i.loli.net/2020/06/27/lwKsmrVPFvEhD95.png" alt="4.png"></p>
+<p>第二个单词也在 HashMap1 中，然后把 foo 存到 HashMap2 中，因为之前已经存过了，所以更新它的 value 为 2 ，然后继续比较此时 foo 的 value 和 HashMap1 中 foo 的 value，2 &lt;&#x3D; 2，所以继续扫描下一个单词。</p>
+<p><img src="https://i.loli.net/2020/06/27/JHgpUoxwV6YaDlm.png" alt="5.png"></p>
+<p>第三个单词也在 HashMap1 中，然后把 foo 存到 HashMap2 中，因为之前已经存过了，所以更新它的 value 为 3，然后继续比较此时 foo 的 value 和 HashMap1 中 foo 的 value，3 &gt; 2，所以表明该字符串不符合。然后判断下个子串就好了。</p>
+<p>当然上边的情况都是单词在 HashMap1 中，如果不在的话就更好说了，不在就表明当前子串肯定不符合了，直接判断下个子串就好了。</p>
+<p>看一下代码吧</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title function_">findSubstring</span><span class="params">(String s, String[] words)</span> &#123;</span><br><span class="line">    List&lt;Integer&gt; res = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Integer&gt;();</span><br><span class="line">    <span class="type">int</span> <span class="variable">wordNum</span> <span class="operator">=</span> words.length;</span><br><span class="line">    <span class="keyword">if</span> (wordNum == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> <span class="variable">wordLen</span> <span class="operator">=</span> words[<span class="number">0</span>].length();</span><br><span class="line">    <span class="comment">//HashMap1 存所有单词</span></span><br><span class="line">    HashMap&lt;String, Integer&gt; allWords = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;String, Integer&gt;();</span><br><span class="line">    <span class="keyword">for</span> (String w : words) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">value</span> <span class="operator">=</span> allWords.getOrDefault(w, <span class="number">0</span>);</span><br><span class="line">        allWords.put(w, value + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//遍历所有子串</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; s.length() - wordNum * wordLen + <span class="number">1</span>; i++) &#123;</span><br><span class="line">        <span class="comment">//HashMap2 存当前扫描的字符串含有的单词</span></span><br><span class="line">        HashMap&lt;String, Integer&gt; hasWords = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;String, Integer&gt;();</span><br><span class="line">        <span class="type">int</span> <span class="variable">num</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="comment">//判断该子串是否符合</span></span><br><span class="line">        <span class="keyword">while</span> (num &lt; wordNum) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">word</span> <span class="operator">=</span> s.substring(i + num * wordLen, i + (num + <span class="number">1</span>) * wordLen);</span><br><span class="line">            <span class="comment">//判断该单词在 HashMap1 中</span></span><br><span class="line">            <span class="keyword">if</span> (allWords.containsKey(word)) &#123;</span><br><span class="line">                <span class="type">int</span> <span class="variable">value</span> <span class="operator">=</span> hasWords.getOrDefault(word, <span class="number">0</span>);</span><br><span class="line">                hasWords.put(word, value + <span class="number">1</span>);</span><br><span class="line">                <span class="comment">//判断当前单词的 value 和 HashMap1 中该单词的 value</span></span><br><span class="line">                <span class="keyword">if</span> (hasWords.get(word) &gt; allWords.get(word)) &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            num++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//判断是不是所有的单词都符合条件</span></span><br><span class="line">        <span class="keyword">if</span> (num == wordNum) &#123;</span><br><span class="line">            res.add(i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>时间复杂度：假设 s 的长度是 n，words 里有 m 个单词，那么时间复杂度就是 O（n * m）。</p>
+<p>空间复杂度：两个 HashMap，假设 words 里有 m 个单词，就是 O（m）。</p>
+<h3 id="解法二"><a href="#解法二" class="headerlink" title="解法二"></a>解法二</h3><p>我们在解法一中，每次移动一个字符。</p>
+<p><img src="https://i.loli.net/2020/06/27/TwnDrUR8gV3Ozj7.png" alt="6.png"></p>
+<p>现在为了方便讨论，我们每次移动一个单词的长度，也就是 3 个字符，这样所有的移动被分成了三类。</p>
+<p><img src="https://i.loli.net/2020/06/27/zKYOavTWMGiBlmC.png" alt="7.png"></p>
+<p><img src="https://i.loli.net/2020/06/27/zyAFHO3Kl6PE5TY.png" alt="8.png"></p>
+<p><img src="https://i.loli.net/2020/06/27/una9YTXMlcrtURx.png" alt="9.png"></p>
+<p>以上三类我们以第一类从 0 开始移动为例，讲一下如何对算法进行优化，有三种需要优化的情况。</p>
+<ul>
+<li>情况一：当子串完全匹配，移动到下一个子串的时候。</li>
+</ul>
+<p><img src="https://i.loli.net/2020/06/27/JQwdebpPFKEgkIR.png" alt="10.png"></p>
+<p>在解法一中，对于 i &#x3D; 3 的子串，我们肯定是从第一个 foo 开始判断。但其实前两个 foo 都不用判断了 ，因为在判断上一个 i &#x3D; 0 的子串的时候我们已经判断过了。所以解法一中的 HashMap2 每次并不需要清空从 0 开始，而是可以只移除之前 i &#x3D; 0 子串的第一个单词 bar 即可，然后直接从箭头所指的 foo 开始就可以了。</p>
+<ul>
+<li>情况二：当判断过程中，出现不符合的单词。</li>
+</ul>
+<p><img src="https://i.loli.net/2020/06/27/oRWjZzTeOwpt8Qc.png" alt="11.png"></p>
+<p>但判断 i &#x3D; 0 的子串的时候，出现了 the ，并不在所给的单词中。所以此时 i &#x3D; 3，i &#x3D; 6 的子串，我们其实并不需要判断了。我们直接判断 i &#x3D; 9 的情况就可以了。</p>
+<ul>
+<li>情况三：判断过程中，出现的是符合的单词，但是次数超了。</li>
+</ul>
+<p><img src="https://i.loli.net/2020/06/27/7kOSty1Pqa4dbKY.png" alt="12.png"></p>
+<p>对于 i &#x3D; 0 的子串，此时判断的 bar 其实是在 words 中的，但是之前已经出现了一次 bar，所以 i &#x3D; 0 的子串是不符合要求的。此时我们只需要往后移动窗口，i &#x3D; 3 的子串将 foo 移除，此时子串中一定还是有两个 bar，所以该子串也一定不符合。接着往后移动，当之前的 bar 被移除后，此时 i &#x3D; 6 的子串，就可以接着按正常的方法判断了。</p>
+<p>所以对于出现 i &#x3D; 0 的子串的情况，我们可以直接从 HashMap2 中依次移除单词，当移除了之前次数超的单词的时候，我们就可以正常判断了，直接从移除了超出了次数的单词后，也就是 i &#x3D; 6 开始判断就可以了。</p>
+<p>看一下代码吧。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title function_">findSubstring</span><span class="params">(String s, String[] words)</span> &#123;</span><br><span class="line">    List&lt;Integer&gt; res = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Integer&gt;();</span><br><span class="line">    <span class="type">int</span> <span class="variable">wordNum</span> <span class="operator">=</span> words.length;</span><br><span class="line">    <span class="keyword">if</span> (wordNum == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> <span class="variable">wordLen</span> <span class="operator">=</span> words[<span class="number">0</span>].length();</span><br><span class="line">    HashMap&lt;String, Integer&gt; allWords = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;String, Integer&gt;();</span><br><span class="line">    <span class="keyword">for</span> (String w : words) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">value</span> <span class="operator">=</span> allWords.getOrDefault(w, <span class="number">0</span>);</span><br><span class="line">        allWords.put(w, value + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//将所有移动分成 wordLen 类情况</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; wordLen; j++) &#123;</span><br><span class="line">        HashMap&lt;String, Integer&gt; hasWords = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;String, Integer&gt;();</span><br><span class="line">        <span class="type">int</span> <span class="variable">num</span> <span class="operator">=</span> <span class="number">0</span>; <span class="comment">//记录当前 HashMap2（这里的 hasWords 变量）中有多少个单词</span></span><br><span class="line">		<span class="comment">//每次移动一个单词长度</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> j; i &lt; s.length() - wordNum * wordLen + <span class="number">1</span>; i = i + wordLen) &#123;</span><br><span class="line">            <span class="type">boolean</span> <span class="variable">hasRemoved</span> <span class="operator">=</span> <span class="literal">false</span>; <span class="comment">//防止情况三移除后，情况一继续移除</span></span><br><span class="line">            <span class="keyword">while</span> (num &lt; wordNum) &#123;</span><br><span class="line">                <span class="type">String</span> <span class="variable">word</span> <span class="operator">=</span> s.substring(i + num * wordLen, i + (num + <span class="number">1</span>) * wordLen);</span><br><span class="line">                <span class="keyword">if</span> (allWords.containsKey(word)) &#123;</span><br><span class="line">                    <span class="type">int</span> <span class="variable">value</span> <span class="operator">=</span> hasWords.getOrDefault(word, <span class="number">0</span>);</span><br><span class="line">                    hasWords.put(word, value + <span class="number">1</span>);</span><br><span class="line">                    <span class="comment">//出现情况三，遇到了符合的单词，但是次数超了</span></span><br><span class="line">                    <span class="keyword">if</span> (hasWords.get(word) &gt; allWords.get(word)) &#123;</span><br><span class="line">                        <span class="comment">// hasWords.put(word, value);</span></span><br><span class="line">                        hasRemoved = <span class="literal">true</span>;</span><br><span class="line">                        <span class="type">int</span> <span class="variable">removeNum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">                        <span class="comment">//一直移除单词，直到次数符合了</span></span><br><span class="line">                        <span class="keyword">while</span> (hasWords.get(word) &gt; allWords.get(word)) &#123;</span><br><span class="line">                            <span class="type">String</span> <span class="variable">firstWord</span> <span class="operator">=</span> s.substring(i + removeNum * wordLen, i + (removeNum + <span class="number">1</span>) * wordLen);</span><br><span class="line">                            <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> hasWords.get(firstWord);</span><br><span class="line">                            hasWords.put(firstWord, v - <span class="number">1</span>);</span><br><span class="line">                            removeNum++;</span><br><span class="line">                        &#125;</span><br><span class="line">                        num = num - removeNum + <span class="number">1</span>; <span class="comment">//加 1 是因为我们把当前单词加入到了 HashMap 2 中</span></span><br><span class="line">                        i = i + (removeNum - <span class="number">1</span>) * wordLen; <span class="comment">//这里依旧是考虑到了最外层的 for 循环，看情况二的解释</span></span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                <span class="comment">//出现情况二，遇到了不匹配的单词，直接将 i 移动到该单词的后边（但其实这里</span></span><br><span class="line">                <span class="comment">//只是移动到了出现问题单词的地方，因为最外层有 for 循环， i 还会移动一个单词</span></span><br><span class="line">                <span class="comment">//然后刚好就移动到了单词后边）</span></span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    hasWords.clear();</span><br><span class="line">                    i = i + num * wordLen;</span><br><span class="line">                    num = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                num++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (num == wordNum) &#123;</span><br><span class="line">                res.add(i);</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//出现情况一，子串完全匹配，我们将上一个子串的第一个单词从 HashMap2 中移除</span></span><br><span class="line">            <span class="keyword">if</span> (num &gt; <span class="number">0</span> &amp;&amp; !hasRemoved) &#123;</span><br><span class="line">                <span class="type">String</span> <span class="variable">firstWord</span> <span class="operator">=</span> s.substring(i, i + wordLen);</span><br><span class="line">                <span class="type">int</span> <span class="variable">v</span> <span class="operator">=</span> hasWords.get(firstWord);</span><br><span class="line">                hasWords.put(firstWord, v - <span class="number">1</span>);</span><br><span class="line">                num = num - <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>时间复杂度：算法中外层的两个for 循环的次数肯定是所有的子串，假设是 n。考虑一下，最极端的情况，每个子串的判断都进了 while 循环，wordNum 等于 m。对于解法一，因为每次都是从头判断，所以 while 循环循环了 m 次。但这里我们由于没有清空，所以每次只判断新加入的单词就可以了，只需判断一次，所以时间复杂度是 O（n）。</p>
+<p>或者换一种理解方式，判断子串是否符合，本质上也就是判断每个单词符不符合，假设 s 的长度是 n，那么就会大约有 n 个子串，也就是会有 n 个单词。而对于每个单词，我们只有刚开始判断符不符合的时候访问一次，还有就是把它移除的时候访问一次，所以每个单词最多访问 2 次，所以时间复杂度是 O（n）。</p>
+<p>空间复杂度：没有变化，依旧是两个 HashMap, 假设 words 里有 m 个单词，就是 O（m）。</p>
+<hr>
+<p>作者：windliang<br>链接：<a class="link"   target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/substring-with-concatenation-of-all-words/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by-w-6/" >https://leetcode-cn.com/problems/substring-with-concatenation-of-all-words/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by-w-6/<i class="fas fa-external-link-alt"></i></a><br>来源：力扣（LeetCode）<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/LeetCode/">#LeetCode</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2020/06/22/2020-6-22-redis-data-type/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Redis 数据类型(一)</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2019/10/20/2019-10-20-nodejs/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">NodeJS</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2022&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">yuuki</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+
+
+
+
+
+<div class="post-scripts">
+    
+</div>
+
+
+
+</body>
+</html>
