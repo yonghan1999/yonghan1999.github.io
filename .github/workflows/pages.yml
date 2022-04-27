@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          submodules: recursive
+          submodules: false
       - name: Use Node.js 17.x
         uses: actions/setup-node@v2
         with:
