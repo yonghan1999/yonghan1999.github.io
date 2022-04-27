@@ -4,7 +4,7 @@
 
 # Site
 title: Yuuki
-subtitle: 'Yuukit的小站'
+subtitle: 'Yuuki的小站'
 description: ''
 keywords:
 author: Yong Han
@@ -97,7 +97,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: maupassant
+theme: keep
 # remote_theme: tufu9441/maupassant-hexo
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
