@@ -1,5 +1,8 @@
 ---
+layout: post
 title: Hexo 静态博客搭建笔记
+date: 2022-04-01
+categories: 技术
 tags: Hexo
 ---
 
@@ -7,7 +10,7 @@ tags: Hexo
 
 Jekyll 被我抛弃的一天,Hexo主题和插件真的是太多了，香
 
-
+> 最开始用的是wordpress，后来她也被我抛弃了，不是因为她不够好，而是我们不合适。2333
 
 ### Intro
 
