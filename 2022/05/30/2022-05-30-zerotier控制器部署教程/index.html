@@ -9,7 +9,7 @@
     
     <title>
         
-            zerotier局域网游戏无法搜到游戏房间 |
+            zerotier虚拟局域网联机教程 |
         
         Yuuki的小站
     </title>
@@ -118,7 +118,7 @@
     <div class="article-content-container">
 
         <div class="article-title">
-            <span class="title-hover-animation">zerotier局域网游戏无法搜到游戏房间</span>
+            <span class="title-hover-animation">zerotier虚拟局域网联机教程</span>
         </div>
 
         
@@ -137,8 +137,8 @@
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fas fa-edit"></i>&nbsp;
-        <span class="pc">2022-05-29 00:00:00</span>
-        <span class="mobile">2022-05-29 00:00</span>
+        <span class="pc">2022-05-30 00:00:00</span>
+        <span class="mobile">2022-05-30 00:00</span>
     </span>
     
         <span class="article-categories article-meta-item">
@@ -158,7 +158,7 @@
             <ul>
                 
                     <li>
-                        <a href="/tags/Zerotier/">Zerotier</a>&nbsp;
+                        <a href="/tags/zerotier/">zerotier</a>&nbsp;
                     </li>
                 
             </ul>
@@ -181,16 +181,58 @@
         
 
         <div class="article-content markdown-body">
-            <p>这个解决方案也适用于那些使用虚拟 LAN 的人，你和你的朋友可以相互 ping 通。我只是在描述我和一个朋友在此修复工作的确切情况&#x2F;环境。</p>
-<p>我们被困在朋友1可以 ping 朋友2，朋友2 ping 到朋友1，但在局域网游戏中搜索时无法找到对方。</p>
-<p>做了一些谷歌搜索，发现可能的罪魁祸首是 BL3 在扫描 LAN 游戏时没有查看正确的适配器。例如，它查看的是普通的 Internet 适配器，而不是虚拟网络适配器。</p>
-<p>解决此问题的方法是将虚拟网络适配器设置为更高优先级的选择。</p>
-<p>这是通过进入您的网络适配器并进行以下修改来完成的。</p>
-<p>（查找如何自己访问您的网络适配器） </p>
-<p>在您的 MAIN&#x2F;NORMAL Internet 适配器上，转到属性 -&gt; Internet 协议版本 4 属性 -&gt; 高级。</p>
-<p>关闭自动设置，然后手动将其设置为高于数字 1 的任何值（在我的情况下，我将其设置为 100，我的朋友也是如此）确定更改。</p>
-<p>对你的虚拟网络适配器（在我的例子中，ZeroTier One [nodeid]）做同样的事情，除了将接口指标设置为 1。只要确保它比你的主适配器小。</p>
-<p>在我和一个伙伴做了这些改变之后，我们立刻找到了彼此，终于可以一起玩了🎉。</p>
+            <p>最近和朋友一起玩无主之地3，因为亚洲的服务器对于我们来说延迟太高，导致游戏体验非常差（基本没法玩），刚好我发现游戏支持局域网联机，刚好我有一台闲置的服务器，我就在想有没有可能通过服务器把我们连接到一个虚拟的局域网中呢？首先我想到了 VPN（<strong>virtual private network</strong>），于是我在我的服务器上搭建了openvpn，问题随之而来了，打开 vpn 后所有的流量都通过 openvpn 转发了，而且游戏延迟也非常大。于是我就开始了我的Google之旅，机缘巧合之下我发现了 zerotier ，最终我认为这才是我的梦中情人。</p>
+<p>我是用自托管控制器的方式来使用zerotier，因为我想如果内网穿透不成功的话，通过我的服务器进行流量转发延迟和速度会比用官方提供的服务器快一些。</p>
+<h3 id="控制器部署教程"><a href="#控制器部署教程" class="headerlink" title="控制器部署教程"></a>控制器部署教程</h3><p><strong>安装</strong></p>
+<p>如果你没有在你的服务器上安装zerotier那么你需要先安装它</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s https://install.zerotier.com | sudo bash</span><br></pre></td></tr></table></figure>
+
+<p><strong>TOKEN</strong></p>
+<p>然后我们设置一个环境变量来记住你节点的令牌（如果你不知道什么是环境变量，你可以认为后面所有的命令中的类似<code>$&#123;TOKEN&#125;</code>都会替换成我们现在配置的值）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TOKEN=$(sudo <span class="built_in">cat</span> /var/lib/zerotier-one/authtoken.secret)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>ZeroTier 主目录中的 authtoken.secret 文件是对控制器服务进行 API 调用所必需的，你的 TOKEN 就保存在这里面，如果你想，你可以修改它。</p>
+</blockquote>
+<p><strong>Node ID</strong></p>
+<p>接下来我们要找到服务器上 zerotier 的 Node ID, 因为我们要使用它来找到我们的服务器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># （可能需要 sudo）</span></span><br><span class="line">zerotier-cli info</span><br><span class="line"><span class="comment"># 或者你也可以使用</span></span><br><span class="line">curl <span class="string">&quot;http://localhost:9993/status&quot;</span> -H <span class="string">&quot;X-ZT1-AUTH: <span class="variable">$&#123;TOKEN&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>在输出的内容中有 “Address” 那一行的内容就是你的 Node ID，复制出来然后我们把它存到环境变量里备用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NODEID=你的Node ID</span><br></pre></td></tr></table></figure>
+
+<p>或者如果你觉得上面的太麻烦，你也可以尝试尝试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NODEID=$(zerotier-cli info | <span class="built_in">cut</span> -d <span class="string">&quot; &quot;</span> -f 3)</span><br></pre></td></tr></table></figure>
+
+<p><strong>创建网络</strong></p>
+<p>开始创建我们的虚拟局域网，我们先执行下面的命令来创建一个虚拟局域网。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST <span class="string">&quot;http://localhost:9993/controller/network/<span class="variable">$&#123;NODEID&#125;</span>______&quot;</span> -H <span class="string">&quot;X-ZT1-AUTH: <span class="variable">$&#123;TOKEN&#125;</span>&quot;</span> -d &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行命令后，在输出的内容中你可以找到 NWID，它的值就是我们要找的。让我们把它写进环境变量备用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NWID=你的NWID</span><br></pre></td></tr></table></figure>
+
+<p><strong>邀请小伙伴</strong></p>
+<p>🎉成功执行完成上面这些内容，说明你搭建完成你自己的zerotier控制器了，让你的小伙伴打开zerotier的客户端（如果你还没有下载，去<a class="link"   target="_blank" rel="noopener" href="https://www.zerotier.com/download/%E4%B8%8B%E8%BD%BD%EF%BC%89%EF%BC%8C%E8%BE%93%E5%85%A5%E4%BD%A0%E7%9A%84" >https://www.zerotier.com/download/下载），输入你的<i class="fas fa-external-link-alt"></i></a> Node ID 点击 <code>Join Network</code>就可以成功的加入到你的网络了，同样你也要加入到这个网络，但是现在你们还不能在局域网中找到对方的电脑，让我们继续下一步，为节点授权。</p>
+<p><strong>授权节点</strong></p>
+<p>先把伙伴的 ID 存到环境变量中，方便后面使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MEMID=小伙伴或要授权的ID（就在软件的左上角）</span><br></pre></td></tr></table></figure>
+
+<p>你可以调用接口查看有哪些节点加入到你的虚拟局域网中，这样你就可以确认是否你的小伙伴真的加入到了你的虚拟局域网中。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="string">&quot;http://localhost:9993/controller/network/<span class="variable">$&#123;NWID&#125;</span>/member/<span class="variable">$&#123;MEMID&#125;</span>&quot;</span> -H <span class="string">&quot;X-ZT1-AUTH: <span class="variable">$&#123;TOKEN&#125;</span>&quot;</span> </span><br></pre></td></tr></table></figure>
+
+<p>OK，确认他加入进来了之后，给他的节点授权，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST <span class="string">&quot;http://localhost:9993/controller/network/<span class="variable">$&#123;NWID&#125;</span>/member/<span class="variable">$&#123;MEMID&#125;</span>&quot;</span> -H <span class="string">&quot;X-ZT1-AUTH: <span class="variable">$&#123;TOKEN&#125;</span>&quot;</span> -d <span class="string">&#x27;&#123;&quot;authorized&quot;: true&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>同样我们也需要给自己授权，重新执行上面的3条命令，把MEMID的值换成你自己的ID，给你自己的游戏机（windows）授权。</p>
+<p>至此你已经和小伙伴在同一个虚拟局域网中了。</p>
+<blockquote>
+<p>如果在游戏中不能看到对方，试试FAQ中的第一个解决方案。</p>
+</blockquote>
+<h3 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h3><ol>
+<li><p>我和小伙伴已经可以相互<code>ping</code>通了，但是游戏中的局域网却搜索不到？</p>
+<p>这是因为 BL3 在扫描 LAN 游戏时没有查看正确的适配器。例如，它查看的是普通的 Internet 适配器，而不是虚拟网络适配器。说人话就是虽然你们在一个虚拟局域网中，但是游戏扫描的是 “真实的局域网”，这个时候我们要让它优先扫描虚拟局域网，在我的<a href="https://hanblog.fun/2022/05/29/2022-05-29-zerotier-one/">zerotier局域网游戏无法搜到游戏房间</a>文章中有解决方案</p>
+</li>
+</ol>
 
         </div>
 
@@ -200,7 +242,7 @@
             <ul class="post-tags-box">
                 
                     <li class="tag-item">
-                        <a href="/tags/Zerotier/">#Zerotier</a>&nbsp;
+                        <a href="/tags/zerotier/">#zerotier</a>&nbsp;
                     </li>
                 
             </ul>
@@ -209,29 +251,14 @@
         
             <div class="article-nav">
                 
-                    <div class="article-prev">
-                        <a class="prev"
-                           rel="prev"
-                           href="/2022/05/30/2022-05-30-zerotier%E6%8E%A7%E5%88%B6%E5%99%A8%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/"
-                        >
-                            <span class="left arrow-icon flex-center">
-                              <i class="fas fa-chevron-left"></i>
-                            </span>
-                            <span class="title flex-center">
-                                <span class="post-nav-title-item">zerotier虚拟局域网联机教程</span>
-                                <span class="post-nav-item">上一篇</span>
-                            </span>
-                        </a>
-                    </div>
-                
                 
                     <div class="article-next">
                         <a class="next"
                            rel="next"
-                           href="/2022/05/24/2022-05-24-%E6%B7%B1%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B5%85%E6%8B%B7%E8%B4%9D/"
+                           href="/2022/05/29/2022-05-29-zerotier-one/"
                         >
                             <span class="title flex-center">
-                                <span class="post-nav-title-item">深拷贝和浅拷贝</span>
+                                <span class="post-nav-title-item">zerotier局域网游戏无法搜到游戏房间</span>
                                 <span class="post-nav-item">下一篇</span>
                             </span>
                             <span class="right arrow-icon flex-center">
