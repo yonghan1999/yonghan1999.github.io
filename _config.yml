@@ -248,3 +248,8 @@ css: css
 
 # Theme version
 version: 1.0.0
+search:
+  path: search.json
+  field: post
+  content: true
+  format: striptags
