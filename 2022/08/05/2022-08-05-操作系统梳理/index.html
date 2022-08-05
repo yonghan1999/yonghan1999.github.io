@@ -9,7 +9,7 @@
     
     <title>
         
-            计算机与网络基础知识 |
+            操作系统梳理 |
         
         Yuuki的小站
     </title>
@@ -124,7 +124,7 @@
     <div class="article-content-container">
 
         <div class="article-title">
-            <span class="title-hover-animation">计算机与网络基础知识</span>
+            <span class="title-hover-animation">操作系统梳理</span>
         </div>
 
         
@@ -143,8 +143,8 @@
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fas fa-edit"></i>&nbsp;
-        <span class="pc">2022-08-03 00:00:00</span>
-        <span class="mobile">2022-08-03 00:00</span>
+        <span class="pc">2022-08-05 00:00:00</span>
+        <span class="mobile">2022-08-05 00:00</span>
     </span>
     
         <span class="article-categories article-meta-item">
@@ -187,39 +187,50 @@
         
 
         <div class="article-content markdown-body">
-            <p>操作系统是计算机系统中的核心系统软件，负责管理和控制计算机系统中硬件和软件资源，有效的组织和利用计算机的资源。操作系统的特征：<strong>并发性</strong>、<strong>共享性</strong>、<strong>虚拟性和不确定性</strong>。操作系统的功能：<strong>进程管理、文件管理、存储管理、设备管理和作业管理</strong>。</p>
-<p>经典的操作系统主要分为：1、<strong>批处理操作系统</strong>，其主要特征为用户脱机使用计算机、成批处理、多道程序运行。2、<strong>时分操作系统</strong>，其主要特征为交互性、多用户同时性、独立性。3、<strong>实时操作系统</strong>，其主要特征为提供及时响应和高可靠性。4、网络操作系统，其主要特征为互操作性，写作处理。5、<strong>分布式操作系统</strong>，分布式操作系统要求有个统一的操作系统，实现系统的操作统一性，负责全系统的资源分配和调度，为用户提供统一的界面。</p>
-<p><strong>进程</strong>，操作系统中进程是系统资源分配、调度和管理的<strong>最小单位</strong>。从静态的观点看，进程由程序、数据和进程控制快（PCB）做成；从动态的观点看，进程是计算机状态的一个有序集合。<strong>进程控制快（PCB）</strong>是进程存在的唯一标志，描述了进程的基本情况，其中包括：调度信息和执行信息，PCB的存储方式有：线性方式、链接方式和索引方式。</p>
-<p><strong>进程的状态</strong>，一个进程从创建而产生至销毁而消亡的整个生命周期，可以用一组状态加以刻画。<strong>三态模型</strong>：运行态、就绪态、等待态。<strong>五态模型</strong></p>
-<p><strong>信号量和PV操作</strong>，在操作系统中，进程之间经常会存在互斥（都需要共享独占性的资源时）和同步（完成异步的两个进程协作）两种关系。信号量和PV操作的提出就是为了有效的处理这两种情况。</p>
+            <h4 id="操作系统的类型与结构"><a href="#操作系统的类型与结构" class="headerlink" title="操作系统的类型与结构"></a>操作系统的类型与结构</h4><p>根据使用环境对作业的处理方式，操作系统可以分为<strong>批处理操作系统、分时操作系统、实时操作系统、网络操作系统和分布式操作系统。</strong></p>
+<p>操作系统的结构可以分为<strong>无序结构、层次结构、面向对象结构、对称多处理结构和微内核结构。</strong></p>
 <ol>
-<li>信号量：是一个变量，可以理解为可用资源的数量和等待队列。</li>
-<li>P操作：分配资源给进程，当没有资源分配时，进程进入等待队列。</li>
-<li>V操作：归还资源，如果等待队列中有进程时，唤醒第一个进程。</li>
+<li>无需结构以大型表格和队列为中心，操作系统的各个部分程序围绕着表哥运行，整个系统就是一个程序。</li>
+<li>层次结构是把一个大型复杂的操作系统分解成若干个单向依赖的程次，由多层的正确性保证操作系统的可靠性。</li>
+<li>面向对象结构是基于面向对象程序设计的编程理念，采用了各种不同的对象技术。</li>
+<li>对称多处理结构。如果一个操作系统在系统中的所有处理机运行且共享同一内存这样的系统就是一个对称多处理系统。</li>
+<li>微内核结构是把系统的公共部分抽象出来，形成一个底层的核心，提供最基本的服务，其他功能都以服务的形式建立在微内核之上。</li>
 </ol>
-<p><strong>地址重定位</strong>是指将程序中的虚拟地址（逻辑地址）转换成内存的真实地址（物理地址）的过程。</p>
-<blockquote>
-<p>静态重定位：绝对地址&#x3D;相对地址+程序存放的内存起始地址</p>
-<p>动态重定位：绝对地址&#x3D;重定位寄存器的值（BR）+逻辑地址寄存器</p>
-</blockquote>
-<p><strong>存储管理</strong>的主要目的是解决多个用户使用主存的问题。</p>
+<p>现代操作系统大多拥有两种工作状态：<strong>核心态和用户态</strong>。我们使用的一般程序工作在用户态，而内核模块和基本的操作系统核心工作在核心态。</p>
+<h4 id="处理器管理"><a href="#处理器管理" class="headerlink" title="处理器管理"></a>处理器管理</h4><p>进程是一个程序关于某个数据集的一次运行。进程是程序的一次运行活动，是一个动态的概念，而程序是静态的概念，是指令的集合。进程具有动态性和并发性，程序是进程运行所对应的运行代码，<strong>一个进程对应一个程序，一个程序可以同时对应多个进程</strong>。<strong>在操作系统中进程是进行系统资源分配、调度和管理的最小单位</strong>（注意，现代操作系统中还引入了<strong>线程</strong>这一概念，它是处理器<strong>分配资源的最小单位</strong>）。从静态观点看，进程由程序、数据和进程控制块（PCB）组成；从动态的观点看，进程是计算机状态的一个有序集合。</p>
+<p><strong>PCB是进程存在的唯一标识</strong>，PCB描述了进程的基本情况。其中的内容可以分成为调度信息和执行信息两大部分。</p>
+<p>一个进程从创建而产生至撤销而消亡的整个生命周期，可以用一组状态加以刻画，为了便于管理进程，把进程划分为几种状态，分别由<strong>三态模型和五态模型</strong>。</p>
+<p><a target="_blank" rel="noopener" href="https://image.hanblog.fun/image/FYYA"><img src="https://image.hanblog.fun/images/2022/08/04/2022-08-05-09.53.33.md.png" alt="2022-08-05-09.53.33.md.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://image.hanblog.fun/image/FRkg"><img src="https://image.hanblog.fun/images/2022/08/04/watermarktype_ZmFuZ3poZW5naGVpdGkshadow_10text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ltcmVhbF8size_16color_FFFFFFt_70.md.jpg" alt="watermarktype_ZmFuZ3poZW5naGVpdGkshadow_10text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ltcmVhbF8size_16color_FFFFFFt_70.md.jpg"></a></p>
+<p><strong>信号量和PV操作</strong>，是为了有效的处理进程之间经常会存在互斥和同步两种关系。</p>
+<p><strong>死锁</strong>是指多个进程之间会想等待对方的资源，而在得到对方资源之前又不释放自己的资源，这样，造成了循环等待的一种现象。发生死锁的必要条件有：<strong>互斥条件、请求保持条件、不可剥夺条件、环路条件</strong>。</p>
+<p><strong>银行家算法</strong>就是为了解决死锁，其在分配资源之前先看清楚资源分配之后是否会导致系统死锁。如果会死锁，则不分配，否则就分配。</p>
+<p><strong>解决死锁的策略</strong>主要有：<strong>死锁预防、死锁避免、死锁检测、死锁解除</strong>。</p>
+<h4 id="文件管理"><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h4><p>文件的逻辑组织是为了方便用户的使用，逻辑结构是用户可见的结构。常用的记录式结构有<strong>连续结构、多重结构、转制结构和顺序结构</strong>。</p>
+<p>文件的物理结构是指文件在存储设备上的存储方法，常用的文件物理结构有<strong>连续文件、串联文件和索引文件</strong>。</p>
+<p>由于文件存储设备式分成许多大小相同的物理块，并以块为单位交换信息，因此，文件存储设别的管理，实质上是对空闲块的组织和管理问题，它包括空闲块的组织、空闲块的分配与空闲块的回收等问题。<strong>空闲表法、空闲链法和位图法。</strong></p>
+<h4 id="存储管理"><a href="#存储管理" class="headerlink" title="存储管理"></a>存储管理</h4><p><a target="_blank" rel="noopener" href="https://image.hanblog.fun/image/FdQc"><img src="https://image.hanblog.fun/images/2022/08/04/Screenshot-2022-08-05-110759.png" alt="Screenshot-2022-08-05-110759.png"></a></p>
+<p>在虚拟存储器的管理中，涉及载入（调入）、放置（放入分区）和置换等问题。</p>
 <ol>
-<li>分区管理：把主存的用户去划分成若干的区域，每一个区域分配给一个用户作业使用，并限定他们只能在自己的区域中使用。分划分为：<strong>可重定位分区、可变分区、固定分区</strong>。</li>
-<li>分页存储管理：将一个进程的地址空间划分为若干个大小相等的区域，称为<strong>页</strong>。相应的，将主存空间划分为与页大小相同的若干个物理快，称为<strong>块或页框</strong>。</li>
-<li>分段管理：分段式存储管理系统中，为每个段分撇一个连续的分区，而进程中的各个段可以离散的分配到主存的不同分区中。</li>
-<li>段页式存储：段页式系统的基本原理是先讲整个主存划分成大小相等的存储块（页框），将用户程序按程序逻辑关系氛围若干个段，再将每个段划分为若干个页，以页框为单位离散分配。</li>
-<li>虚拟存储。</li>
+<li>调入策略：即合适将以页或一段从外存中调入内存，通常有两种策略，一种是请求调入法，即需要使用时才调入；另一种是先行调入法，即将预计要使用的页&#x2F;段先行调入内存。</li>
+<li>放置策略：也就是调入喉，放在内存的什么位置，这与内存管理基本是一致的。</li>
+<li>置换策略：由于实际内存是小于虚拟内存的，因此可能会发生内存已满，但需要使用的页不存在内存这一种情况（称缺页中断）。这时就需要进行置换，即将一些内存中的页淘汰到外存，腾出空间给要使用的页，这个过程也称为交换。</li>
 </ol>
-<p><strong>管程和线程</strong>。<strong>线程</strong>是进程的活动成分，是处理器<strong>分配资源的最小单位</strong>。</p>
-<p><strong>死锁</strong>。死锁是指多个进程之间互相等待对方的资源，而在得到对方资源之前又不释放自己的资源，造成循环等待的一种现象。如果一个进程在等待一个不可能发生的事件则进程就死锁了。发生死锁的必要条件有：<strong>互斥条件、请求保持条件、不可剥夺条件、环路条件</strong></p>
-<p><strong>银行家算法</strong>是指在分配资源之前先看清楚分配资源后是否会造成导致系统死锁。如果会死锁，则不分配；否则就分配。</p>
-<ol>
-<li>当一个进程对资源的最大需求量不超过系统中的资源数时，可以接纳该进程。</li>
-<li>进程可以分期请求资源，但请求的总数不能超过最大需求量。</li>
-<li>当系统现有的资源不能满足进程尚需资源数时，对进程的请求可以推迟分配，但总能使进程在有限的时间内得到资源。</li>
-<li>当系统现有的资源能满足进程尚需资源数时，必须测试系统现存的资源数能否满足该进程尚需的最大资源数，若能满足则按当前的申请量分配资源；否则也要推迟分配。</li>
-</ol>
-<h3 id="数据库系统基础知识"><a href="#数据库系统基础知识" class="headerlink" title="数据库系统基础知识"></a>数据库系统基础知识</h3>
+<p>常见的置换算法有：<strong>最有算法、随机算法、先进先出和最近最少使用算法</strong>。</p>
+<p>存储管理策略的基础是 局部性原理，即进程往往会不均匀地高度局部变化地访问内存。局部性分为<strong>时间局部性和空间局部性</strong>。时间局部性是指最近访问的存储位置，很可能在不久的将来还要访问；空间局部性是指存储访问又成组的倾向：当访问某个位置后，很可能也要访问其附近的位置。</p>
+<h4 id="作业管理"><a href="#作业管理" class="headerlink" title="作业管理"></a>作业管理</h4><p>作业调度主要完成从后备状态到执行状态的转变，以及执行状态到完成状态的转变。作业调度算法有：<strong>先来先服务、短作业优先、响应比高者优先和优先级调度</strong>。</p>
+<h4 id="设备管理"><a href="#设备管理" class="headerlink" title="设备管理"></a>设备管理</h4><p>在计算机系统中，除了处理器和内存之外，其他大部分硬件设备称为外部设备。他们主要提供的功能有：<strong>提供和进程管理系统的接口；进行设备分配；实现设备和设备、设备和CPU等之间的并行操作；进行缓冲区管理</strong>。</p>
+<p>在计算机中，输入输出系统可以有 5 种不同的工作方式，分别是程序控制方式、程序中断方式、DMA（Direct Memory Access，直接内存存取）工作方式、通道方式、输入&#x2F;输出处理机。</p>
+<p><strong>磁盘调度算法</strong>，访问磁盘的是时间由3部分构成，它们是寻道（查找数据所在的磁道）时间，等待（旋转等待扇区）时间和数据传输时间，其中寻道时间（查找时间）是决定因素。</p>
+<ul>
+<li>FCFS 算法，也称为FIFO算法。</li>
+<li>SSTF算法，最短寻道时间优先。</li>
+<li>SCAN算法，电梯算法。</li>
+<li>N-SCAN算法，N步SCAN算法。</li>
+<li>C-SCAN算法，循环扫描算法。</li>
+</ul>
+<h4 id="操作系统结构"><a href="#操作系统结构" class="headerlink" title="操作系统结构"></a>操作系统结构</h4><p><a target="_blank" rel="noopener" href="https://image.hanblog.fun/image/Fhwb"><img src="https://image.hanblog.fun/images/2022/08/05/9d4b05855277e2b174b574f6efd2f699.md.png" alt="9d4b05855277e2b174b574f6efd2f699.md.png"></a></p>
+
         </div>
 
         
@@ -237,29 +248,14 @@
         
             <div class="article-nav">
                 
-                    <div class="article-prev">
-                        <a class="prev"
-                           rel="prev"
-                           href="/2022/08/05/2022-08-05-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A2%B3%E7%90%86/"
-                        >
-                            <span class="left arrow-icon flex-center">
-                              <i class="fas fa-chevron-left"></i>
-                            </span>
-                            <span class="title flex-center">
-                                <span class="post-nav-title-item">操作系统梳理</span>
-                                <span class="post-nav-item">上一篇</span>
-                            </span>
-                        </a>
-                    </div>
-                
                 
                     <div class="article-next">
                         <a class="next"
                            rel="next"
-                           href="/2022/05/30/2022-05-30-zerotier%E6%8E%A7%E5%88%B6%E5%99%A8%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/"
+                           href="/2022/08/03/2022-08-03-%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%B8%8E%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%A6%82%E8%A6%81/"
                         >
                             <span class="title flex-center">
-                                <span class="post-nav-title-item">zerotier虚拟局域网联机教程</span>
+                                <span class="post-nav-title-item">计算机与网络基础知识</span>
                                 <span class="post-nav-item">下一篇</span>
                             </span>
                             <span class="right arrow-icon flex-center">
