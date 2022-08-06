@@ -9,7 +9,7 @@
     
     <title>
         
-            标签: 软考 基础 |
+            数据库系统梳理 |
         
         Yuuki的小站
     </title>
@@ -121,56 +121,126 @@
 
                 
                     <div class="fade-in-down-animation">
-    <div class="tag-container">
-        <div class="tag-name"><i class="fas fa-tag"></i>&nbsp;软考 基础
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">数据库系统梳理</span>
         </div>
-        <div class="tag-post-list">
-            
-<div class="archive-list-container">
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://image.hanblog.fun/images/2022/04/27/06cc54c40991403a3f17178a8a09fd9e.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">yuuki</span>
+                        
+                            <span class="author-label">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2022-08-06 00:00:00</span>
+        <span class="mobile">2022-08-06 00:00</span>
+    </span>
     
-        <section class="archive-item">
-            <div class="archive-item-header">
-                <span class="archive-year">2022</span>
-                <span class="archive-year-post-count">[3]</span>
-            </div>
-            <ul class="article-list">
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
                 
-                    <li class="article-item">
-                        <a class="article-title"
-                           href="/2022/08/06/2022-08-06-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E6%A2%B3%E7%90%86/"
-                        >数据库系统梳理</a>
-                        <span class="article-date">08-06</span>
-                    </li>
-                
-                    <li class="article-item">
-                        <a class="article-title"
-                           href="/2022/08/05/2022-08-05-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A2%B3%E7%90%86/"
-                        >操作系统梳理</a>
-                        <span class="article-date">08-05</span>
-                    </li>
-                
-                    <li class="article-item">
-                        <a class="article-title"
-                           href="/2022/08/03/2022-08-03-%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%B8%8E%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%A6%82%E8%A6%81/"
-                        >计算机与网络基础知识</a>
-                        <span class="article-date">08-03</span>
+                    <li>
+                        <a href="/categories/%E8%BD%AF%E8%80%83/">软考</a>&nbsp;
                     </li>
                 
             </ul>
-        </section>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E8%BD%AF%E8%80%83-%E5%9F%BA%E7%A1%80/">软考 基础</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
     
 </div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <p><strong>数据库管理系统的类型：</strong>数据库管理系统的类型通常有多个分类标准。入按数据模型分类、按用户数分类、按数据库分布站点分类等。</p>
+<p>近几年随着NoSQL技术的兴起，也产生了一些新的数据模型。常见的DBMS按数据模型划分，包括：**关系型DBMS、文档型DBMS、键值型DBMS、对象型DBMS等。</p>
+<p>数据库的结构，由ANSI&#x2F;SPARC数据库系统研究组 1975 年提出的<strong>三级划分法</strong>。</p>
+<p><a target="_blank" rel="noopener" href="https://image.hanblog.fun/image/FvMI"><img src="https://image.hanblog.fun/images/2022/08/06/2022-08-06-15.09.55.png" alt="2022-08-06-15.09.55.png"></a></p>
+<p>数据库系统划分为三个抽象级：用户级、概念级、物理级。数据库系统的三级模式为外模式、概念模式、内模式。</p>
+<p>数据库系统两级独立性是指物理独立性和逻辑独立性。三个抽象级通过两级映射进行相互转换，使得数据库的三级形成一个统一的整体。</p>
+<p><strong>数据模型</strong>主要有两大类，分别是概念数据模型和基本数据模型。</p>
+<ul>
+<li>概念数据模型是按照用户的观点来对数据和信息建模，主要用于数据库设计。概念模型主要是实体–联系方法表示，所以也称E-R模型。</li>
+<li>基本数据模型是按照计算机系统的观点来对数据和信息建模，主要用于DBMS的实现。基本数据模型是数据库系统的核心和基础。基本数据模型通常由数据结构、数据操作和完成性约束三部分组成。其中数据结构是对系统静态特性的描述，数据操作是对系统动态特性的描述，完整性约束是一组完整性规则的集合。</li>
+</ul>
+<p>常用的基本数据模型由<strong>层次模型、网状模型、关系模型和面向对象模型</strong>。</p>
+<p><strong>关系代数的基本运算</strong>主要有并、交、差、笛卡尔积、选择、投影、连接和除法运算。</p>
+<blockquote>
+<p>未完待续</p>
+</blockquote>
 
         </div>
-    </div>
 
-    <div class="tag-paginator">
-        <div class="paginator">
-    
+        
 
-    
-</div>
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/%E8%BD%AF%E8%80%83-%E5%9F%BA%E7%A1%80/">#软考 基础</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
 
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2022/08/05/2022-08-05-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A2%B3%E7%90%86/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">操作系统梳理</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
     </div>
 </div>
 
@@ -217,6 +287,19 @@
         </div>
     </div>
 
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
     
 
     <div class="right-bottom-side-tools">
