@@ -190,7 +190,12 @@
             <p> CRC 校验码即<strong>循环冗余校验码</strong>，是数据通信领域中最常用的一种查错校验码，其特征是信息字段和校验字段的长度可以任意选定。循环冗余检查（CRC）是一种数据传输检错功能，对数据进行多项式计算，并将得到的结果附在帧的后面，接收设备也执行类似的算法，以保证数据传输的正确性和完整性。</p>
 <p><strong>CRC校验原理：</strong><br> 其根本思想就是先在要发送的帧后面附加一个数（这个就是用来校验的校验码，但要注意，这里的数也是二进制序列的，下同），生成一个新帧发送给接收端。当然，这个附加的数不是随意的，它要使所生成的新帧能与发送端和接收端共同选定的某个特定数整除（注意，这里不是直接采用二进制除法，而是采用一种称之为“模2除法”）。到达接收端后，再把接收到的新帧除以（同样采用“模2除法”）这个选定的除数。因为在发送端发送数据帧之前就已通过附加一个数，做了“去余”处理（也就已经能整除了），所以结果应该是没有余数。如果有余数，则表明该帧在传输过程中出现了差错。</p>
 <p><strong>CRC校验码计算</strong></p>
-<iframe src="//player.bilibili.com/player.html?aid=63987698&bvid=BV1V4411Z7VA&cid=111098298&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+<iframe src="//player.bilibili.com/player.html?aid=63987698&bvid=BV1V4411Z7VA&cid=111098298&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="
+    width: 800px;
+    height: 450px;
+"> </iframe>
+
+
         </div>
 
         
