@@ -6,7 +6,11 @@ categories: 技术
 tags: LCU 英雄联盟
 ---
 
+> 新版本的国服英雄联盟客户端已经不能连接LCU接口了
+
 除了 LCU REST API，League 客户端架构还使用 websocket 连接将更改从 LCU 本身传送到要显示给你的 UX 流程（例如，你收到的好友请求或聊天消息）。本指南将向你展示如何连接到此 websocket 并请求有关状态更改的通知。这篇文章假定你具备 LCU API 的基本知识。LCU websocket 在这个 websocket 上使用 WAMP 1.0 协议。
+
+> 新版本的国服英雄联盟客户端已经不能连接LCU接口了 -- 2022-10-20更新之后，后续不知道会不会开放。
 
 ## 连接到Websocket
 
