@@ -187,7 +187,13 @@
         
 
         <div class="article-content markdown-body">
-            <p>除了 LCU REST API，League 客户端架构还使用 websocket 连接将更改从 LCU 本身传送到要显示给你的 UX 流程（例如，你收到的好友请求或聊天消息）。本指南将向你展示如何连接到此 websocket 并请求有关状态更改的通知。这篇文章假定你具备 LCU API 的基本知识。LCU websocket 在这个 websocket 上使用 WAMP 1.0 协议。</p>
+            <blockquote>
+<p>新版本的国服英雄联盟客户端已经不能连接LCU接口了</p>
+</blockquote>
+<p>除了 LCU REST API，League 客户端架构还使用 websocket 连接将更改从 LCU 本身传送到要显示给你的 UX 流程（例如，你收到的好友请求或聊天消息）。本指南将向你展示如何连接到此 websocket 并请求有关状态更改的通知。这篇文章假定你具备 LCU API 的基本知识。LCU websocket 在这个 websocket 上使用 WAMP 1.0 协议。</p>
+<blockquote>
+<p>新版本的国服英雄联盟客户端已经不能连接LCU接口了 – 2022-10-20更新之后，后续不知道会不会开放。</p>
+</blockquote>
 <h2 id="连接到Websocket"><a href="#连接到Websocket" class="headerlink" title="连接到Websocket"></a>连接到Websocket</h2><p>有了手中的密码和端口，这应该就像告诉 websocket 客户端&#x2F;库连接到<code>wss://127.0.0.1:12345/</code>。 但要注意的是，你仍然必须像调用 LCU REST API 端点一样在请求Header中传入 authorization 字段。</p>
 <p>如果连接成功，它应该保持打开状态而没有任何响应，如果出现任何问题，你获得的唯一信息是 HTTP 响应代码，但可能无法连接，唯一原因是你没有正确的配置Header。</p>
 <h2 id="与-websocket-通信"><a href="#与-websocket-通信" class="headerlink" title="与 websocket 通信"></a>与 websocket 通信</h2><p>WAMP 1.0 对每条消息都使用 JSON 数组。数组的第一项始终是操作码。<code>5</code>为你订阅一个事件，为<code>6</code>你取消订阅一个事件，并且<code>8</code>是客户端在向你发送事件时将使用的操作码。</p>
