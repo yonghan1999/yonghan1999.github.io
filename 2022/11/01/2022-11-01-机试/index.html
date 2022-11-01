@@ -9,7 +9,7 @@
     
     <title>
         
-            Java面试 |
+            机试 |
         
         Yuuki的小站
     </title>
@@ -124,7 +124,7 @@
     <div class="article-content-container">
 
         <div class="article-title">
-            <span class="title-hover-animation">Java面试</span>
+            <span class="title-hover-animation">机试</span>
         </div>
 
         
@@ -143,8 +143,8 @@
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fas fa-edit"></i>&nbsp;
-        <span class="pc">2022-10-14 00:00:00</span>
-        <span class="mobile">2022-10-14 00:00</span>
+        <span class="pc">2022-11-01 00:00:00</span>
+        <span class="mobile">2022-11-01 00:00</span>
     </span>
     
         <span class="article-categories article-meta-item">
@@ -152,7 +152,7 @@
             <ul>
                 
                     <li>
-                        <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                        <a href="/categories/%E9%9D%A2%E8%AF%95/">面试</a>&nbsp;
                     </li>
                 
             </ul>
@@ -164,7 +164,7 @@
             <ul>
                 
                     <li>
-                        <a href="/tags/Java-%E9%9D%A2%E8%AF%95/">Java 面试</a>&nbsp;
+                        <a href="/tags/%E9%9D%A2%E8%AF%95%E6%9C%BA%E8%AF%95/">面试机试</a>&nbsp;
                     </li>
                 
             </ul>
@@ -187,78 +187,30 @@
         
 
         <div class="article-content markdown-body">
-            <p>工作的时候很多东西是用不到的，这不，等到再面试的时候，本应该掌握的东西有些又被大风吹走了😂，八股文还是得搞一搞。</p>
-<h3 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h3><p>JVM内存模型</p>
-<p>从 JDK 1.8 的时候，方法区（HotSpot 的永久代）被彻底移除了（JDK1.7 就已经开始了），取而代之是元空间，元空间使用的是直接内存。</p>
-<img src="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/java-runtime-data-areas-jdk1.8.png" alt="Java 运行时数据区域（JDK1.8 之后）" style="zoom: 67%;" />
+            <p>不知道可不可以放出来，所以这里就不说明是哪里的题目了，如有侵权，联系我立刻删除（狗头保命）。</p>
+<h3 id="第一题-出租车计费"><a href="#第一题-出租车计费" class="headerlink" title="第一题 出租车计费"></a>第一题 出租车计费</h3><p>程序员小明打了一辆出租车去上班。出于职业敏感，他注意到这辆出租车的计费表有点问题，总是偏大。出租车司机解释说他不喜欢数字4，所以改装了计费表，任何数字位置遇到数字4就直接跳过，其余功能都正常。</p>
+<p>比如：</p>
+<p>​	23再多一块钱就变为25；</p>
+<p>​	39再多一块钱变为50；</p>
+<p>​	399再多一块钱变为500；</p>
+<p>小明识破了司机的伎俩，准备利用自己的学识打败司机的阴谋。给出计费表的表面读数，返回实际产生的费用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">输入描述:</span><br><span class="line">  只有一行，数字N，表示里程表的读数。</span><br><span class="line">  (1&lt;=N&lt;=888888888)。</span><br><span class="line">输出描述:</span><br><span class="line">  一个数字，表示实际产生的费用。以回车结束。</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">示例1：</span><br><span class="line">输入</span><br><span class="line">  5</span><br><span class="line">输出</span><br><span class="line">  4</span><br><span class="line">说明</span><br><span class="line">  5表示计费表的表面读数。</span><br><span class="line">  表示实际产生的费用其实只有4块钱。</span><br><span class="line"></span><br><span class="line">示例2：</span><br><span class="line">输入</span><br><span class="line">  17</span><br><span class="line">输出</span><br><span class="line">  15</span><br><span class="line">说明</span><br><span class="line">  17表示计费表的表面读数。</span><br><span class="line">  15表示实际产生的费用其实只有15块钱。</span><br><span class="line">示例3：</span><br><span class="line">输入</span><br><span class="line">  100</span><br><span class="line">输出</span><br><span class="line">  81</span><br><span class="line">说明：100表示计费表的表面读数，81表示实际产生的费用其实只有81块钱</span><br></pre></td></tr></table></figure>
 
-<p>线程私有</p>
-<p><strong>程序计数器</strong>是一块较小的内存空间，可以看作是当前线程所执行的字节码的行号指示器。字节码解释器工作时通过改变这个计数器的值来选取下一条需要执行的字节码指令，分支、循环、跳转、异常处理、线程恢复等功能都需要依赖这个计数器来完成。</p>
-<p><strong>Java 虚拟机栈</strong>也是线程私有的，它的生命周期和线程相同，随着线程的创建而创建，随着线程的死亡而死亡。栈由一个个栈帧组成，而每个栈帧中都拥有：<strong>局部变量表、操作数栈、动态链接、方法返回地址</strong>。</p>
 <blockquote>
-<p><strong>局部变量表</strong> 主要存放了编译期可知的各种数据类型（boolean、byte、char、short、int、float、long、double）、对象引用（reference 类型，它不同于对象本身，可能是一个指向对象起始地址的引用指针，也可能是指向一个代表对象的句柄或其他与此对象相关的位置）。</p>
-<p><strong>操作数栈</strong> 主要作为方法调用的中转站使用，用于存放方法执行过程中产生的中间计算结果。另外，计算过程中产生的临时变量也会放在操作数栈中。</p>
-<p><strong>动态链接</strong> 主要服务一个方法需要调用其他方法的场景。在 Java 源文件被编译成字节码文件时，所有的变量和方法引用都作为符号引用（Symbilic Reference）保存在 Class 文件的常量池里。当一个方法要调用其他方法，需要将常量池中指向方法的符号引用转化为其在内存地址中的直接引用。动态链接的作用就是为了将符号引用转换为调用方法的直接引用。</p>
+<p>做的时候脑子不会急转弯了。我尝试暴力求解会超时，通过率90%。</p>
 </blockquote>
-<p><strong>本地方法栈</strong>和虚拟机栈所发挥的作用非常相似，区别是： <strong>虚拟机栈为虚拟机执行 Java 方法 （也就是字节码）服务，而本地方法栈则为虚拟机使用到的 Native 方法服务。</strong> 在 HotSpot 虚拟机中和 Java 虚拟机栈合二为一。</p>
-<p>线程共享</p>
-<p><strong>堆</strong>是Java 虚拟机所管理的内存中最大的一块，Java 堆是所有线程共享的一块内存区域，在虚拟机启动时创建。<strong>此内存区域的唯一目的就是存放对象实例，几乎所有的对象实例以及数组都在这里分配内存。</strong></p>
-<hr>
-<h3 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h3><p><strong>volatile</strong></p>
-<p><code>volatile</code> 关键字其实并非是 Java 语言特有的，在 C 语言里也有，它最原始的意义就是禁用 CPU 缓存。如果我们将一个变量使用 <code>volatile</code> 修饰，这就指示 编译器，这个变量是共享且不稳定的，每次使用它都到主存中进行读取。</p>
-<p><code>volatile</code> 关键字能保证数据的可见性，但不能保证数据的原子性。<code>synchronized</code> 关键字两者都能保证。</p>
-<p><strong>在 Java 中，<code>volatile</code> 关键字除了可以保证变量的可见性，还有一个重要的作用就是防止 JVM 的指令重排序。</strong> 如果我们将变量声明为 <strong><code>volatile</code></strong> ，在对这个变量进行读写操作的时候，会通过插入特定的 <strong>内存屏障</strong> 的方式来禁止指令重排序。</p>
-<p><strong>synchronized</strong></p>
-<ul>
-<li><code>synchronized</code> 关键字加到 <code>static</code> 静态方法和 <code>synchronized(class)</code> 代码块上都是是给 Class 类上锁；</li>
-<li><code>synchronized</code> 关键字加到实例方法上是给对象实例上锁；</li>
-<li>尽量不要使用 <code>synchronized(String a)</code> 因为 JVM 中，字符串常量池具有缓存功能。</li>
-</ul>
-<h3 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h3><p><strong>标记-清除法</strong>：效率低，标记清除后会有大量的的碎片。</p>
-<p><strong>标记-复制法</strong>：空间利用率低。</p>
-<p><strong>标记-整理法</strong>：类似标记清除，但会整理也就没有碎片。</p>
-<p><strong>分代收集</strong>：新生代中，每次收集都会有大量对象死去，所以可以选择”标记-复制“算法，只需要付出少量对象的复制成本就可以完成每次垃圾收集。而老年代的对象存活几率是比较高的，而且没有额外的空间对它进行分配担保，所以我们必须选择“标记-清除”或“标记-整理”算法进行垃圾收集。</p>
-<h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><p><strong>数据库优化</strong> </p>
-<p>选取最适用的字段属性、使用连接（JOIN）来代替子查询(Sub-Queries)、使用联合(UNION)来代替手动创建的临时表、事务、锁定表、使用外键、使用索引、优化的查询语句</p>
-<p><strong>数据库设计的步骤</strong></p>
-<ol>
-<li>需求分析 : 分析用户的需求，包括数据、功能和性能需求。</li>
-<li>概念结构设计 : 主要采用 E-R 模型进行设计，包括画 E-R 图。</li>
-<li>逻辑结构设计 : 通过将 E-R 图转换成表，实现从 E-R 模型到关系模型的转换。</li>
-<li>物理结构设计 : 主要是为所设计的数据库选择合适的存储结构和存取路径。</li>
-<li>数据库实施 : 包括编程、测试和试运行</li>
-<li>数据库的运行和维护 : 系统的运行与数据库的日常维护</li>
-</ol>
-<p><strong>数据库事务</strong></p>
-<p>事务是逻辑上的一组操作，要么都执行，要么都不执行。</p>
-<p>事务都有 <strong>ACID</strong> 特性：只有保证了事务的持久性D、原子性A、隔离性I之后，一致性C才能得到保障。</p>
-<p><strong>事务的传播机制</strong></p>
-<p> 多个事务的方法相互调用时Spring提供的7中不同的传播特性，保证事务的正常执行。</p>
-<p><strong>并发事务带来的问题</strong></p>
-<p>脏读，修改丢失，不可重复读，幻读。</p>
-<p><strong>数据库的隔离级别</strong></p>
-<ul>
-<li>READ-UNCOMMITTED(读取未提交) </li>
-<li>READ-COMMITTED(读取已提交)</li>
-<li>REPEATABLE-READ(可重复读)  – 默认隔离级别</li>
-<li>SERIALIZABLE(可串行化)</li>
-</ul>
-<h3 id="Redis-和-RabbitMQ"><a href="#Redis-和-RabbitMQ" class="headerlink" title="Redis 和 RabbitMQ"></a>Redis 和 RabbitMQ</h3><p>Redis 中的数据类型： String（字符串）、List（列表）、Set（集合）、Hash（散列）、Zset（有序集合）、HyperLogLogs（基数统计）、Bitmap （位存储）、Geospatial (地理位置)、Stream（5.0后，可以做消息队列，但消息丢失和堆积问题不好解决）</p>
-<p><strong>Redis 事务</strong>（没有rollback不建议使用）</p>
-<p><strong>MULTI</strong> 命令后可以输入多个命令，Redis 不会立即执行这些命令，而是将它们放到队列，当调用了 EXEC 命令后，再执行所有的命令。</p>
-<p><strong>DISCARD</strong> 命令取消一个事务，它会清空事务队列中保存的所有命令</p>
-<p><strong>WATCH</strong> 命令监听指定的 Key，当调用 EXEC 命令执行事务时，如果一个被 WATCH 命令监视的 Key 被 其他客户端&#x2F;Session 修改的话，整个事务都不会被执行。</p>
-<h3 id="常用的设计模式"><a href="#常用的设计模式" class="headerlink" title="常用的设计模式"></a>常用的设计模式</h3><p>软件设计原则：</p>
-<p><a target="_blank" rel="noopener" href="https://image.hanblog.fun/image/F87s"><img src="https://image.hanblog.fun/images/2022/10/21/image-20221021111832405.md.png" alt="image-20221021111832405.md.png"></a></p>
-<ul>
-<li><strong>工厂设计模式</strong> : Spring 使用工厂模式通过 <code>BeanFactory</code>、<code>ApplicationContext</code> 创建 bean 对象。</li>
-<li><strong>代理设计模式</strong> : Spring AOP 功能的实现。</li>
-<li><strong>单例设计模式</strong> : Spring 中的 Bean 默认都是单例的。</li>
-<li><strong>模板方法模式</strong> : Spring 中 <code>jdbcTemplate</code>、<code>hibernateTemplate</code> 等以 Template 结尾的对数据库操作的类，它们就使用到了模板模式。</li>
-<li><strong>包装器设计模式</strong> : 我们的项目需要连接多个数据库，而且不同的客户在每次访问中根据需要会去访问不同的数据库。这种模式让我们可以根据客户的需求能够动态切换不同的数据源。</li>
-<li><strong>观察者模式:</strong> Spring 事件驱动模型就是观察者模式很经典的一个应用。</li>
-<li><strong>适配器模式</strong> : Spring AOP 的增强或通知(Advice)使用到了适配器模式、spring MVC 中也是用到了适配器模式适配<code>Controller</code>。</li>
-</ul>
+<h3 id="第二题-两数之和绝对值最小"><a href="#第二题-两数之和绝对值最小" class="headerlink" title="第二题 两数之和绝对值最小"></a>第二题 两数之和绝对值最小</h3><p>给定一个随机的整数（可能存在正整数和负整数）数组<code>nums</code>，请你在该数组中找出两个数，其和的绝对值<code>（|nums[x]+nums[y]|）</code>为最小值，并返回这个两个数（按从小到大返回）以及绝对值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">输入描述:</span><br><span class="line">	一个通过空格分割的有序整数序列，最多1000个整数，且整数数值范围是 [-65535, 65535]。</span><br><span class="line">输出描述:</span><br><span class="line">	两数之和和绝对值最小值</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">示例1:</span><br><span class="line">输入</span><br><span class="line">-1 -3 7 5 11 15</span><br><span class="line">输出</span><br><span class="line">-3 5 2</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>🐸跳的方式，暴力可以过。</p>
+</blockquote>
+<h3 id="第三题-仿LISP运算"><a href="#第三题-仿LISP运算" class="headerlink" title="第三题 仿LISP运算"></a>第三题 仿LISP运算</h3><p>LISP语言唯一的语法就是括号要配对。形如 <code>(OP P1 P2 …)</code>，括号内元素由单个空格分割。其中第一个元素<code>OP</code>为操符，后续元素均为其参数，参数个数取决于操作符类型注意：参数 <code>P1, P2</code> 也有可能是另外一个嵌套的 <code>(OP P1 P2 )</code>当前<code>OP</code>类型为<code>add</code>&#x2F;<code>sub</code>&#x2F;<code>mul</code>&#x2F;<code>div</code>(全小写)，分别代表整数的加减乘除法。简单起见，所以<code>OP</code>参数个数为2。</p>
+<p>举例<br>    输入：<code>(mul 3 -7)</code>输出：-21<br>    输入：<code>(add 1 2) </code>输出：3<br>    输入：<code>(sub (mul 2 4) (div 9 3))</code> 输出 ：5<br>    输入：<code>(div 1 0)</code> 输出：error</p>
+<blockquote>
+<p>括号匹配思路解决。</p>
+</blockquote>
+<p>题解做的时候没保存到本地，写文章的时候没有地方测试是否100%正确，所以没贴出来。后面有时间上传到 Github 上（先立一个🚩）。</p>
 
         </div>
 
@@ -268,7 +220,7 @@
             <ul class="post-tags-box">
                 
                     <li class="tag-item">
-                        <a href="/tags/Java-%E9%9D%A2%E8%AF%95/">#Java 面试</a>&nbsp;
+                        <a href="/tags/%E9%9D%A2%E8%AF%95%E6%9C%BA%E8%AF%95/">#面试机试</a>&nbsp;
                     </li>
                 
             </ul>
@@ -280,13 +232,13 @@
                     <div class="article-prev">
                         <a class="prev"
                            rel="prev"
-                           href="/2022/11/01/2022-11-01-%E6%9C%BA%E8%AF%95/"
+                           href="/2022/11/01/2022-11-01-Flutter-console/"
                         >
                             <span class="left arrow-icon flex-center">
                               <i class="fas fa-chevron-left"></i>
                             </span>
                             <span class="title flex-center">
-                                <span class="post-nav-title-item">机试</span>
+                                <span class="post-nav-title-item">Flutter console</span>
                                 <span class="post-nav-item">上一篇</span>
                             </span>
                         </a>
@@ -296,10 +248,10 @@
                     <div class="article-next">
                         <a class="next"
                            rel="next"
-                           href="/2022/09/23/2022-09-23-LCU-websocket-%E5%85%A5%E9%97%A8%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/"
+                           href="/2022/10/14/2022-10-14-interview/"
                         >
                             <span class="title flex-center">
-                                <span class="post-nav-title-item">LCU websocket 入门使用教程</span>
+                                <span class="post-nav-title-item">Java面试</span>
                                 <span class="post-nav-item">下一篇</span>
                             </span>
                             <span class="right arrow-icon flex-center">
