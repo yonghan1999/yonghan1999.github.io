@@ -30,3 +30,8 @@ Jekyll 被我抛弃的一天,Hexo主题和插件真的是太多了，香
 ### 推荐主题
 
 - [hexo-theme-next](https://github.com/theme-next/hexo-theme-next)：应该是最出名的 Hexo 主题
+
+### 国内加速
+
+我目前使用的是[netlify](https://www.netlify.com/)。个人感觉效果不错。
+
