@@ -200,8 +200,8 @@
 <h4 id="处理器管理"><a href="#处理器管理" class="headerlink" title="处理器管理"></a>处理器管理</h4><p>进程是一个程序关于某个数据集的一次运行。进程是程序的一次运行活动，是一个动态的概念，而程序是静态的概念，是指令的集合。进程具有动态性和并发性，程序是进程运行所对应的运行代码，<strong>一个进程对应一个程序，一个程序可以同时对应多个进程</strong>。<strong>在操作系统中进程是进行系统资源分配、调度和管理的最小单位</strong>（注意，现代操作系统中还引入了<strong>线程</strong>这一概念，它是处理器<strong>分配资源的最小单位</strong>）。从静态观点看，进程由程序、数据和进程控制块（PCB）组成；从动态的观点看，进程是计算机状态的一个有序集合。</p>
 <p><strong>PCB是进程存在的唯一标识</strong>，PCB描述了进程的基本情况。其中的内容可以分成为调度信息和执行信息两大部分。</p>
 <p>一个进程从创建而产生至撤销而消亡的整个生命周期，可以用一组状态加以刻画，为了便于管理进程，把进程划分为几种状态，分别由<strong>三态模型和五态模型</strong>。</p>
-<p><a target="_blank" rel="noopener" href="https://image.hanblog.fun/image/FYYA"><img src="https://image.hanblog.fun/images/2022/08/04/2022-08-05-09.53.33.md.png" alt="2022-08-05-09.53.33.md.png"></a></p>
-<p><a target="_blank" rel="noopener" href="https://image.hanblog.fun/image/FRkg"><img src="https://image.hanblog.fun/images/2022/08/04/watermarktype_ZmFuZ3poZW5naGVpdGkshadow_10text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ltcmVhbF8size_16color_FFFFFFt_70.md.jpg" alt="watermarktype_ZmFuZ3poZW5naGVpdGkshadow_10text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ltcmVhbF8size_16color_FFFFFFt_70.md.jpg"></a></p>
+<p><a target="_blank" rel="noopener" href="http://image.hanblog.fun/image/FYYA"><img src="http://image.hanblog.fun/images/2022/08/04/2022-08-05-09.53.33.md.png" alt="2022-08-05-09.53.33.md.png"></a></p>
+<p><a target="_blank" rel="noopener" href="http://image.hanblog.fun/image/FRkg"><img src="http://image.hanblog.fun/images/2022/08/04/watermarktype_ZmFuZ3poZW5naGVpdGkshadow_10text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ltcmVhbF8size_16color_FFFFFFt_70.md.jpg" alt="watermarktype_ZmFuZ3poZW5naGVpdGkshadow_10text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ltcmVhbF8size_16color_FFFFFFt_70.md.jpg"></a></p>
 <p><strong>信号量和PV操作</strong>，是为了有效的处理进程之间经常会存在互斥和同步两种关系。</p>
 <p><strong>死锁</strong>是指多个进程之间会想等待对方的资源，而在得到对方资源之前又不释放自己的资源，这样，造成了循环等待的一种现象。发生死锁的必要条件有：<strong>互斥条件、请求保持条件、不可剥夺条件、环路条件</strong>。</p>
 <p><strong>银行家算法</strong>就是为了解决死锁，其在分配资源之前先看清楚资源分配之后是否会导致系统死锁。如果会死锁，则不分配，否则就分配。</p>
@@ -209,7 +209,7 @@
 <h4 id="文件管理"><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h4><p>文件的逻辑组织是为了方便用户的使用，逻辑结构是用户可见的结构。常用的记录式结构有<strong>连续结构、多重结构、转制结构和顺序结构</strong>。</p>
 <p>文件的物理结构是指文件在存储设备上的存储方法，常用的文件物理结构有<strong>连续文件、串联文件和索引文件</strong>。</p>
 <p>由于文件存储设备式分成许多大小相同的物理块，并以块为单位交换信息，因此，文件存储设别的管理，实质上是对空闲块的组织和管理问题，它包括空闲块的组织、空闲块的分配与空闲块的回收等问题。<strong>空闲表法、空闲链法和位图法。</strong></p>
-<h4 id="存储管理"><a href="#存储管理" class="headerlink" title="存储管理"></a>存储管理</h4><p><a target="_blank" rel="noopener" href="https://image.hanblog.fun/image/FdQc"><img src="https://image.hanblog.fun/images/2022/08/04/Screenshot-2022-08-05-110759.png" alt="Screenshot-2022-08-05-110759.png"></a></p>
+<h4 id="存储管理"><a href="#存储管理" class="headerlink" title="存储管理"></a>存储管理</h4><p><a target="_blank" rel="noopener" href="http://image.hanblog.fun/image/FdQc"><img src="http://image.hanblog.fun/images/2022/08/04/Screenshot-2022-08-05-110759.png" alt="Screenshot-2022-08-05-110759.png"></a></p>
 <p>在虚拟存储器的管理中，涉及载入（调入）、放置（放入分区）和置换等问题。</p>
 <ol>
 <li>调入策略：即合适将以页或一段从外存中调入内存，通常有两种策略，一种是请求调入法，即需要使用时才调入；另一种是先行调入法，即将预计要使用的页&#x2F;段先行调入内存。</li>
@@ -229,7 +229,7 @@
 <li>N-SCAN算法，N步SCAN算法。</li>
 <li>C-SCAN算法，循环扫描算法。</li>
 </ul>
-<h4 id="操作系统结构"><a href="#操作系统结构" class="headerlink" title="操作系统结构"></a>操作系统结构</h4><p><a target="_blank" rel="noopener" href="https://image.hanblog.fun/image/Fhwb"><img src="https://image.hanblog.fun/images/2022/08/05/9d4b05855277e2b174b574f6efd2f699.md.png" alt="9d4b05855277e2b174b574f6efd2f699.md.png"></a></p>
+<h4 id="操作系统结构"><a href="#操作系统结构" class="headerlink" title="操作系统结构"></a>操作系统结构</h4><p><a target="_blank" rel="noopener" href="http://image.hanblog.fun/image/Fhwb"><img src="http://image.hanblog.fun/images/2022/08/05/9d4b05855277e2b174b574f6efd2f699.md.png" alt="9d4b05855277e2b174b574f6efd2f699.md.png"></a></p>
 
         </div>
 
