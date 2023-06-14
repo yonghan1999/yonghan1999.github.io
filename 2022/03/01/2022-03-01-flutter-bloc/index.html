@@ -189,7 +189,7 @@
         <div class="article-content markdown-body">
             <p>最近在又又又开始重构我的Flutter项目😇，继上次堆代码把功能实现了然后代码越写越复杂耦合越来越严重💀，于是我决定短痛，推了重写（这次我一定设计（chao）一个好的架构并维护好它💪）。先从业务逻辑和UI组件的结偶下手，决定用这个👉BLoC (<strong>B</strong>usiness <strong>L</strong>ogic <strong>C</strong>omponents) 模式，BLoC的哲学就是app里的所有东西都应该被认为是事件流：一部分组件订阅事件，另一部分组件则响应事件。BLoC居中管理这些会话。Dart甚至把流（Stream）内置到了语言本身里。这个模式最好的地方就是你不需要引入任何的插件，也不需要学习其他的语法。所有需要的内容Flutter都有提供。</p>
 <p>PS：学起来有点难 😭。　</p>
-<p><a target="_blank" rel="noopener" href="http://image.hanblog.fun/image/1G1"><img src="http://image.hanblog.fun/images/2022/03/01/streams_bloc.png" alt="streams_bloc.png"></a></p>
+<p><img src="http://image.hanblog.fun/images/2022/03/01/streams_bloc.png" alt="streams_bloc.png"></p>
 <ul>
 <li><em>小部件通过Sinks</em>向 BLoC发送<em>事件</em>。</li>
 <li>BLoC 通过<em>流</em>通知小部件。</li>
@@ -202,8 +202,10 @@
 <li>现在测试业务逻辑要容易得多。</li>
 </ul>
 <p>同时现在也已经有非常受欢迎的Flutter_bloc来支持你实现这个模式：</p>
-<p><a target="_blank" rel="noopener" href="http://image.hanblog.fun/image/S7V"><img src="http://image.hanblog.fun/images/2022/02/27/bloc_architecture_full.png" alt="bloc_architecture_full.png" style="zoom:67%;" /></a></p>
-<p><a target="_blank" rel="noopener" href="http://image.hanblog.fun/image/aze"><img src="http://image.hanblog.fun/images/2022/02/27/bloc_flow.png" alt="bloc_flow.png" style="zoom:67%;" /></a></p>
+<img src="http://image.hanblog.fun/images/2022/02/27/bloc_architecture_full.png" alt="bloc_architecture_full.png" style="zoom:67%;" />
+
+<img src="http://image.hanblog.fun/images/2022/02/27/bloc_flow.png" alt="bloc_flow.png" style="zoom:67%;" />
+
 <p><a class="link"   target="_blank" rel="noopener" href="https://bloclibrary.dev/#/gettingstarted" >文档在这里<i class="fas fa-external-link-alt"></i></a></p>
 
         </div>
