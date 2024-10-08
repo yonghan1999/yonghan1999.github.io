@@ -158,7 +158,7 @@ utterances: ## See: https://utteranc.es
   theme: github-light ## Choose an Utterances theme which matches your blog.
 twikoo: ## See: https://twikoo.js.org
   enable: true ## If you want to use twikoo comment system, please set the value to true.
-  envId: https://comment.hanblog.fun## Tencent CloudBase envId
+  envId: https://comment.hanblog.fun ## Tencent CloudBase envId
 ##  region: ## Tencent CloudBase region, e.g. ap-shanghai
 ##  path: ## Article path, e.g. window.location.pathname
 
