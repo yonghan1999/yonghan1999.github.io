@@ -9,7 +9,7 @@
     
     <title>
         
-            Hexo Keep主题，如何置顶文章 |
+            标签: 修理 |
         
         Yuuki的经验总结
     </title>
@@ -121,187 +121,42 @@
 
                 
                     <div class="fade-in-down-animation">
-    <div class="article-content-container">
-
-        <div class="article-title">
-            <span class="title-hover-animation">Hexo Keep主题，如何置顶文章</span>
+    <div class="tag-container">
+        <div class="tag-name"><i class="fas fa-tag"></i>&nbsp;修理
         </div>
-
-        
-            <div class="article-header">
-                <div class="avatar">
-                    <img src="https://image.hanblog.fun/images/2022/04/27/06cc54c40991403a3f17178a8a09fd9e.jpg">
-                </div>
-                <div class="info">
-                    <div class="author">
-                        <span class="name">yuuki</span>
-                        
-                            <span class="author-label">Lv5</span>
-                        
-                    </div>
-                    <div class="meta-info">
-                        <div class="article-meta-info">
-    <span class="article-date article-meta-item">
-        <i class="fas fa-edit"></i>&nbsp;
-        <span class="pc">2023-03-07 00:00:00</span>
-        <span class="mobile">2023-03-07 00:00</span>
-    </span>
-    
-        <span class="article-categories article-meta-item">
-            <i class="fas fa-folder"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
-    
-    
-        <span class="article-tags article-meta-item">
-            <i class="fas fa-tags"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/tags/Hexo/">Hexo</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
-    
-
-    
-    
-    
-    
-        <span class="article-pv article-meta-item">
-            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
-        </span>
-    
-</div>
-
-                    </div>
-                </div>
-            </div>
-        
-
-        <div class="article-content markdown-body">
-            <ol>
-<li><p>需要主题支持<br> 我用的是：<a class="link"   target="_blank" rel="noopener" href="https://github.com/XPoet/hexo-theme-keep" >keep<i class="fas fa-external-link-alt"></i></a></p>
-</li>
-<li><p>设置置顶，给需要置顶的文章加入sticky参数，如下：</p>
-</li>
-</ol>
-  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">layout: post</span><br><span class="line">title: Hexo如何置顶文章</span><br><span class="line">date: 2023-03-07</span><br><span class="line">sticky: 1</span><br><span class="line">categories: 技术</span><br><span class="line">tags: Hexo</span><br></pre></td></tr></table></figure>
-
-<p>   sticky 是否需要将此文章置顶，不需要置顶的文章可以不写这个属性，Hexo将文章按照sticky的值倒叙排列确定文章置顶的时候顺序，即值越大，越排在前面</p>
-<p>  其他的参数：</p>
-<ul>
-<li>title 文章标题，在博客页面上展示文章的时候，会把title属性的内容当成文章标题，而不是md文档实际的名称</li>
-<li>date 文章发布时间</li>
-<li>tags 文章标签</li>
-<li>categories 文章目录，这个很关键，以上面的内容为例，<code>[java,spring,ioc]</code>表示属于java目录下的spring目录下的ioc，如果当然，在<code>[]</code>中，你也可以只写一个目录名。同时，一篇文章还可以属于多个（多级）目录，[参考Hexo官方文档](<a class="link"   target="_blank" rel="noopener" href="https://hexo.io/docs/front-matter#Categories-amp-Tags" >Front-matter | Hexo<i class="fas fa-external-link-alt"></i></a>)。</li>
-</ul>
-<h3 id="在下面记录一些自己的缺点"><a href="#在下面记录一些自己的缺点" class="headerlink" title="在下面记录一些自己的缺点"></a>在下面记录一些自己的缺点</h3><ul>
-<li>文章写的太散了，以后要整理归档成体系。</li>
-</ul>
-
-        </div>
-
-        
-
-        
-            <ul class="post-tags-box">
-                
-                    <li class="tag-item">
-                        <a href="/tags/Hexo/">#Hexo</a>&nbsp;
-                    </li>
-                
-            </ul>
-        
-
-        
-            <div class="article-nav">
-                
-                    <div class="article-prev">
-                        <a class="prev"
-                           rel="prev"
-                           href="/2024/11/11/202411-11-%E9%BC%A0%E6%A0%87%E5%BE%AE%E5%8A%A8%E6%8B%A8%E7%89%87%E6%B0%A7%E5%8C%96%E4%BF%AE%E5%A4%8D/"
-                        >
-                            <span class="left arrow-icon flex-center">
-                              <i class="fas fa-chevron-left"></i>
-                            </span>
-                            <span class="title flex-center">
-                                <span class="post-nav-title-item">鼠标双击问题（微动拨片氧化）</span>
-                                <span class="post-nav-item">上一篇</span>
-                            </span>
-                        </a>
-                    </div>
-                
-                
-                    <div class="article-next">
-                        <a class="next"
-                           rel="next"
-                           href="/2023/02/25/2023-02-25-%E9%A5%A5%E8%8D%92%E4%B8%93%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BA/"
-                        >
-                            <span class="title flex-center">
-                                <span class="post-nav-title-item">饥荒专用服务器搭建</span>
-                                <span class="post-nav-item">下一篇</span>
-                            </span>
-                            <span class="right arrow-icon flex-center">
-                              <i class="fas fa-chevron-right"></i>
-                            </span>
-                        </a>
-                    </div>
-                
-            </div>
-        
-
-        
-            <div class="comment-container">
-                <div class="comments-container">
-    <div id="comment-anchor"></div>
-    <div class="comment-area-title">
-        <i class="fas fa-comments">&nbsp;评论</i>
-    </div>
-    
-
-        
+        <div class="tag-post-list">
             
-    <div class="twikoo-container">
-        <script 
-                src="//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js"
-        ></script>
-        <div id="twikoo-comment"></div>
-        <script >
-            function loadTwikoo() {
-                twikoo.init({
-                    el: '#twikoo-comment',
-                    envId: 'https://comment.hanblog.fun',
-                    region: '',
-                });
-            }
-
-            if ('false') {
-                const loadTwikooTimeout = setTimeout(() => {
-                    loadTwikoo();
-                    clearTimeout(loadTwikooTimeout);
-                }, 1000);
-            } else {
-                window.addEventListener('DOMContentLoaded', loadTwikoo);
-            }
-        </script>
-    </div>
-
-
-
-        
+<div class="archive-list-container">
+    
+        <section class="archive-item">
+            <div class="archive-item-header">
+                <span class="archive-year">2024</span>
+                <span class="archive-year-post-count">[1]</span>
+            </div>
+            <ul class="article-list">
+                
+                    <li class="article-item">
+                        <a class="article-title"
+                           href="/2024/11/11/202411-11-%E9%BC%A0%E6%A0%87%E5%BE%AE%E5%8A%A8%E6%8B%A8%E7%89%87%E6%B0%A7%E5%8C%96%E4%BF%AE%E5%A4%8D/"
+                        >鼠标双击问题（微动拨片氧化）</a>
+                        <span class="article-date">11-11</span>
+                    </li>
+                
+            </ul>
+        </section>
     
 </div>
 
-            </div>
-        
+        </div>
+    </div>
+
+    <div class="tag-paginator">
+        <div class="paginator">
+    
+
+    
+</div>
+
     </div>
 </div>
 
@@ -349,23 +204,6 @@
         </div>
     </div>
 
-    
-        <div class="post-tools">
-            <div class="post-tools-container">
-    <ul class="tools-list">
-        <!-- TOC aside toggle -->
-        
-
-        <!-- go comment -->
-        
-            <li class="go-comment">
-                <i class="fas fa-comment"></i>
-            </li>
-        
-    </ul>
-</div>
-
-        </div>
     
 
     <div class="right-bottom-side-tools">
