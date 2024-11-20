@@ -14,7 +14,7 @@ tags: 工具 Typora Chevereto
 
 ![QQ截图20220618085235](https://image.hanblog.fun/images/2024/11/20/3c9d7560e9812bb9c7d204073ccd41a6.png)
 
-使用`pf`工具（工具链接：https://github.com/yonghan1999/picture_fly/releases/latest），下载自己所需环境的包。并将工具配置到PATH环境变量下。
+使用`pf`工具（工具链接：[https://github.com/yonghan1999/picture_fly/releases/latest](https://github.com/yonghan1999/picture_fly/releases/latest)），下载自己所需环境的包。并将工具配置到PATH环境变量下。
 
 ~~~bash
 # 命令介绍
