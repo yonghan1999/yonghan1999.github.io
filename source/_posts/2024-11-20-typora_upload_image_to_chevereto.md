@@ -16,6 +16,28 @@ tags: 工具 Typora Chevereto
 
 使用`pf`工具（工具链接：https://github.com/yonghan1999/picture_fly/releases/latest），下载自己所需环境的包。并将工具配置到PATH环境变量下。
 
+~~~bash
+# 命令介绍
+$ pf.exe --help
+
+A simple chevereto image upload tool.
+
+Usage: pf.exe [OPTIONS] <KEY> <URL> [FILES]...
+
+Arguments:
+  <KEY>       chevereto api key
+  <URL>       your chevereto upload url e.g. https://images.hanblog.fun/api/1/upload/
+  [FILES]...  image file path. e.g. https://image.hanblog.fun/images/2024/11/20/test.jpg OR local file path
+
+Options:
+  -f, --force
+  -p, --print
+  -h, --help     Print help
+  -V, --version  Print version
+~~~
+
+接下来我们打开Typora的设置配置上传图像。
+
 ![image-20241120211111325](https://image.hanblog.fun/images/2024/11/20/image-20241120211111325.png)
 
 命令的地方填写`pf <KEY> <URL>`，这里的`<Key>`就是前面我们赋值出来的`API v1 密钥`，`<URL>`填写图片的上传地址Chevereto一般是` https://${domain}/api/1/upload/`，例如我的是` https://image.hanblog.fun/api/1/upload/`。
