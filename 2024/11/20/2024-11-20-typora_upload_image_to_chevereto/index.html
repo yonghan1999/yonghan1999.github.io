@@ -9,7 +9,7 @@
     
     <title>
         
-            python-auto-dependencies |
+            Typora自动上传图片到Chevereto |
         
         Yuuki的经验总结
     </title>
@@ -124,7 +124,7 @@
     <div class="article-content-container">
 
         <div class="article-title">
-            <span class="title-hover-animation">python-auto-dependencies</span>
+            <span class="title-hover-animation">Typora自动上传图片到Chevereto</span>
         </div>
 
         
@@ -143,8 +143,8 @@
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fas fa-edit"></i>&nbsp;
-        <span class="pc">2021-01-08 00:00:00</span>
-        <span class="mobile">2021-01-08 00:00</span>
+        <span class="pc">2024-11-20 00:00:00</span>
+        <span class="mobile">2024-11-20 00:00</span>
     </span>
     
         <span class="article-categories article-meta-item">
@@ -152,7 +152,7 @@
             <ul>
                 
                     <li>
-                        <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                        <a href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>&nbsp;
                     </li>
                 
             </ul>
@@ -164,7 +164,7 @@
             <ul>
                 
                     <li>
-                        <a href="/tags/python/">python</a>&nbsp;
+                        <a href="/tags/%E5%B7%A5%E5%85%B7-Typora-Chevereto/">工具 Typora Chevereto</a>&nbsp;
                     </li>
                 
             </ul>
@@ -187,16 +187,16 @@
         
 
         <div class="article-content markdown-body">
-            <p>Python 自动生成当前项目依赖包文件</p>
-<p>方法一</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cd 到项目路径下，执行以下命令</span></span><br><span class="line">pip freeze &gt; requirements.txt</span><br></pre></td></tr></table></figure>
+            <p>登录chevereto服务器，<code>右上角账号 -- 仪表盘 -- 设置 -- API</code></p>
+<p><img src="https://image.hanblog.fun/images/2024/11/20/3a71e2dec4f2c263db58cda6d2dcecc2.png" alt="image-20220618085157380"></p>
+<p>复制一下这里的<code>API v1 密钥</code></p>
+<p><img src="https://image.hanblog.fun/images/2024/11/20/3c9d7560e9812bb9c7d204073ccd41a6.png" alt="QQ截图20220618085235"></p>
+<p>使用<code>pf</code>工具（工具链接：<a class="link"   target="_blank" rel="noopener" href="https://github.com/yonghan1999/picture_fly/releases/latest%EF%BC%89%EF%BC%8C%E4%B8%8B%E8%BD%BD%E8%87%AA%E5%B7%B1%E6%89%80%E9%9C%80%E7%8E%AF%E5%A2%83%E7%9A%84%E5%8C%85%E3%80%82%E5%B9%B6%E5%B0%86%E5%B7%A5%E5%85%B7%E9%85%8D%E7%BD%AE%E5%88%B0PATH%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E4%B8%8B%E3%80%82" >https://github.com/yonghan1999/picture_fly/releases/latest），下载自己所需环境的包。并将工具配置到PATH环境变量下。<i class="fas fa-external-link-alt"></i></a></p>
+<p><img src="https://image.hanblog.fun/images/2024/11/20/image-20241120211111325.png" alt="image-20241120211111325"></p>
+<p>命令的地方填写<code>pf &lt;KEY&gt; &lt;URL&gt;</code>，这里的<code>&lt;Key&gt;</code>就是前面我们赋值出来的<code>API v1 密钥</code>，<code>&lt;URL&gt;</code>填写图片的上传地址Chevereto一般是<code> https://$&#123;domain&#125;/api/1/upload/</code>，例如我的是<code> https://image.hanblog.fun/api/1/upload/</code>。</p>
+<p>例如我的命令就是<code>pf thisismyapikey https://image.hanblog.fun/api/1/upload/ </code>。然后我们点击<code>验证图片上传选项</code>按钮检测是否能个正确上传图片。</p>
+<p><img src="https://image.hanblog.fun/images/2024/11/20/image-20241120211905801.png" alt="image-20241120211905801"></p>
 
-<p>方法二</p>
-<p>使用工具 pipreqs</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1 安装 pipreqs</span></span><br><span class="line">pip install pipreqs</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2 cd 到项目路径下，执行以下命令</span></span><br><span class="line">pipreqs ./</span><br></pre></td></tr></table></figure>
-
-<p>使用 requests.txt 自动安装所有依赖包</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install -r requirements.txt</span><br></pre></td></tr></table></figure>
         </div>
 
         
@@ -205,7 +205,7 @@
             <ul class="post-tags-box">
                 
                     <li class="tag-item">
-                        <a href="/tags/python/">#python</a>&nbsp;
+                        <a href="/tags/%E5%B7%A5%E5%85%B7-Typora-Chevereto/">#工具 Typora Chevereto</a>&nbsp;
                     </li>
                 
             </ul>
@@ -214,29 +214,14 @@
         
             <div class="article-nav">
                 
-                    <div class="article-prev">
-                        <a class="prev"
-                           rel="prev"
-                           href="/2021/04/01/2021-4-1-%E4%B8%80%E4%B8%AA%E9%80%9A%E7%94%A8%E7%9A%84-.gitignore/"
-                        >
-                            <span class="left arrow-icon flex-center">
-                              <i class="fas fa-chevron-left"></i>
-                            </span>
-                            <span class="title flex-center">
-                                <span class="post-nav-title-item">一个通用的 .gitignore</span>
-                                <span class="post-nav-item">上一篇</span>
-                            </span>
-                        </a>
-                    </div>
-                
                 
                     <div class="article-next">
                         <a class="next"
                            rel="next"
-                           href="/2021/01/08/2021-1-8-python-auto-dependencies/"
+                           href="/2024/11/11/2024-11-11-%E9%BC%A0%E6%A0%87%E5%BE%AE%E5%8A%A8%E6%8B%A8%E7%89%87%E6%B0%A7%E5%8C%96%E4%BF%AE%E5%A4%8D/"
                         >
                             <span class="title flex-center">
-                                <span class="post-nav-title-item">python-auto-dependencies</span>
+                                <span class="post-nav-title-item">鼠标双击问题（微动拨片氧化）</span>
                                 <span class="post-nav-item">下一篇</span>
                             </span>
                             <span class="right arrow-icon flex-center">
