@@ -9,7 +9,7 @@
     
     <title>
         
-            多线程 |
+            Nat类型 |
         
         Yuuki的小站
     </title>
@@ -124,7 +124,7 @@
     <div class="article-content-container">
 
         <div class="article-title">
-            <span class="title-hover-animation">多线程</span>
+            <span class="title-hover-animation">Nat类型</span>
         </div>
 
         
@@ -143,8 +143,8 @@
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fas fa-edit"></i>&nbsp;
-        <span class="pc">2020-07-14 00:00:00</span>
-        <span class="mobile">2020-07-14 00:00</span>
+        <span class="pc">2024-11-27 00:00:00</span>
+        <span class="mobile">2024-11-27 00:00</span>
     </span>
     
         <span class="article-categories article-meta-item">
@@ -164,7 +164,7 @@
             <ul>
                 
                     <li>
-                        <a href="/tags/LeetCode/">LeetCode</a>&nbsp;
+                        <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-NAT/">计算机网络 NAT</a>&nbsp;
                     </li>
                 
             </ul>
@@ -187,32 +187,157 @@
         
 
         <div class="article-content markdown-body">
-            <h4 id="1114-按序打印"><a href="#1114-按序打印" class="headerlink" title="1114. 按序打印"></a><a class="link"   target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/print-in-order/" >1114. 按序打印<i class="fas fa-external-link-alt"></i></a></h4><p>我们提供了一个类：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public class Foo &#123;</span><br><span class="line">  public void one() &#123; print(&quot;one&quot;); &#125;</span><br><span class="line">  public void two() &#123; print(&quot;two&quot;); &#125;</span><br><span class="line">  public void three() &#123; print(&quot;three&quot;); &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<p>三个不同的线程将会共用一个 Foo 实例。</p>
-<ul>
-<li><p>线程 A 将会调用 one() 方法</p>
+            <h3 id="一、根据行为的NAT-类型分类"><a href="#一、根据行为的NAT-类型分类" class="headerlink" title="一、根据行为的NAT 类型分类"></a>一、根据行为的NAT 类型分类</h3><p>RFC 5780 对 NAT 行为主要从两方面进行分类：</p>
+<ol>
+<li><strong>地址相关映射行为（Address-dependent Mapping Behavior）</strong><ul>
+<li>当 NAT 为通信的内部 IP 和外部服务器创建映射（私有地址到公共地址）时，是否依赖于外部服务器的 IP 地址。</li>
+</ul>
 </li>
-<li><p>线程 B 将会调用 two() 方法</p>
+<li><strong>地址相关过滤行为（Address-dependent Filtering Behavior）</strong><ul>
+<li>外部主机是否能够通过 NAT 映射后的地址与内部设备通信，并且是否限制这种通信仅来自已通信过的外部主机。</li>
+</ul>
 </li>
-<li><p>线程 C 将会调用 three() 方法</p>
+</ol>
+<p>这两种行为的不同组合，总共形成 <strong>9 种 NAT 类型</strong>。</p>
+<hr>
+<h3 id="二、NAT-类型及其解析"><a href="#二、NAT-类型及其解析" class="headerlink" title="二、NAT 类型及其解析"></a>二、NAT 类型及其解析</h3><p>针对 NAT 的映射行为和过滤行为的不同表现：</p>
+<h4 id="1-Endpoint-independent-Mapping（与端点无关的映射）"><a href="#1-Endpoint-independent-Mapping（与端点无关的映射）" class="headerlink" title="1. Endpoint-independent Mapping（与端点无关的映射）"></a>1. <strong>Endpoint-independent Mapping（与端点无关的映射）</strong></h4><ul>
+<li><strong>定义</strong>：NAT 映射不依赖外部的目标地址（IP 地址或端口号），即不管内部设备连接哪个外部服务器，NAT 始终使用相同的映射。</li>
+<li><strong>特点</strong>：这类似于 Full Cone NAT 或 Restricted Cone NAT，STUN 普遍支持它。</li>
+</ul>
+<h4 id="2-Address-dependent-Mapping（地址相关映射）"><a href="#2-Address-dependent-Mapping（地址相关映射）" class="headerlink" title="2. Address-dependent Mapping（地址相关映射）"></a>2. <strong>Address-dependent Mapping（地址相关映射）</strong></h4><ul>
+<li><strong>定义</strong>：NAT 映射依赖外部目标地址 IP，即内部设备连接不同外部服务器时，对应的 NAT 映射也会有所不同。</li>
+<li><strong>特点</strong>：安全性比 Endpoint-independent Mapping 更高，但通信自由度降低。</li>
+</ul>
+<h4 id="3-Address-and-Port-dependent-Mapping（地址和端口相关映射）"><a href="#3-Address-and-Port-dependent-Mapping（地址和端口相关映射）" class="headerlink" title="3. Address and Port-dependent Mapping（地址和端口相关映射）"></a>3. <strong>Address and Port-dependent Mapping（地址和端口相关映射）</strong></h4><ul>
+<li><strong>定义</strong>：NAT 映射不仅依赖外部地址，还依赖目标服务器的端口号。对于同一个目服务器的不同端口，NAT 会为内部设备生成不同的映射。</li>
+<li><strong>特点</strong>：与 Symmetric NAT 类似，穿透难度最大，需要 TURN 等中继方案。</li>
+</ul>
+<hr>
+<p>针对 NAT 的过滤行为，分为以下三种类型：</p>
+<h4 id="1-Endpoint-independent-Filtering（与端点无关的过滤）"><a href="#1-Endpoint-independent-Filtering（与端点无关的过滤）" class="headerlink" title="1. Endpoint-independent Filtering（与端点无关的过滤）"></a>1. <strong>Endpoint-independent Filtering（与端点无关的过滤）</strong></h4><ul>
+<li><strong>定义</strong>：外部主机只要知道 NAT 的公网地址（IP + 端口）即可向内部设备发送数据包。</li>
+<li><strong>特点</strong>：过滤机制最宽松，类似于完全圆锥 NAT。</li>
+</ul>
+<h4 id="2-Address-dependent-Filtering（地址相关过滤）"><a href="#2-Address-dependent-Filtering（地址相关过滤）" class="headerlink" title="2. Address-dependent Filtering（地址相关过滤）"></a>2. <strong>Address-dependent Filtering（地址相关过滤）</strong></h4><ul>
+<li><strong>定义</strong>：仅允许那些已经建立过会话的外部主机发送数据包给 NAT 所创建的映射。</li>
+<li><strong>特点</strong>：更严格的过滤行为，限制了不受信任外部设备的访问。</li>
+</ul>
+<h4 id="3-Address-and-Port-dependent-Filtering（地址和端口相关过滤）"><a href="#3-Address-and-Port-dependent-Filtering（地址和端口相关过滤）" class="headerlink" title="3. Address and Port-dependent Filtering（地址和端口相关过滤）"></a>3. <strong>Address and Port-dependent Filtering（地址和端口相关过滤）</strong></h4><ul>
+<li><strong>定义</strong>：只有来自特定目标地址和端口号的外部主机才能访问 NAT 映射。</li>
+<li><strong>特点</strong>：过滤行为最严格，安全性最高。</li>
+</ul>
+<hr>
+<h3 id="三、组合行为（9-类-NAT-类型）"><a href="#三、组合行为（9-类-NAT-类型）" class="headerlink" title="三、组合行为（9 类 NAT 类型）"></a>三、组合行为（9 类 NAT 类型）</h3><p>通过<strong>映射行为</strong>和<strong>过滤行为</strong>的组合，NAT 总共形成 9 种具体类型：</p>
+<table>
+<thead>
+<tr>
+<th>映射行为</th>
+<th>过滤行为</th>
+<th>NAT 类型描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Endpoint-independent</td>
+<td>Endpoint-independent</td>
+<td>Full Cone NAT</td>
+</tr>
+<tr>
+<td>Endpoint-independent</td>
+<td>Address-dependent</td>
+<td>Restricted Cone NAT</td>
+</tr>
+<tr>
+<td>Endpoint-independent</td>
+<td>Address and Port-dependent</td>
+<td>Port Restricted Cone NAT</td>
+</tr>
+<tr>
+<td>Address-dependent</td>
+<td>Endpoint-independent</td>
+<td>特殊类型（较少见）</td>
+</tr>
+<tr>
+<td>Address-dependent</td>
+<td>Address-dependent</td>
+<td>常见安全 NAT</td>
+</tr>
+<tr>
+<td>Address-dependent</td>
+<td>Address and Port-dependent</td>
+<td>Address and Port-restricted NAT</td>
+</tr>
+<tr>
+<td>Address and Port-dependent</td>
+<td>Endpoint-independent</td>
+<td>特殊类型（几乎不存在）</td>
+</tr>
+<tr>
+<td>Address and Port-dependent</td>
+<td>Address-dependent</td>
+<td>高安全 NAT</td>
+</tr>
+<tr>
+<td>Address and Port-dependent</td>
+<td>Address and Port-dependent</td>
+<td>Symmetric NAT (对称 NAT，常见)</td>
+</tr>
+</tbody></table>
+<h4 id="从使用角度来看："><a href="#从使用角度来看：" class="headerlink" title="从使用角度来看："></a>从使用角度来看：</h4><ol>
+<li><strong>Full Cone NAT（完全圆锥 NAT）</strong>：<ul>
+<li>最开放的 NAT 行为，通信最自由，P2P 协议支持最好。</li>
+<li>穿透最简单，但安全性较低。</li>
+</ul>
+</li>
+<li><strong>Symmetric NAT（对称 NAT）</strong>：<ul>
+<li>最严格和动态的映射机制，安全性高。</li>
+<li>最不利于 NAT 穿透，需要 TURN 中继服务器协助通信。</li>
+</ul>
+</li>
+<li><strong>其他中间类型</strong>：<ul>
+<li>大部分 NAT 则在这两端之间，具体表现为受限过滤和地址依赖映射策略，安全性和通信灵活性之间达到平衡。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="四、RFC-5780-中检测-NAT-类型的方法"><a href="#四、RFC-5780-中检测-NAT-类型的方法" class="headerlink" title="四、RFC 5780 中检测 NAT 类型的方法"></a>四、RFC 5780 中检测 NAT 类型的方法</h3><p>RFC 5780 建议通过扩展 <strong>STUN（Session Traversal Utilities for NAT）协议</strong> 来检测 NAT 类型，具体方法包括以下几个步骤：</p>
+<ol>
+<li><strong>映射行为测试</strong><ul>
+<li>向 STUN 服务器发送测试请求，检测返回的外部地址。</li>
+<li>同时改变请求的目标地址或端口，观察 NAT 映射地址是否变化，从而判断 NAT 映射的行为：<ul>
+<li><strong>地址无关映射（Endpoint-independent Mapping）</strong>：映射保持不变。</li>
+<li><strong>地址相关映射（Address-dependent Mapping）</strong>：映射随目标地址变化。</li>
+<li><strong>端口相关映射（Address and Port-dependent Mapping）</strong>：映射随目标地址和端口变化。</li>
+</ul>
 </li>
 </ul>
-<p>请设计修改程序，以确保 two() 方法在 one() 方法之后被执行，three() 方法在 two() 方法之后被执行。</p>
-<p><strong>示例 1:</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">输入: [1,2,3]</span><br><span class="line">输出: &quot;onetwothree&quot;</span><br><span class="line">解释: </span><br><span class="line">有三个线程会被异步启动。</span><br><span class="line">输入 [1,2,3] 表示线程 A 将会调用 one() 方法，线程 B 将会调用 two() 方法，线程 C 将会调用 three() 方法。</span><br><span class="line">正确的输出是 &quot;onetwothree&quot;。</span><br></pre></td></tr></table></figure>
-
-
-<p><strong>示例 2:</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入: [1,3,2]</span><br><span class="line">输出: &quot;onetwothree&quot;</span><br><span class="line">解释: </span><br><span class="line">输入 [1,3,2] 表示线程 A 将会调用 one() 方法，线程 B 将会调用 three() 方法，线程 C 将会调用 two() 方法。</span><br><span class="line">正确的输出是 &quot;onetwothree&quot;。</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意:</strong></p>
-<p>尽管输入中的数字似乎暗示了顺序，但是我们并不保证线程在操作系统中的调度顺序。</p>
-<p>你看到的输入格式主要是为了确保测试的全面性。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">Semaphore</span> <span class="variable">two</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Semaphore</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">private</span> <span class="type">Semaphore</span> <span class="variable">three</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Semaphore</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Foo</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">first</span><span class="params">(Runnable printFirst)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// printFirst.run() outputs &quot;first&quot;. Do not change or remove this line.</span></span><br><span class="line">        printFirst.run();</span><br><span class="line">        two.release();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">second</span><span class="params">(Runnable printSecond)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        two.acquire();</span><br><span class="line">        <span class="comment">// printSecond.run() outputs &quot;second&quot;. Do not change or remove this line.</span></span><br><span class="line">        printSecond.run();</span><br><span class="line">        three.release();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">third</span><span class="params">(Runnable printThird)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        three.acquire();</span><br><span class="line">        <span class="comment">// printThird.run() outputs &quot;third&quot;. Do not change or remove this line.</span></span><br><span class="line">        printThird.run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+</li>
+<li><strong>过滤行为测试</strong><ul>
+<li>通过 STUN 服务器不同 IP 和端口向 NAT 映射地址发送数据包，观察内部设备是否能接收到：<ul>
+<li><strong>地址无关过滤（Endpoint-independent Filtering）</strong>：数据包可通过。</li>
+<li><strong>地址相关过滤（Address-dependent Filtering）</strong>：过滤未通信过的数据包。</li>
+<li><strong>地址和端口相关过滤（Address and Port-dependent Filtering）</strong>：过滤所有不同源地址或端口端数据包。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="五、NAT-的应用场景及优化"><a href="#五、NAT-的应用场景及优化" class="headerlink" title="五、NAT 的应用场景及优化"></a>五、NAT 的应用场景及优化</h3><ol>
+<li><strong>互联网应用场景</strong>：<ul>
+<li>P2P 网络、视频通话、在线游戏等，需要 NAT 穿透技术解决 NAT 带来的通信障碍。</li>
+<li>采用标准 NAT 类型分类进行适配（如通过 STUN 检测并配置端口映射）。</li>
+</ul>
+</li>
+<li><strong>NAT 优化建议</strong>：<ul>
+<li>在苛刻的 NAT 类型（如 Symmetric NAT）下，可使用 TURN 中继服务器进行流量中转。</li>
+<li>启用 UPnP（通用即插即用）或 NAT-PMP（NAT 端口映射协议）动态创建映射规则。</li>
+<li>对于有专用应用场景需求的网络，使用 Full Cone 或 Endpoint-independent NAT 可以最大程度优化通信性能（如用于私有网络的实时通信）。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="六、小结"><a href="#六、小结" class="headerlink" title="六、小结"></a>六、小结</h3><p>基于 <strong>RFC 5780</strong>，NAT 类型可以通过映射行为和过滤行为组合细化为 9 种具体类型。这种细分方式可以更加精准地描述 NAT 行为，尤其是帮助 STUN、TURN 和 ICE 等技术在实际网络环境中更高效地穿透 NAT。</p>
 
         </div>
 
@@ -222,7 +347,7 @@
             <ul class="post-tags-box">
                 
                     <li class="tag-item">
-                        <a href="/tags/LeetCode/">#LeetCode</a>&nbsp;
+                        <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-NAT/">#计算机网络 NAT</a>&nbsp;
                     </li>
                 
             </ul>
@@ -231,29 +356,14 @@
         
             <div class="article-nav">
                 
-                    <div class="article-prev">
-                        <a class="prev"
-                           rel="prev"
-                           href="/2020/09/20/2020-9-20-Looking-forward-to-interview/"
-                        >
-                            <span class="left arrow-icon flex-center">
-                              <i class="fas fa-chevron-left"></i>
-                            </span>
-                            <span class="title flex-center">
-                                <span class="post-nav-title-item">Looking forward to interview</span>
-                                <span class="post-nav-item">上一篇</span>
-                            </span>
-                        </a>
-                    </div>
-                
                 
                     <div class="article-next">
                         <a class="next"
                            rel="next"
-                           href="/2020/07/11/2020-7-11-Offer/"
+                           href="/2024/11/20/2024-11-20-FFmpeg_command/"
                         >
                             <span class="title flex-center">
-                                <span class="post-nav-title-item">剑指Offer</span>
+                                <span class="post-nav-title-item">FFmpeg常用命令</span>
                                 <span class="post-nav-item">下一篇</span>
                             </span>
                             <span class="right arrow-icon flex-center">
