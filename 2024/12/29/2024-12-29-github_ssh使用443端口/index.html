@@ -9,7 +9,7 @@
     
     <title>
         
-            Hexo使用Github Action自动部署 |
+            Github在443端口使用SSH |
         
         Han的小站
     </title>
@@ -124,7 +124,7 @@
     <div class="article-content-container">
 
         <div class="article-title">
-            <span class="title-hover-animation">Hexo使用Github Action自动部署</span>
+            <span class="title-hover-animation">Github在443端口使用SSH</span>
         </div>
 
         
@@ -143,8 +143,8 @@
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fas fa-edit"></i>&nbsp;
-        <span class="pc">2022-04-29 00:00:00</span>
-        <span class="mobile">2022-04-29 00:00</span>
+        <span class="pc">2024-12-29 00:00:00</span>
+        <span class="mobile">2024-12-29 00:00</span>
     </span>
     
         <span class="article-categories article-meta-item">
@@ -164,7 +164,7 @@
             <ul>
                 
                     <li>
-                        <a href="/tags/Github/">Github</a>&nbsp;
+                        <a href="/tags/github/">github</a>&nbsp;
                     </li>
                 
             </ul>
@@ -187,16 +187,27 @@
         
 
         <div class="article-content markdown-body">
-            <p>使用Hexo搭建博客后，用 Github Action 自动部署。</p>
+            <p>我在软路由上加了代理后，<code>git pull/push</code> 无法连接（比如路由器系统是 <code>OpenWrt</code>,代理软件用的 <code>PassWall</code> ），但是如果设置<code>Github</code> 不走代理就可以正常使用。但是如果不代理那就有点治标不治本，还是很慢。</p>
+<p>然后排查了一下，发现是机场封了 22 端口，导致出现了这个问题。既然问题找到了那么也就好解决了。<code>Github</code>支持使用<code>443</code>端口访问<code>SSH</code>。</p>
 <blockquote>
-<p>再见👋 NodeJS，**** u。</p>
+<p>有时，防火墙会完全拒绝允许 SSH 连接。 如果无法选择使用<a class="link"   target="_blank" rel="noopener" href="https://docs.github.com/zh/github/getting-started-with-github/caching-your-github-credentials-in-git" >具有凭据缓存的 HTTPS 克隆<i class="fas fa-external-link-alt"></i></a>，可以尝试使用通过 HTTPS 端口建立的 SSH 连接克隆。 大多数防火墙规则应允许此操作，但代理服务器可能会干扰。</p>
 </blockquote>
-<p>在你的 Github 仓库中点击 <code>Action</code> 按钮，如果你从来都没有创建过<code>Action</code>，那么再点击<code>I understand my workflows, go ahead and enable them</code>按钮，然后复制下面的配置。去看Github的最近你添加Action的那次提交是否正常执行，相信你一定幸运的得到了自己想要的结果。如果你不够幸运，那就点❌看看报错信息，相信最终你会成功。</p>
-<blockquote>
-<p><a class="link"   target="_blank" rel="noopener" href="https://github.com/features/actions" >https://github.com/features/actions<i class="fas fa-external-link-alt"></i></a> 它可能会有帮助</p>
-</blockquote>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">Pages</span></span><br><span class="line"></span><br><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">branches:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">master</span>  <span class="comment"># 要编译的分支</span></span><br><span class="line"></span><br><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">pages:</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-latest</span></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/checkout@v2</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">submodules:</span> <span class="string">recursive</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Use</span> <span class="string">Node.js</span> <span class="number">17.</span><span class="string">x</span></span><br><span class="line">        <span class="attr">uses:</span> <span class="string">actions/setup-node@v2</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">node-version:</span> <span class="string">&#x27;17&#x27;</span>   <span class="comment"># NodeJs的版本根据你本地的版本写</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Cache</span> <span class="string">NPM</span> <span class="string">dependencies</span></span><br><span class="line">        <span class="attr">uses:</span> <span class="string">actions/cache@v2</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">path:</span> <span class="string">node_modules</span></span><br><span class="line">          <span class="attr">key:</span> <span class="string">$&#123;&#123;</span> <span class="string">runner.OS</span> <span class="string">&#125;&#125;-npm-cache</span></span><br><span class="line">          <span class="attr">restore-keys:</span> <span class="string">|</span></span><br><span class="line"><span class="string">            $&#123;&#123; runner.OS &#125;&#125;-npm-cache</span></span><br><span class="line"><span class="string"></span>      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Install</span> <span class="string">Dependencies</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">npm</span> <span class="string">install</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Build</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">npm</span> <span class="string">run</span> <span class="string">build</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Deploy</span></span><br><span class="line">        <span class="attr">uses:</span> <span class="string">peaceiris/actions-gh-pages@v3</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">github_token:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.GITHUB_TOKEN</span> <span class="string">&#125;&#125;</span></span><br><span class="line">          <span class="attr">publish_dir:</span> <span class="string">./pub</span> <span class="comment"># 要发布的目录，也可能叫 publish，</span></span><br></pre></td></tr></table></figure>
+<p>要测试通过 HTTPS 端口的 SSH 是否可行，请运行以下 SSH 命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -T -p 443 git@ssh.github.com</span><br><span class="line"><span class="comment"># Hi USERNAME! You&#x27;ve successfully authenticated, but GitHub does not</span></span><br><span class="line"><span class="comment"># provide shell access.</span></span><br></pre></td></tr></table></figure>
 
+<p>如果这样有效，万事大吉！ 否则，可能需要<a class="link"   target="_blank" rel="noopener" href="https://docs.github.com/zh/authentication/troubleshooting-ssh/error-permission-denied-publickey" >遵循官方的故障排除指南<i class="fas fa-external-link-alt"></i></a>。</p>
+<blockquote>
+<p>端口 443 的主机名为 <code>ssh.github.com</code>，而不是 <code>github.com</code>。</p>
+</blockquote>
+<p>现在，若要克隆存储库，可以运行以下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone ssh://git@ssh.github.com:443/YOUR-USERNAME/YOUR-REPOSITORY.git</span><br></pre></td></tr></table></figure>
+
+<h3 id="启用通过-443-端口进行-SSH-连接"><a href="#启用通过-443-端口进行-SSH-连接" class="headerlink" title="启用通过 443 端口进行 SSH 连接"></a>启用通过 443 端口进行 SSH 连接</h3><p>如果你能在端口 443 上通过 SSH 连接到 <code>git@ssh.github.com</code>，则可覆盖你的 SSH 设置来强制与 GitHub.com 的任何连接均通过该服务器和端口运行。</p>
+<p>要在 SSH 配置文件中设置此行为，请在 <code>~/.ssh/config</code> 编辑该文件，并添加以下部分：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Host github.com</span><br><span class="line">    Hostname ssh.github.com</span><br><span class="line">    Port 443</span><br><span class="line">    User git</span><br></pre></td></tr></table></figure>
+
+<p>你可以通过再次连接到 GitHub.com 来测试这是否有效：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -T git@github.com</span><br><span class="line"><span class="comment"># Hi USERNAME! You&#x27;ve successfully authenticated, but GitHub does not</span></span><br><span class="line"><span class="comment"># provide shell access.</span></span><br></pre></td></tr></table></figure>
 
         </div>
 
@@ -206,7 +217,7 @@
             <ul class="post-tags-box">
                 
                     <li class="tag-item">
-                        <a href="/tags/Github/">#Github</a>&nbsp;
+                        <a href="/tags/github/">#github</a>&nbsp;
                     </li>
                 
             </ul>
@@ -215,29 +226,14 @@
         
             <div class="article-nav">
                 
-                    <div class="article-prev">
-                        <a class="prev"
-                           rel="prev"
-                           href="/2022/04/29/2022-04-29-%E6%A0%88(Stack)%E4%B8%8E%E5%A0%86(Heap)%E7%AE%80%E5%8D%95%E4%BA%86%E8%A7%A3/"
-                        >
-                            <span class="left arrow-icon flex-center">
-                              <i class="fas fa-chevron-left"></i>
-                            </span>
-                            <span class="title flex-center">
-                                <span class="post-nav-title-item">栈(Stack)与堆(Heap)简单了解</span>
-                                <span class="post-nav-item">上一篇</span>
-                            </span>
-                        </a>
-                    </div>
-                
                 
                     <div class="article-next">
                         <a class="next"
                            rel="next"
-                           href="/2022/04/28/2022-04-28-%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%8C%BA%E5%9D%97%E9%93%BE%E7%B3%BB%E7%BB%9F/"
+                           href="/2024/12/02/2024-12-02-WebRTC%E6%98%AF%E4%BB%80%E4%B9%88/"
                         >
                             <span class="title flex-center">
-                                <span class="post-nav-title-item">如何实现区块链系统</span>
+                                <span class="post-nav-title-item">WebRTC是什么</span>
                                 <span class="post-nav-item">下一篇</span>
                             </span>
                             <span class="right arrow-icon flex-center">
