@@ -36,8 +36,8 @@ tags: Windows 管理员权限
 
    输出以下结果，表明操作成功。
 
-   ![成功授权](https://image.hanblog.fun/images/2024/11/20/35fda38946280bab310458d603e3deb3.png)
+   ![在这里插入图片描述](https://image.hanblog.fun/images/2025/01/10/35fda38946280bab310458d603e3deb3.png)
 
 4. 完成后程序上会出现盾牌标志，打开时会提示需要管理员权限。
 
-   ![image-20241120230336369](https://image.hanblog.fun/images/2024/11/20/image-20241120230336369.png)
+   ![在这里插入图片描述](https://image.hanblog.fun/images/2025/01/10/69fa5ba116637daaa823287041037d52.png)
