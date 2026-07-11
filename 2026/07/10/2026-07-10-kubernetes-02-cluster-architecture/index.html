@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Han的小站">
+    <meta name="description" content="Han的小站">
+    <meta name="author" content="Han">
+    
+    <title>
+        
+            Kubernetes 学习笔记（二）：控制面和工作节点如何配合 |
+        
+        Han的小站
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"hanblog.fun","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"https://image.hanblog.fun/images/2022/04/27/06cc54c40991403a3f17178a8a09fd9e.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"一直写代码，直到看不清屏幕那一天"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":false,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                Han的小站
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Kubernetes 学习笔记（二）：控制面和工作节点如何配合</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://image.hanblog.fun/images/2022/04/27/06cc54c40991403a3f17178a8a09fd9e.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">Han</span>
+                        
+                            <span class="author-label">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2026-07-10 00:00:00</span>
+        <span class="mobile">2026-07-10 00:00</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Kubernetes-K8s-%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84/">Kubernetes K8s 集群架构</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上一篇整理 Kubernetes 基本概念时，我把集群简单分成了两部分：控制面负责“管”，工作节点负责“跑”。</p>
+<p>这个说法比较容易记，但继续往下看时，我又遇到了新的问题：控制面到底怎么管？调度器选完节点后，是谁真正启动容器？Pod 挂掉以后，又是谁发现并补回来？</p>
+<p>这些问题刚好可以放到一次完整的部署过程中理解。假设我准备运行一个有 3 个副本的 <code>demo-api</code>，从提交 YAML 到 Pod 真正启动，整个集群大致会经历下面这条链路：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">提交 YAML</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">API Server 接收请求并保存状态</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">Controller 创建需要的 Pod</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">Scheduler 为 Pod 选择节点</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">节点上的 kubelet 启动容器</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">各组件继续观察并维护状态</span><br></pre></td></tr></table></figure>
+
+<p>这篇就沿着这条链路，梳理控制面和工作节点里的主要组件。</p>
+<h2 id="先看整个集群"><a href="#先看整个集群" class="headerlink" title="先看整个集群"></a>先看整个集群</h2><p>一个 Kubernetes 集群通常由控制面和一个或多个工作节点组成。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Kubernetes 集群</span><br><span class="line"></span><br><span class="line">┌──────────────────────────────────────┐</span><br><span class="line">│ 控制面 Control Plane                 │</span><br><span class="line">│                                      │</span><br><span class="line">│  kube-apiserver       etcd           │</span><br><span class="line">│  kube-scheduler       controller     │</span><br><span class="line">└───────────────────┬──────────────────┘</span><br><span class="line">                    │</span><br><span class="line">         通过 API 观察和修改状态</span><br><span class="line">                    │</span><br><span class="line">       ┌────────────┴────────────┐</span><br><span class="line">       v                         v</span><br><span class="line">┌─────────────────┐      ┌─────────────────┐</span><br><span class="line">│ 工作节点 Node A │      │ 工作节点 Node B │</span><br><span class="line">│ kubelet         │      │ kubelet         │</span><br><span class="line">│ containerd      │      │ containerd      │</span><br><span class="line">│ 网络组件        │      │ 网络组件        │</span><br><span class="line">│ Pod A / Pod B   │      │ Pod C           │</span><br><span class="line">└─────────────────┘      └─────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p>我一开始把控制面理解成一个统一的大脑，但这个类比并不完全准确。它不是一个组件包办所有事情，而是一组各司其职的组件：有人负责接收请求，有人负责保存状态，有人负责做决定，还有人负责持续巡检。</p>
+<p>工作节点也不只是几台被动执行命令的机器。每个节点都有自己的管理程序、容器运行时和网络能力，它们共同把控制面记录的期望变成真正运行的容器。</p>
+<h2 id="kube-apiserver：集群的统一入口"><a href="#kube-apiserver：集群的统一入口" class="headerlink" title="kube-apiserver：集群的统一入口"></a>kube-apiserver：集群的统一入口</h2><p><code>kube-apiserver</code> 是 Kubernetes API 的服务端，也是控制面的入口。</p>
+<p>执行下面这条命令时：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f deployment.yaml</span><br></pre></td></tr></table></figure>
+
+<p><code>kubectl</code> 并不会直接联系调度器，也不会登录某个节点启动容器。它会把请求发送给 API Server。</p>
+<p>API Server 收到请求后，大致会处理这些事情：</p>
+<ol>
+<li>确认请求者是谁；</li>
+<li>判断请求者有没有权限；</li>
+<li>经过准入控制检查或修改请求；</li>
+<li>校验资源内容是否合法；</li>
+<li>把最终状态保存下来。</li>
+</ol>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">kubectl</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">kube-apiserver</span><br><span class="line">   |</span><br><span class="line">   ├─ 身份认证 Authentication</span><br><span class="line">   ├─ 权限检查 Authorization</span><br><span class="line">   ├─ 准入控制 Admission Control</span><br><span class="line">   └─ 资源校验 Validation</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">保存集群状态</span><br></pre></td></tr></table></figure>
+
+<p>这里让我印象比较深的是：Kubernetes 的组件通常不是私下修改集群，而是通过 API Server 读取或更新资源。API Server 因此像一个统一办事窗口，集群的重要变化都从这里经过。</p>
+<p>如果把集群比作一家公司，API Server 很像前台加办事大厅。外部请求从这里进来，内部组件也围绕这里交换状态。</p>
+<h2 id="etcd：保存事实的档案室"><a href="#etcd：保存事实的档案室" class="headerlink" title="etcd：保存事实的档案室"></a>etcd：保存事实的档案室</h2><p><code>etcd</code> 是一个分布式键值存储，Kubernetes 用它保存集群的重要状态。</p>
+<p>例如这些信息都需要被记录：</p>
+<ul>
+<li>集群里有哪些 Deployment、Service 和 Pod；</li>
+<li>某个 Deployment 期望有几个副本；</li>
+<li>Pod 被分配到了哪个节点；</li>
+<li>ConfigMap、Secret 和其他资源当前是什么内容。</li>
+</ul>
+<p>可以把 etcd 理解成集群的档案室。API Server 负责办理业务，etcd 负责保存最终档案。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">其他组件</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">kube-apiserver</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">etcd</span><br><span class="line"></span><br><span class="line">通常不会绕过 API Server 直接修改 etcd</span><br></pre></td></tr></table></figure>
+
+<p>etcd 保存的是集群状态，不是应用本身的数据。业务数据库里的订单、用户信息，不会因为应用运行在 Kubernetes 中就自动存进 etcd。</p>
+<p>这也解释了为什么 etcd 的备份非常重要：如果工作节点像厂房，Pod 像正在运行的生产线，那么 etcd 保存的就是整个集群的配置和状态档案。</p>
+<h2 id="kube-controller-manager：一直对账的巡检员"><a href="#kube-controller-manager：一直对账的巡检员" class="headerlink" title="kube-controller-manager：一直对账的巡检员"></a>kube-controller-manager：一直对账的巡检员</h2><p>资源状态保存下来后，还需要有人把期望变成行动。这个角色由一系列控制器承担，它们通常运行在 <code>kube-controller-manager</code> 中。</p>
+<p>控制器的工作方式很像不断对账：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">期望状态</span><br><span class="line">   |</span><br><span class="line">   | 对比</span><br><span class="line">   v</span><br><span class="line">实际状态</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">存在差异就尝试修正</span><br></pre></td></tr></table></figure>
+
+<p>以 Deployment 为例，我提交“保持 3 个副本”的声明后，相关控制器会逐层创建和维护资源：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Deployment</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">ReplicaSet</span><br><span class="line">   |</span><br><span class="line">   ├─ Pod A</span><br><span class="line">   ├─ Pod B</span><br><span class="line">   └─ Pod C</span><br></pre></td></tr></table></figure>
+
+<p>如果某个 Pod 被删除，ReplicaSet 观察到实际数量只剩 2 个，就会再创建 1 个 Pod，让数量回到 3。</p>
+<p>这里有一个容易混淆的地方：控制器会创建 Pod 对象，但不会亲自登录节点启动容器。它负责让集群状态向目标靠近，真正运行容器的是节点上的 kubelet 和容器运行时。</p>
+<h2 id="kube-scheduler：只负责选择节点"><a href="#kube-scheduler：只负责选择节点" class="headerlink" title="kube-scheduler：只负责选择节点"></a>kube-scheduler：只负责选择节点</h2><p>控制器创建出 Pod 后，这个 Pod 一开始还不知道自己应该去哪个节点。<code>kube-scheduler</code> 会观察这些尚未分配节点的 Pod，并为它们选择合适的位置。</p>
+<p>调度时会考虑很多条件，例如：</p>
+<ul>
+<li>节点是否有足够的 CPU 和内存；</li>
+<li>Pod 是否要求特定标签的节点；</li>
+<li>节点是否存在 Pod 不能容忍的污点；</li>
+<li>Pod 之间是否希望靠近或分散；</li>
+<li>存储卷是否能在目标节点使用。</li>
+</ul>
+<p>可以先把调度过程理解成两步：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">过滤 Filter</span><br><span class="line">排除不满足条件的节点</span><br><span class="line">        |</span><br><span class="line">        v</span><br><span class="line">评分 Score</span><br><span class="line">从可用节点中选择更合适的节点</span><br></pre></td></tr></table></figure>
+
+<p>假设集群里有三个节点：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Node A：内存不足              -&gt; 排除</span><br><span class="line">Node B：满足条件，评分 80      -&gt; 候选</span><br><span class="line">Node C：满足条件，评分 95      -&gt; 选中</span><br></pre></td></tr></table></figure>
+
+<p>调度器最终会把“这个 Pod 应该运行在 Node C”写回 API Server。</p>
+<p>调度器只负责做选择，不负责启动容器。这一点很像公司里的调度员：他决定任务交给哪个小组，但真正完成任务的是对应小组。</p>
+<h2 id="kubelet：节点上的管家"><a href="#kubelet：节点上的管家" class="headerlink" title="kubelet：节点上的管家"></a>kubelet：节点上的管家</h2><p>每个工作节点上都会运行 <code>kubelet</code>。它持续关注 API Server 中分配给本节点的 Pod。</p>
+<p>当调度器把 Pod 分配到 Node C 后，Node C 上的 kubelet 会看到这个变化，然后开始让 Pod 真正运行起来。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">API Server 中记录：Pod -&gt; Node C</span><br><span class="line">                 |</span><br><span class="line">                 v</span><br><span class="line">          Node C 上的 kubelet</span><br><span class="line">                 |</span><br><span class="line">                 v</span><br><span class="line">           调用容器运行时</span><br><span class="line">                 |</span><br><span class="line">                 v</span><br><span class="line">             启动容器</span><br></pre></td></tr></table></figure>
+
+<p>kubelet 主要负责：</p>
+<ul>
+<li>获取分配给本节点的 Pod 描述；</li>
+<li>调用容器运行时拉取镜像并启动容器；</li>
+<li>配合存储和网络组件准备运行环境；</li>
+<li>执行健康检查；</li>
+<li>把 Pod 和节点状态报告回 API Server。</li>
+</ul>
+<p>我觉得 kubelet 是控制面和真实容器之间最关键的连接点。控制面里的对象最终能不能落地，很大程度上要靠 kubelet 在节点上执行。</p>
+<h2 id="容器运行时：真正启动容器"><a href="#容器运行时：真正启动容器" class="headerlink" title="容器运行时：真正启动容器"></a>容器运行时：真正启动容器</h2><p>kubelet 自己不负责实现容器，它会通过 CRI（Container Runtime Interface）调用容器运行时。常见的运行时是 containerd，也可以使用其他符合 CRI 的实现。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">kubelet</span><br><span class="line">   |</span><br><span class="line">   | CRI</span><br><span class="line">   v</span><br><span class="line">containerd</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">拉取镜像、创建容器、管理容器生命周期</span><br></pre></td></tr></table></figure>
+
+<p>这一层让我更容易区分 Docker 和 Kubernetes：</p>
+<ul>
+<li>容器运行时负责把容器真正跑起来；</li>
+<li>Kubernetes 负责决定应该跑什么、跑几个、放在哪里，以及出问题后如何恢复。</li>
+</ul>
+<p>两者关注的层次并不相同。</p>
+<h2 id="网络组件与-kube-proxy"><a href="#网络组件与-kube-proxy" class="headerlink" title="网络组件与 kube-proxy"></a>网络组件与 kube-proxy</h2><p>Pod 启动后还需要网络。Kubernetes 会借助 CNI 网络插件为 Pod 配置网络，让 Pod 之间能够通信。</p>
+<p>很多集群还会在节点上运行 <code>kube-proxy</code>，根据 Service 和后端端点维护转发规则。不同集群的网络实现可能不同，一些网络方案也可能不依赖传统的 kube-proxy。</p>
+<p>现阶段我先把节点网络分成两件事理解：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CNI 网络插件</span><br><span class="line">负责让 Pod 接入集群网络</span><br><span class="line"></span><br><span class="line">kube-proxy 或替代方案</span><br><span class="line">负责实现 Service 到后端 Pod 的流量转发</span><br></pre></td></tr></table></figure>
+
+<p>具体网络模型后面再单独展开，这里先知道它们属于“让运行起来的 Pod 能互相访问”的部分。</p>
+<h2 id="一次-Deployment-到底经历了什么"><a href="#一次-Deployment-到底经历了什么" class="headerlink" title="一次 Deployment 到底经历了什么"></a>一次 Deployment 到底经历了什么</h2><p>把组件分别看完后，再回到最开始的 <code>demo-api</code>。假设我提交一个有 3 个副本的 Deployment，完整过程大致如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">1. kubectl 把 Deployment 提交给 API Server</span><br><span class="line">                         |</span><br><span class="line">                         v</span><br><span class="line">2. API Server 校验请求，并把状态保存到 etcd</span><br><span class="line">                         |</span><br><span class="line">                         v</span><br><span class="line">3. Deployment Controller 发现新的 Deployment</span><br><span class="line">                         |</span><br><span class="line">                         v</span><br><span class="line">4. 创建 ReplicaSet，ReplicaSet 再创建 3 个 Pod</span><br><span class="line">                         |</span><br><span class="line">                         v</span><br><span class="line">5. Scheduler 为每个 Pod 选择工作节点</span><br><span class="line">                         |</span><br><span class="line">                         v</span><br><span class="line">6. 对应节点上的 kubelet 发现分配给自己的 Pod</span><br><span class="line">                         |</span><br><span class="line">                         v</span><br><span class="line">7. kubelet 调用容器运行时启动容器，并配置网络、存储</span><br><span class="line">                         |</span><br><span class="line">                         v</span><br><span class="line">8. kubelet 把运行状态报告给 API Server</span><br><span class="line">                         |</span><br><span class="line">                         v</span><br><span class="line">9. 各控制器继续观察，让实际状态保持为 3 个副本</span><br></pre></td></tr></table></figure>
+
+<p>这条链路里没有一个组件完成所有工作：</p>
+<ul>
+<li>API Server 负责入口和状态变更；</li>
+<li>etcd 负责保存状态；</li>
+<li>Controller 负责发现差异并推动修正；</li>
+<li>Scheduler 负责选择节点；</li>
+<li>kubelet 负责在节点上落实 Pod；</li>
+<li>容器运行时负责真正运行容器；</li>
+<li>网络和存储组件负责补齐运行环境。</li>
+</ul>
+<p>它们通过资源状态协作，而不是靠一条很长的脚本依次调用。</p>
+<h2 id="如果某个组件出问题会怎样"><a href="#如果某个组件出问题会怎样" class="headerlink" title="如果某个组件出问题会怎样"></a>如果某个组件出问题会怎样</h2><p>理解职责之后，组件故障也更容易分析。</p>
+<h3 id="Scheduler-暂时不可用"><a href="#Scheduler-暂时不可用" class="headerlink" title="Scheduler 暂时不可用"></a>Scheduler 暂时不可用</h3><p>已经运行的 Pod 通常不会因此立即停止，但新创建且尚未调度的 Pod 会停留在 Pending 状态，因为没有组件替它们选择节点。</p>
+<h3 id="Controller-Manager-暂时不可用"><a href="#Controller-Manager-暂时不可用" class="headerlink" title="Controller Manager 暂时不可用"></a>Controller Manager 暂时不可用</h3><p>已经运行的容器不会立刻消失，但期望状态与实际状态之间的差异无法及时修正。例如 Pod 少了一个，控制器暂时不会补回来。</p>
+<h3 id="某个节点上的-kubelet-不可用"><a href="#某个节点上的-kubelet-不可用" class="headerlink" title="某个节点上的 kubelet 不可用"></a>某个节点上的 kubelet 不可用</h3><p>控制面会逐渐发现节点状态异常。节点上的容器是否仍在运行取决于实际故障情况，但控制面无法正常获得状态，也无法继续通过 kubelet 管理这些 Pod。</p>
+<h3 id="API-Server-不可用"><a href="#API-Server-不可用" class="headerlink" title="API Server 不可用"></a>API Server 不可用</h3><p>集群的统一入口中断，<code>kubectl</code> 和其他组件无法正常读取或更新状态。已经运行的容器可能继续运行一段时间，但整个集群的管理和协调能力会受到严重影响。</p>
+<p>这些现象让我更清楚地看到：Kubernetes 的“高可用”不等于任意组件故障后什么都不发生，而是通过组件多副本、状态持久化和控制循环降低单点故障影响。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>这一篇整理下来，我对“控制面负责管，工作节点负责跑”有了更具体的理解：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">控制面</span><br><span class="line">├─ kube-apiserver：统一入口</span><br><span class="line">├─ etcd：保存状态</span><br><span class="line">├─ kube-controller-manager：发现差异并修正</span><br><span class="line">└─ kube-scheduler：为 Pod 选择节点</span><br><span class="line"></span><br><span class="line">工作节点</span><br><span class="line">├─ kubelet：落实分配到本节点的 Pod</span><br><span class="line">├─ 容器运行时：真正启动容器</span><br><span class="line">└─ 网络组件：让 Pod 和 Service 能够通信</span><br></pre></td></tr></table></figure>
+
+<p>其中最关键的一条主线是：组件围绕 API Server 中的资源状态协作，控制器不断比较期望状态和实际状态，最终由节点上的 kubelet 把声明变成运行中的容器。</p>
+<p>下一篇准备继续梳理 Pod。上一篇只是把 Pod 比作一个“小房间”，下一篇可以进一步看看：为什么 Kubernetes 不直接调度容器、同一个 Pod 里的容器究竟共享了什么，以及 Pod 为什么天生就不适合被当成一台长期不变的小服务器。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>Kubernetes Components：<a class="link"   target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/overview/components/" >https://kubernetes.io/docs/concepts/overview/components/<i class="fas fa-external-link-alt"></i></a></li>
+<li>Kubernetes API：<a class="link"   target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/overview/kubernetes-api/" >https://kubernetes.io/docs/concepts/overview/kubernetes-api/<i class="fas fa-external-link-alt"></i></a></li>
+<li>Kubernetes Scheduler：<a class="link"   target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/" >https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/<i class="fas fa-external-link-alt"></i></a></li>
+<li>Container Runtime Interface：<a class="link"   target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/architecture/cri/" >https://kubernetes.io/docs/concepts/architecture/cri/<i class="fas fa-external-link-alt"></i></a></li>
+<li>Cluster Networking：<a class="link"   target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/cluster-administration/networking/" >https://kubernetes.io/docs/concepts/cluster-administration/networking/<i class="fas fa-external-link-alt"></i></a></li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Kubernetes-K8s-%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84/">#Kubernetes K8s 集群架构</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2026/07/08/2026-07-08-kubernetes-learning-roadmap/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Kubernetes 学习路线：先建立心智模型</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="twikoo-container">
+        <script 
+                src="//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js"
+        ></script>
+        <div id="twikoo-comment"></div>
+        <script >
+            function loadTwikoo() {
+                twikoo.init({
+                    el: '#twikoo-comment',
+                    envId: 'https://comment.hanblog.fun',
+                    region: '',
+                });
+            }
+
+            if ('false') {
+                const loadTwikooTimeout = setTimeout(() => {
+                    loadTwikoo();
+                    clearTimeout(loadTwikooTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadTwikoo);
+            }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2026&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">Han</a>
+			<a href="https://beian.miit.gov.cn/" target="_blank">鲁ICP备19036975号</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+<div class="post-scripts">
+    
+</div>
+
+
+
+</body>
+</html>
