@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Han的小站">
+    <meta name="description" content="Han的小站">
+    <meta name="author" content="Han">
+    
+    <title>
+        
+            Kubernetes 学习笔记（三）：Pod 为什么不是容器的别名 |
+        
+        Han的小站
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"hanblog.fun","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"https://image.hanblog.fun/images/2022/04/27/06cc54c40991403a3f17178a8a09fd9e.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"一直写代码，直到看不清屏幕那一天"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":false,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                Han的小站
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Kubernetes 学习笔记（三）：Pod 为什么不是容器的别名</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://image.hanblog.fun/images/2022/04/27/06cc54c40991403a3f17178a8a09fd9e.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">Han</span>
+                        
+                            <span class="author-label">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2026-07-11 00:00:00</span>
+        <span class="mobile">2026-07-11 00:00</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Kubernetes-K8s-Pod/">Kubernetes K8s Pod</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>刚接触 Kubernetes 时，我一直把 Pod 当成“换了个名字的容器”。毕竟大多数示例里，一个 Pod 只有一个容器，看起来只是外面多包了一层。</p>
+<p>继续往下看后，我发现这个理解会留下不少问题：既然一个容器就能运行应用，为什么 Kubernetes 不直接调度容器？为什么 Pod 可以放多个容器？Pod 被重新创建后，为什么 IP 可能会变化？</p>
+<p>我目前更愿意这样理解：</p>
+<blockquote>
+<p>容器负责运行进程，Pod 负责为一组紧密协作的容器提供共同的运行环境。</p>
+</blockquote>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Pod</span><br><span class="line">├─ 共同的网络身份</span><br><span class="line">├─ 可以共享的存储卷</span><br><span class="line">├─ 相同的调度位置</span><br><span class="line">├─ 统一的生命周期边界</span><br><span class="line">└─ 一个或多个容器</span><br></pre></td></tr></table></figure>
+
+<p>Pod 不是容器技术的替代品，而是 Kubernetes 用来组织和调度容器的基本单位。</p>
+<h2 id="为什么-Kubernetes-不直接调度容器"><a href="#为什么-Kubernetes-不直接调度容器" class="headerlink" title="为什么 Kubernetes 不直接调度容器"></a>为什么 Kubernetes 不直接调度容器</h2><p>假设现在只有一个后端应用，它对应一个容器：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">demo-api 容器</span><br><span class="line">└─ Java 进程</span><br></pre></td></tr></table></figure>
+
+<p>如果 Kubernetes 直接调度这个容器，短期看没有问题。但有些应用运行时还需要一个紧密绑定的辅助程序，例如本地代理、配置刷新程序或者日志处理程序。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">业务容器</span><br><span class="line">   +</span><br><span class="line">辅助容器</span><br></pre></td></tr></table></figure>
+
+<p>这两个容器可能需要：</p>
+<ul>
+<li>永远运行在同一台节点上；</li>
+<li>通过 <code>localhost</code> 互相访问；</li>
+<li>读取同一个目录中的文件；</li>
+<li>一起创建，也一起被删除。</li>
+</ul>
+<p>如果 Kubernetes 只认识单个容器，就还需要额外描述“这两个容器必须绑在一起”。Pod 正好把这种关系收进了一个更高层的对象中。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">调度单位不是单个容器</span><br><span class="line"></span><br><span class="line">Scheduler</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">Pod</span><br><span class="line">├─ Container A</span><br><span class="line">└─ Container B</span><br><span class="line"></span><br><span class="line">两个容器会被一起放到同一个节点</span><br></pre></td></tr></table></figure>
+
+<p>所以 Kubernetes 调度的是 Pod，Pod 里面再包含具体容器。</p>
+<h2 id="一个-Pod-通常还是只有一个业务容器"><a href="#一个-Pod-通常还是只有一个业务容器" class="headerlink" title="一个 Pod 通常还是只有一个业务容器"></a>一个 Pod 通常还是只有一个业务容器</h2><p>虽然 Pod 支持多个容器，但最常见的结构仍然是一 Pod 一业务容器：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Pod: demo-api</span><br><span class="line">└─ Container: demo-api</span><br></pre></td></tr></table></figure>
+
+<p>这并不代表 Pod 是多余的。即使只有一个容器，Kubernetes 仍然需要通过 Pod 给它分配节点、网络身份、存储和运行状态。</p>
+<p>我把它理解成租房：大多数时候一个人住一个房间，房间仍然有门牌号、水电和租期。不能因为房间里只有一个人，就认为房间这个概念没有意义。</p>
+<p>一个最简单的 Pod YAML 大致是这样：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">demo-api</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">demo-api</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">demo-api</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">example/demo-api:1.0.0</span></span><br><span class="line">      <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure>
+
+<p>这份声明表达的是：创建一个叫 <code>demo-api</code> 的 Pod，在里面运行一个同名容器，容器使用指定镜像并监听 <code>8080</code> 端口。</p>
+<h2 id="同一个-Pod-里的容器共享什么"><a href="#同一个-Pod-里的容器共享什么" class="headerlink" title="同一个 Pod 里的容器共享什么"></a>同一个 Pod 里的容器共享什么</h2><p>多容器 Pod 最关键的不是“能放多个容器”，而是这些容器之间共享了一部分运行环境。</p>
+<h3 id="共享网络"><a href="#共享网络" class="headerlink" title="共享网络"></a>共享网络</h3><p>同一个 Pod 中的容器共享网络命名空间。它们使用同一个 Pod IP，也共享端口空间。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Pod IP: 10.0.1.20</span><br><span class="line"></span><br><span class="line">┌─────────────────────────────┐</span><br><span class="line">│ Pod                         │</span><br><span class="line">│                             │</span><br><span class="line">│ 业务容器：监听 8080          │</span><br><span class="line">│ 辅助容器：访问 localhost:8080│</span><br><span class="line">└─────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p>这意味着一个容器可以通过 <code>localhost</code> 访问另一个容器。但共享端口空间也意味着，两个容器不能同时监听同一个端口。</p>
+<p>例如业务容器已经监听 <code>8080</code>，辅助容器再尝试监听 <code>8080</code> 就会发生端口冲突。这一点和两个普通进程运行在同一台机器上很相似。</p>
+<h3 id="可以共享存储卷"><a href="#可以共享存储卷" class="headerlink" title="可以共享存储卷"></a>可以共享存储卷</h3><p>同一个 Pod 里的容器可以挂载同一个 Volume，通过文件交换数据。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">     shared-data Volume</span><br><span class="line">          /data</span><br><span class="line">        /       \</span><br><span class="line">       v         v</span><br><span class="line">Writer 容器    Reader 容器</span><br><span class="line">写入文件        读取文件</span><br></pre></td></tr></table></figure>
+
+<p>下面这个示例中，一个容器持续写入时间，另一个容器读取同一个文件：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">shared-data-demo</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">writer</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">busybox:1.36</span></span><br><span class="line">      <span class="attr">command:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">sh</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">-c</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">while</span> <span class="literal">true</span><span class="string">;</span> <span class="string">do</span> <span class="string">date</span> <span class="string">&gt;&gt;</span> <span class="string">/data/time.log;</span> <span class="string">sleep</span> <span class="number">5</span><span class="string">;</span> <span class="string">done</span></span><br><span class="line">      <span class="attr">volumeMounts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">shared-data</span></span><br><span class="line">          <span class="attr">mountPath:</span> <span class="string">/data</span></span><br><span class="line"></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">reader</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">busybox:1.36</span></span><br><span class="line">      <span class="attr">command:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">sh</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">-c</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">touch</span> <span class="string">/data/time.log;</span> <span class="string">tail</span> <span class="string">-f</span> <span class="string">/data/time.log</span></span><br><span class="line">      <span class="attr">volumeMounts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">shared-data</span></span><br><span class="line">          <span class="attr">mountPath:</span> <span class="string">/data</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">shared-data</span></span><br><span class="line">      <span class="attr">emptyDir:</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里使用的 <code>emptyDir</code> 会在 Pod 被分配到节点后创建。容器在同一个 Pod 内重启时，目录中的数据仍然保留；Pod 被移除后，<code>emptyDir</code> 才会随之删除。两个容器都把它挂载到 <code>/data</code>，因此能看到同一份文件。</p>
+<p>需要注意的是，容器不会自动共享整个文件系统。只有显式挂载的 Volume 才能被多个容器共同使用。</p>
+<h3 id="共享调度位置"><a href="#共享调度位置" class="headerlink" title="共享调度位置"></a>共享调度位置</h3><p>同一个 Pod 中的容器一定运行在同一个节点上。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Node A</span><br><span class="line">└─ Pod</span><br><span class="line">   ├─ 业务容器</span><br><span class="line">   └─ 辅助容器</span><br></pre></td></tr></table></figure>
+
+<p>Scheduler 不会把一个 Pod 拆开，一部分放在 Node A，另一部分放在 Node B。Pod 是一个不可再拆分的调度单位。</p>
+<p>这也是多容器 Pod 只适合紧密协作程序的原因。如果两个服务需要独立扩容、独立发布或者分布到不同节点，它们更适合放在不同 Pod 中。</p>
+<h2 id="什么情况适合放进同一个-Pod"><a href="#什么情况适合放进同一个-Pod" class="headerlink" title="什么情况适合放进同一个 Pod"></a>什么情况适合放进同一个 Pod</h2><p>我判断两个容器是否适合放在同一个 Pod 时，会先看它们是不是一个不可分割的运行单元。</p>
+<p>比较适合的情况：</p>
+<ul>
+<li>辅助容器必须跟随业务容器运行；</li>
+<li>两者需要通过 <code>localhost</code> 高频通信；</li>
+<li>两者需要读写同一个临时目录；</li>
+<li>两者应该一起调度、一起删除。</li>
+</ul>
+<p>不太适合的情况：</p>
+<ul>
+<li>两个服务需要独立扩容；</li>
+<li>两者发布频率不同；</li>
+<li>一个服务异常时不希望影响另一个；</li>
+<li>两者只是普通的网络调用关系。</li>
+</ul>
+<p>例如把 Web 服务和数据库放进同一个 Pod，短期看省事，但后面很容易遇到问题：Web 服务可能需要扩成 5 个副本，数据库却不能跟着复制 5 份；两者升级和存储需求也完全不同。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">不推荐的绑定</span><br><span class="line"></span><br><span class="line">Pod</span><br><span class="line">├─ Web 服务</span><br><span class="line">└─ 数据库</span><br><span class="line"></span><br><span class="line">Web 扩容 5 份</span><br><span class="line">   -&gt; 数据库也被迫出现 5 份</span><br></pre></td></tr></table></figure>
+
+<p>更合适的做法通常是让它们分别运行在不同 Pod 中，再通过 Service 通信。</p>
+<h2 id="Pod-是短暂的，不是一台小服务器"><a href="#Pod-是短暂的，不是一台小服务器" class="headerlink" title="Pod 是短暂的，不是一台小服务器"></a>Pod 是短暂的，不是一台小服务器</h2><p>这是我理解 Pod 时卡得比较久的一点。</p>
+<p>刚开始很容易把 Pod 当成一台缩小版服务器：进去改配置、手动启动进程、记住它的 IP，希望它一直存在。但 Kubernetes 里的 Pod 天生是可以被替换的。</p>
+<p>Pod 可能因为这些原因消失：</p>
+<ul>
+<li>所在节点故障；</li>
+<li>Deployment 滚动发布；</li>
+<li>扩缩容调整副本数量；</li>
+<li>人工删除；</li>
+<li>调度或驱逐行为。</li>
+</ul>
+<p>控制器发现 Pod 消失后，通常会创建一个新的 Pod。这个过程不是把原来的 Pod“复活”，而是创建一个替代品。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">旧 Pod</span><br><span class="line">name: demo-api-abc</span><br><span class="line">UID: 1111</span><br><span class="line">IP: 10.0.1.20</span><br><span class="line">        |</span><br><span class="line">        | 被删除</span><br><span class="line">        v</span><br><span class="line">新 Pod</span><br><span class="line">name: demo-api-xyz</span><br><span class="line">UID: 2222</span><br><span class="line">IP: 10.0.2.15</span><br></pre></td></tr></table></figure>
+
+<p>新 Pod 可以运行相同的镜像、使用相同的标签，但它拥有新的 UID，IP 也可能不同。</p>
+<p>这也是为什么应用不能依赖某一个 Pod IP，持久数据也不应该只放在容器可写层里。Pod 可以换，服务入口和持久化数据需要由其他对象负责。</p>
+<h2 id="容器重启和-Pod-重建不是一回事"><a href="#容器重启和-Pod-重建不是一回事" class="headerlink" title="容器重启和 Pod 重建不是一回事"></a>容器重启和 Pod 重建不是一回事</h2><p>我之前经常把这两个动作混在一起。</p>
+<h3 id="容器重启"><a href="#容器重启" class="headerlink" title="容器重启"></a>容器重启</h3><p>容器里的进程退出后，节点上的 kubelet 可以根据 <code>restartPolicy</code> 决定是否在原 Pod 中重启容器。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">同一个 Pod</span><br><span class="line">UID 不变</span><br><span class="line">IP 通常不变</span><br><span class="line"></span><br><span class="line">Container 退出</span><br><span class="line">      |</span><br><span class="line">      v</span><br><span class="line">kubelet 重启 Container</span><br></pre></td></tr></table></figure>
+
+<p>Pod 级别的 <code>restartPolicy</code> 有三种常见取值：</p>
+<ul>
+<li><code>Always</code>：容器退出后总是尝试重启；</li>
+<li><code>OnFailure</code>：容器异常退出时重启；</li>
+<li><code>Never</code>：容器退出后不重启。</li>
+</ul>
+<h3 id="Pod-重建"><a href="#Pod-重建" class="headerlink" title="Pod 重建"></a>Pod 重建</h3><p>Pod 被删除或节点不可用时，Deployment、ReplicaSet 等控制器会创建新的 Pod。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">旧 Pod 被删除</span><br><span class="line">      |</span><br><span class="line">      v</span><br><span class="line">控制器发现副本不足</span><br><span class="line">      |</span><br><span class="line">      v</span><br><span class="line">创建一个新 Pod</span><br><span class="line"></span><br><span class="line">UID 改变，IP 也可能改变</span><br></pre></td></tr></table></figure>
+
+<p>简单说，容器重启更像房间里的住户重新开始工作，Pod 重建则像原房间被拆掉后重新分配了一个新房间。</p>
+<h2 id="Pod-的阶段和容器状态"><a href="#Pod-的阶段和容器状态" class="headerlink" title="Pod 的阶段和容器状态"></a>Pod 的阶段和容器状态</h2><p>查看 Pod 时，经常会看到 <code>Pending</code>、<code>Running</code>、<code>Succeeded</code>、<code>Failed</code> 等阶段。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Pod Phase</span><br><span class="line">├─ Pending：已经创建，但还没全部准备好运行</span><br><span class="line">├─ Running：已经分配到节点，至少一个容器在运行或启动中</span><br><span class="line">├─ Succeeded：所有容器成功结束，不会再重启</span><br><span class="line">├─ Failed：所有容器都结束，至少一个失败结束</span><br><span class="line">└─ Unknown：暂时无法获得 Pod 状态</span><br></pre></td></tr></table></figure>
+
+<p>Pod Phase 是一个比较粗略的整体阶段，不等于容器的详细状态。Pod 内部的单个容器还有自己的状态：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Container State</span><br><span class="line">├─ Waiting</span><br><span class="line">├─ Running</span><br><span class="line">└─ Terminated</span><br></pre></td></tr></table></figure>
+
+<p>所以看到 Pod 显示 <code>Running</code> 时，也不能直接认为应用已经可以接收流量。容器可能刚启动，应用还在初始化；是否可以接收流量，还需要结合 Readiness Probe 等状态判断。</p>
+<p>健康检查后面会单独整理，这里先把 Pod 阶段和应用可用性区分开。</p>
+<h2 id="为什么通常不直接创建-Pod"><a href="#为什么通常不直接创建-Pod" class="headerlink" title="为什么通常不直接创建 Pod"></a>为什么通常不直接创建 Pod</h2><p>虽然可以直接提交一个 <code>kind: Pod</code> 的 YAML，但实际部署长期运行的无状态应用时，通常会交给 Deployment 管理。</p>
+<p>原因并不复杂：单独创建的 Pod 被删除后，没有上层控制器负责补回来。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">直接创建 Pod</span><br><span class="line">Pod 被删除</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">没有控制器补副本</span><br><span class="line"></span><br><span class="line">Deployment 管理 Pod</span><br><span class="line">Pod 被删除</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">ReplicaSet 发现副本不足</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">创建新 Pod</span><br></pre></td></tr></table></figure>
+
+<p>Pod 负责描述“一个运行单元长什么样”，Deployment 等控制器负责描述“这个运行单元应该长期保持多少份、如何更新”。</p>
+<p>这两个职责拆开后，Pod 可以保持简单，控制器则专门处理副本、自愈和发布策略。</p>
+<h2 id="把-Pod-的关系串起来"><a href="#把-Pod-的关系串起来" class="headerlink" title="把 Pod 的关系串起来"></a>把 Pod 的关系串起来</h2><p>整理到这里，我把 Pod 放回整个 Kubernetes 链路中：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Deployment</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">ReplicaSet</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">Pod</span><br><span class="line">├─ 网络身份：Pod IP、共享端口空间</span><br><span class="line">├─ 存储：可以挂载共享 Volume</span><br><span class="line">├─ 调度：整体分配到同一个节点</span><br><span class="line">├─ 生命周期：可以被删除和替换</span><br><span class="line">└─ 容器</span><br><span class="line">   ├─ Container A</span><br><span class="line">   └─ Container B</span><br></pre></td></tr></table></figure>
+
+<p>Pod 向上接受控制器管理，向下组织容器，同时又连接网络、存储、调度和健康状态。它不是简单的容器包装壳，而是 Kubernetes 运行应用时最核心的边界之一。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>这一篇整理下来，我对 Pod 的理解可以概括成几句话：</p>
+<ul>
+<li>Kubernetes 调度 Pod，而不是直接调度容器；</li>
+<li>Pod 可以包含一个或多个紧密协作的容器；</li>
+<li>同一个 Pod 中的容器共享网络，并可以通过 Volume 共享文件；</li>
+<li>Pod 内的容器一定运行在同一个节点；</li>
+<li>Pod 是可以被删除和替换的，不应该被当成长久不变的小服务器；</li>
+<li>容器重启发生在原 Pod 内，Pod 重建则会产生新的 Pod；</li>
+<li>长期运行的应用通常由 Deployment 等控制器管理 Pod。</li>
+</ul>
+<p>下一篇准备继续梳理 Deployment 和 ReplicaSet。Pod 解决了“一个运行单元长什么样”，接下来要看的问题是：Kubernetes 怎样长期保持副本数量，又怎样在更新版本时逐步替换旧 Pod。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>Pods：<a class="link"   target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/workloads/pods/" >https://kubernetes.io/docs/concepts/workloads/pods/<i class="fas fa-external-link-alt"></i></a></li>
+<li>Pod Lifecycle：<a class="link"   target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/" >https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/<i class="fas fa-external-link-alt"></i></a></li>
+<li>Multi-container Pods：<a class="link"   target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/" >https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/<i class="fas fa-external-link-alt"></i></a></li>
+<li>Volumes：<a class="link"   target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/storage/volumes/" >https://kubernetes.io/docs/concepts/storage/volumes/<i class="fas fa-external-link-alt"></i></a></li>
+<li>Deployments：<a class="link"   target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/" >https://kubernetes.io/docs/concepts/workloads/controllers/deployment/<i class="fas fa-external-link-alt"></i></a></li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Kubernetes-K8s-Pod/">#Kubernetes K8s Pod</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2026/07/12/2026-07-12-kubernetes-04-deployment-and-replicaset/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Kubernetes 学习笔记（四）：Deployment 如何让 Pod 稳定运行</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2026/07/10/2026-07-10-kubernetes-02-cluster-architecture/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Kubernetes 学习笔记（二）：控制面和工作节点如何配合</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="twikoo-container">
+        <script 
+                src="//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js"
+        ></script>
+        <div id="twikoo-comment"></div>
+        <script >
+            function loadTwikoo() {
+                twikoo.init({
+                    el: '#twikoo-comment',
+                    envId: 'https://comment.hanblog.fun',
+                    region: '',
+                });
+            }
+
+            if ('false') {
+                const loadTwikooTimeout = setTimeout(() => {
+                    loadTwikoo();
+                    clearTimeout(loadTwikooTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadTwikoo);
+            }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2026&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">Han</a>
+			<a href="https://beian.miit.gov.cn/" target="_blank">鲁ICP备19036975号</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+<div class="post-scripts">
+    
+</div>
+
+
+
+</body>
+</html>

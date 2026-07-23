@@ -136,6 +136,94 @@
                 
 
                 <h3 class="home-article-title">
+                    <a href="/2026/07/13/2026-07-13-kubernetes-05-understanding-service/">
+                        Kubernetes 学习笔记（五）：Service 为什么能提供稳定入口
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        前言上一篇整理 Deployment 时，我把它理解成“长期维护一组 Pod 的声明”。Deployment 能让 Pod 少了就补，版本变了就逐步替换。
+但这里马上会出现另一个问题：Pod 会不断变化，那别人到底该访问谁？
+假设 demo-api ...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Mon Jul 13 2026 00:00:00 GMT+0000">2026-07-13</span></span>
+        
+        
+    </div>
+
+    <a href="/2026/07/13/2026-07-13-kubernetes-05-understanding-service/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2026/07/12/2026-07-12-kubernetes-04-deployment-and-replicaset/">
+                        Kubernetes 学习笔记（四）：Deployment 如何让 Pod 稳定运行
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        前言上一篇整理 Pod 时，我留下了一个问题：Pod 本身是短暂的，被删除后不会自己回来，那长期运行的服务到底靠什么稳定住？
+刚开始看 Kubernetes 时，我总觉得 Deployment、ReplicaSet、Pod 这三层有点绕。明明最终跑起...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Sun Jul 12 2026 00:00:00 GMT+0000">2026-07-12</span></span>
+        
+        
+    </div>
+
+    <a href="/2026/07/12/2026-07-12-kubernetes-04-deployment-and-replicaset/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2026/07/11/2026-07-11-kubernetes-03-understanding-pod/">
+                        Kubernetes 学习笔记（三）：Pod 为什么不是容器的别名
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        前言刚接触 Kubernetes 时，我一直把 Pod 当成“换了个名字的容器”。毕竟大多数示例里，一个 Pod 只有一个容器，看起来只是外面多包了一层。
+继续往下看后，我发现这个理解会留下不少问题：既然一个容器就能运行应用，为什么 Kubernet...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Sat Jul 11 2026 00:00:00 GMT+0000">2026-07-11</span></span>
+        
+        
+    </div>
+
+    <a href="/2026/07/11/2026-07-11-kubernetes-03-understanding-pod/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
                     <a href="/2026/07/10/2026-07-10-kubernetes-02-cluster-architecture/">
                         Kubernetes 学习笔记（二）：控制面和工作节点如何配合
                     </a>
@@ -156,6 +244,36 @@
     </div>
 
     <a href="/2026/07/10/2026-07-10-kubernetes-02-cluster-architecture/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2026/07/08/2026-07-08-kubernetes-01-what-problem-does-it-solve/">
+                        Kubernetes 学习笔记（一）：先理解它解决什么问题
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        前言刚开始接触 Kubernetes 时，我最先看到的是一堆 kubectl 命令，但真正让我困惑的其实是：这些命令背后的 Kubernetes 到底在解决什么问题？
+我试着从一个更熟悉的场景来理解它。
+如果把应用部署比作开餐馆，最开始可能只有一个小...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Wed Jul 08 2026 00:00:00 GMT+0000">2026-07-08</span></span>
+        
+        
+    </div>
+
+    <a href="/2026/07/08/2026-07-08-kubernetes-01-what-problem-does-it-solve/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -215,36 +333,6 @@
     </div>
 
     <a href="/2026/07/08/2026-07-08-return-to-blogging/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/2026/07/08/2026-07-08-kubernetes-01-what-problem-does-it-solve/">
-                        Kubernetes 学习笔记（一）：先理解它解决什么问题
-                    </a>
-                </h3>
-
-                <div class="home-article-content markdown-body">
-                    
-                        前言刚开始接触 Kubernetes 时，我最先看到的是一堆 kubectl 命令，但真正让我困惑的其实是：这些命令背后的 Kubernetes 到底在解决什么问题？
-我试着从一个更熟悉的场景来理解它。
-如果把应用部署比作开餐馆，最开始可能只有一个小...
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Wed Jul 08 2026 00:00:00 GMT+0000">2026-07-08</span></span>
-        
-        
-    </div>
-
-    <a href="/2026/07/08/2026-07-08-kubernetes-01-what-problem-does-it-solve/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -331,100 +419,6 @@ RFC3489（Session Traversal Utilities for NAT，早期称为 Simple Traversal of
     </div>
 
     <a href="/2024/12/02/2024-12-02-WebRTC%E6%98%AF%E4%BB%80%E4%B9%88/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/2024/11/27/2024-11-27-NAT%20%E7%B1%BB%E5%9E%8B/">
-                        Nat类型
-                    </a>
-                </h3>
-
-                <div class="home-article-content markdown-body">
-                    
-                        一、根据行为的NAT 类型分类RFC 5780 对 NAT 行为主要从两方面进行分类：
-
-地址相关映射行为（Address-dependent Mapping Behavior）
-当 NAT 为通信的内部 IP 和外部服务器创建映射（私有地址到公共地...
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Wed Nov 27 2024 00:00:00 GMT+0000">2024-11-27</span></span>
-        
-        
-    </div>
-
-    <a href="/2024/11/27/2024-11-27-NAT%20%E7%B1%BB%E5%9E%8B/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/2024/11/20/2024-11-20-FFmpeg_command/">
-                        FFmpeg常用命令
-                    </a>
-                </h3>
-
-                <div class="home-article-content markdown-body">
-                    
-                        
-转载自https://www.ruanyifeng.com/blog/2020/01/ffmpeg.html
-
-FFmpeg 是视频处理最常用的开源软件。
-它功能强大，用途广泛，大量用于视频网站和商业软件（比如 Youtube 和 iTunes），...
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Wed Nov 20 2024 00:00:00 GMT+0000">2024-11-20</span></span>
-        
-        
-    </div>
-
-    <a href="/2024/11/20/2024-11-20-FFmpeg_command/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/2024/11/20/2024-11-20-typora_upload_image_to_chevereto/">
-                        Typora自动上传图片到Chevereto
-                    </a>
-                </h3>
-
-                <div class="home-article-content markdown-body">
-                    
-                        登录chevereto服务器，右上角账号 -- 仪表盘 -- 设置 -- API
-
-复制一下这里的API v1 密钥
-使用pf工具（工具链接：https://github.com/yonghan1999/picture_fly&#x2F;releas...
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Wed Nov 20 2024 00:00:00 GMT+0000">2024-11-20</span></span>
-        
-        
-    </div>
-
-    <a href="/2024/11/20/2024-11-20-typora_upload_image_to_chevereto/">阅读全文&nbsp;<i class="fas fa-angle-right"></i></a>
 </div>
 
             </li>

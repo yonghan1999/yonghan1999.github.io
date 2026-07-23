@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Han的小站">
+    <meta name="description" content="Han的小站">
+    <meta name="author" content="Han">
+    
+    <title>
+        
+            Kubernetes 学习笔记（五）：Service 为什么能提供稳定入口 |
+        
+        Han的小站
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"hanblog.fun","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":false,"number":false,"expand_all":false,"init_open":false},"style":{"primary_color":"#0066CC","avatar":"https://image.hanblog.fun/images/2022/04/27/06cc54c40991403a3f17178a8a09fd9e.jpg","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"一直写代码，直到看不清屏幕那一天"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":false,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                Han的小站
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Kubernetes 学习笔记（五）：Service 为什么能提供稳定入口</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://image.hanblog.fun/images/2022/04/27/06cc54c40991403a3f17178a8a09fd9e.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">Han</span>
+                        
+                            <span class="author-label">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2026-07-13 00:00:00</span>
+        <span class="mobile">2026-07-13 00:00</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Kubernetes-K8s-Service/">Kubernetes K8s Service</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上一篇整理 Deployment 时，我把它理解成“长期维护一组 Pod 的声明”。Deployment 能让 Pod 少了就补，版本变了就逐步替换。</p>
+<p>但这里马上会出现另一个问题：Pod 会不断变化，那别人到底该访问谁？</p>
+<p>假设 <code>demo-api</code> 有 3 个副本：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Pod A: 10.0.1.11</span><br><span class="line">Pod B: 10.0.1.12</span><br><span class="line">Pod C: 10.0.2.20</span><br></pre></td></tr></table></figure>
+
+<p>如果前端服务直接写死这些 Pod IP，看起来能通，但只要发生重建，地址就可能变：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Pod A 被删除</span><br><span class="line">10.0.1.11 消失</span><br><span class="line"></span><br><span class="line">新 Pod D 被创建</span><br><span class="line">10.0.3.18 出现</span><br></pre></td></tr></table></figure>
+
+<p>这时前端还拿着旧 IP，就像把同学住哪间宿舍写进通讯录，结果人搬寝室了，通讯录没更新。</p>
+<p>Service 要解决的就是这个问题：</p>
+<blockquote>
+<p>Pod 可以变，但访问入口要尽量稳定。</p>
+</blockquote>
+<h2 id="为什么不能直接访问-Pod-IP"><a href="#为什么不能直接访问-Pod-IP" class="headerlink" title="为什么不能直接访问 Pod IP"></a>为什么不能直接访问 Pod IP</h2><p>Pod IP 本身不是不能访问。在同一个集群网络里，Pod 之间通常可以直接通过 Pod IP 通信。</p>
+<p>问题在于 Pod IP 不适合作为长期依赖。</p>
+<p>Pod 可能因为这些原因被替换：</p>
+<ul>
+<li>Deployment 滚动发布；</li>
+<li>Pod 崩溃后被重新创建；</li>
+<li>节点故障后重新调度；</li>
+<li>扩容和缩容；</li>
+<li>人工删除异常 Pod。</li>
+</ul>
+<p>每次重建都可能产生新的 Pod 名称、UID 和 IP。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">旧 Pod</span><br><span class="line">name: demo-api-7c9d9f-a</span><br><span class="line">ip:   10.0.1.11</span><br><span class="line"></span><br><span class="line">被替换后</span><br><span class="line"></span><br><span class="line">新 Pod</span><br><span class="line">name: demo-api-7c9d9f-x</span><br><span class="line">ip:   10.0.3.18</span><br></pre></td></tr></table></figure>
+
+<p>如果调用方自己维护 Pod 列表，就会遇到两个麻烦：</p>
+<ul>
+<li>后端 Pod 增减时，调用方要及时更新地址；</li>
+<li>后端 Pod 异常时，调用方还要避开不可用实例。</li>
+</ul>
+<p>这和我们平时访问网站不会记某一台服务器 IP 是一个道理。我们更希望访问一个稳定名字，后面具体落到哪台机器，由系统处理。</p>
+<h2 id="Service-像一个稳定门牌号"><a href="#Service-像一个稳定门牌号" class="headerlink" title="Service 像一个稳定门牌号"></a>Service 像一个稳定门牌号</h2><p>Service 可以先理解成一块稳定门牌号。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">调用方</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">Service: demo-api</span><br><span class="line">  |</span><br><span class="line">  ├─ Pod A</span><br><span class="line">  ├─ Pod B</span><br><span class="line">  └─ Pod C</span><br></pre></td></tr></table></figure>
+
+<p>调用方不需要关心后面到底有几个 Pod，也不需要记每个 Pod 的 IP。它访问 Service，Service 再把流量转到后端 Pod。</p>
+<p>如果 Pod 发生变化：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">原来：</span><br><span class="line">Service -&gt; Pod A / Pod B / Pod C</span><br><span class="line"></span><br><span class="line">Pod A 被删，Pod D 被创建</span><br><span class="line"></span><br><span class="line">后来：</span><br><span class="line">Service -&gt; Pod B / Pod C / Pod D</span><br></pre></td></tr></table></figure>
+
+<p>对调用方来说，入口仍然是同一个 Service。</p>
+<p>这就是 Service 最核心的价值：把“调用方”和“不断变化的一组 Pod”解耦。</p>
+<h2 id="Service-怎么知道后面有哪些-Pod"><a href="#Service-怎么知道后面有哪些-Pod" class="headerlink" title="Service 怎么知道后面有哪些 Pod"></a>Service 怎么知道后面有哪些 Pod</h2><p>Service 通常通过标签选择器找到后端 Pod。</p>
+<p>假设 Deployment 创建出来的 Pod 都带有这个标签：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">labels:</span></span><br><span class="line">  <span class="attr">app:</span> <span class="string">demo-api</span></span><br></pre></td></tr></table></figure>
+
+<p>Service 也写同样的选择条件：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">selector:</span></span><br><span class="line">  <span class="attr">app:</span> <span class="string">demo-api</span></span><br></pre></td></tr></table></figure>
+
+<p>于是它们之间就能匹配上：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Service selector: app=demo-api</span><br><span class="line"></span><br><span class="line">匹配：</span><br><span class="line">Pod A labels: app=demo-api</span><br><span class="line">Pod B labels: app=demo-api</span><br><span class="line">Pod C labels: app=demo-api</span><br><span class="line"></span><br><span class="line">不匹配：</span><br><span class="line">Pod X labels: app=other</span><br></pre></td></tr></table></figure>
+
+<p>这也是为什么前面几篇一直强调标签。标签不是写给人看的备注，它会直接影响控制器和 Service 如何识别对象。</p>
+<p>如果标签写错，Service 可能就找不到后端：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Service selector: app=demo-api</span><br><span class="line"></span><br><span class="line">Pod labels: app=demo</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">没有匹配的后端 Pod</span><br></pre></td></tr></table></figure>
+
+<p>这类问题表面看是“服务访问不通”，但根上可能只是标签对不上。</p>
+<h2 id="一个最小-Service-示例"><a href="#一个最小-Service-示例" class="headerlink" title="一个最小 Service 示例"></a>一个最小 Service 示例</h2><p>下面这个 Service 会把集群内部访问 <code>demo-api</code> 的流量转发到带有 <code>app=demo-api</code> 标签的 Pod：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">demo-api</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">ClusterIP</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">demo-api</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">http</span></span><br><span class="line">      <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure>
+
+<p>拆开来看：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">metadata.name</span><br><span class="line">  Service 名字叫 demo-api</span><br><span class="line"></span><br><span class="line">type: ClusterIP</span><br><span class="line">  只在集群内部提供一个稳定 IP</span><br><span class="line"></span><br><span class="line">selector</span><br><span class="line">  找 app=demo-api 的 Pod</span><br><span class="line"></span><br><span class="line">port: 80</span><br><span class="line">  Service 对外暴露的端口</span><br><span class="line"></span><br><span class="line">targetPort: 8080</span><br><span class="line">  后端 Pod 容器实际监听的端口</span><br></pre></td></tr></table></figure>
+
+<p>这里最容易混的是 <code>port</code> 和 <code>targetPort</code>。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">调用方访问：</span><br><span class="line">demo-api:80</span><br><span class="line"></span><br><span class="line">Service 转发到：</span><br><span class="line">Pod:8080</span><br></pre></td></tr></table></figure>
+
+<p>可以把 <code>port</code> 理解成门牌号上的窗口，<code>targetPort</code> 理解成房间里真正接电话的分机号。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Client</span><br><span class="line">  |</span><br><span class="line">  | demo-api:80</span><br><span class="line">  v</span><br><span class="line">Service</span><br><span class="line">  |</span><br><span class="line">  | PodIP:8080</span><br><span class="line">  v</span><br><span class="line">Pod Container</span><br></pre></td></tr></table></figure>
+
+<p>这两个值可以一样，也可以不一样。实际项目里，我更倾向让 Service 端口保持对调用方友好，比如 HTTP 用 <code>80</code>，容器内部想监听 <code>8080</code> 也没关系。</p>
+<h2 id="EndpointSlice：Service-后面的后端清单"><a href="#EndpointSlice：Service-后面的后端清单" class="headerlink" title="EndpointSlice：Service 后面的后端清单"></a>EndpointSlice：Service 后面的后端清单</h2><p>Service 自己并不直接“装着”所有 Pod IP。Kubernetes 会为 Service 维护后端端点信息，现代版本里更推荐从 EndpointSlice 理解这件事。</p>
+<p>可以简单想成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Service</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">EndpointSlice</span><br><span class="line">  |</span><br><span class="line">  ├─ 10.0.1.11:8080</span><br><span class="line">  ├─ 10.0.1.12:8080</span><br><span class="line">  └─ 10.0.2.20:8080</span><br></pre></td></tr></table></figure>
+
+<p>当 Pod 增加、减少、变为 Ready 或 NotReady 时，EndpointSlice 会跟着变化。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Pod D 新增并 Ready</span><br><span class="line">       |</span><br><span class="line">       v</span><br><span class="line">EndpointSlice 加入 10.0.3.18:8080</span><br><span class="line"></span><br><span class="line">Pod A 被删除</span><br><span class="line">       |</span><br><span class="line">       v</span><br><span class="line">EndpointSlice 移除 10.0.1.11:8080</span><br></pre></td></tr></table></figure>
+
+<p>调用方一般不需要直接操作 EndpointSlice，但排查 Service 问题时，它很有用。因为它能回答一个关键问题：</p>
+<blockquote>
+<p>这个 Service 当前到底有没有可用后端？</p>
+</blockquote>
+<p>常见查看命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl get service demo-api</span><br><span class="line">kubectl get endpointslice -l kubernetes.io/service-name=demo-api</span><br><span class="line">kubectl get pods -l app=demo-api</span><br></pre></td></tr></table></figure>
+
+<p>如果 Service 存在，但 EndpointSlice 里没有地址，那访问不通就很正常。接下来要继续查的是 selector 是否匹配、Pod 是否 Ready、端口是否写对。</p>
+<h2 id="Service-会不会只转发到-Ready-的-Pod"><a href="#Service-会不会只转发到-Ready-的-Pod" class="headerlink" title="Service 会不会只转发到 Ready 的 Pod"></a>Service 会不会只转发到 Ready 的 Pod</h2><p>平时说 Service 转发到后端 Pod，容易让人以为只要标签匹配就一定会被转发。</p>
+<p>实际理解时，我会加一个条件：正常情况下，Service 更关心可用端点，而不是所有看起来匹配的 Pod。</p>
+<p>例如一个 Pod 刚启动，容器进程已经起来了，但应用还在加载配置或初始化连接：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Pod Phase: Running</span><br><span class="line">Readiness: False</span><br></pre></td></tr></table></figure>
+
+<p>这时它可能还不适合接收业务流量。等 Readiness Probe 通过后，才更适合作为后端。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Pod 启动中</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">NotReady</span><br><span class="line">   |</span><br><span class="line">   | Readiness Probe 通过</span><br><span class="line">   v</span><br><span class="line">Ready</span><br><span class="line">   |</span><br><span class="line">   v</span><br><span class="line">加入 Service 可用后端</span><br></pre></td></tr></table></figure>
+
+<p>这也是为什么上一篇提到：<code>Running</code> 不等于应用已经可以接收流量。</p>
+<p>健康检查后面会单独写一篇，这里先记住 Service、EndpointSlice、Ready 状态之间有关系就够了。</p>
+<h2 id="ClusterIP：集群内部最常见的入口"><a href="#ClusterIP：集群内部最常见的入口" class="headerlink" title="ClusterIP：集群内部最常见的入口"></a>ClusterIP：集群内部最常见的入口</h2><p><code>ClusterIP</code> 是 Service 的默认类型。它会给 Service 分配一个只在集群内部使用的虚拟 IP。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Cluster 内部</span><br><span class="line"></span><br><span class="line">frontend Pod</span><br><span class="line">    |</span><br><span class="line">    | demo-api Service IP</span><br><span class="line">    v</span><br><span class="line">demo-api Service</span><br><span class="line">    |</span><br><span class="line">    v</span><br><span class="line">demo-api Pods</span><br></pre></td></tr></table></figure>
+
+<p>如果没有特别指定 <code>type</code>，Service 默认就是 <code>ClusterIP</code>：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">demo-api</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">demo-api</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure>
+
+<p>这类 Service 适合服务之间的内部调用。</p>
+<p>比如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">frontend -&gt; demo-api</span><br><span class="line">demo-api -&gt; user-service</span><br><span class="line">order-service -&gt; payment-service</span><br></pre></td></tr></table></figure>
+
+<p>这些调用不一定要暴露到集群外部，稳定的内部 Service 就够了。</p>
+<h2 id="DNS：多数时候访问的是名字，不是-IP"><a href="#DNS：多数时候访问的是名字，不是-IP" class="headerlink" title="DNS：多数时候访问的是名字，不是 IP"></a>DNS：多数时候访问的是名字，不是 IP</h2><p>虽然 ClusterIP 提供了一个稳定 IP，但在实际应用配置里，通常更推荐访问 Service 名字。</p>
+<p>例如同一个命名空间下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://demo-api</span><br><span class="line">http://demo-api:80</span><br></pre></td></tr></table></figure>
+
+<p>跨命名空间时，可以写得更完整：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://demo-api.default.svc.cluster.local</span><br></pre></td></tr></table></figure>
+
+<p>Kubernetes 会为 Service 分配 DNS 名称。这样调用方不需要关心 ClusterIP 是多少。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">应用配置：</span><br><span class="line">DEMO_API_URL=http://demo-api</span><br><span class="line"></span><br><span class="line">DNS 解析：</span><br><span class="line">demo-api -&gt; Service ClusterIP</span><br><span class="line"></span><br><span class="line">Service 转发：</span><br><span class="line">ClusterIP -&gt; Pod 后端</span><br></pre></td></tr></table></figure>
+
+<p>这就比写死 IP 稳得多。Service 的名字像一个固定联系人，背后的号码变动交给集群处理。</p>
+<h2 id="NodePort：从节点端口进来"><a href="#NodePort：从节点端口进来" class="headerlink" title="NodePort：从节点端口进来"></a>NodePort：从节点端口进来</h2><p><code>NodePort</code> 会在每个节点上打开一个端口，把外部访问转发到 Service。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">demo-api</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">NodePort</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">demo-api</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">8080</span></span><br><span class="line">      <span class="attr">nodePort:</span> <span class="number">30080</span></span><br></pre></td></tr></table></figure>
+
+<p>访问路径大概是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">外部请求</span><br><span class="line">  |</span><br><span class="line">  | NodeIP:30080</span><br><span class="line">  v</span><br><span class="line">任意节点</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">Service</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">后端 Pod</span><br></pre></td></tr></table></figure>
+
+<p>默认 NodePort 范围通常是 <code>30000-32767</code>。如果不指定 <code>nodePort</code>，控制面会自动分配一个。</p>
+<p>我现在把 NodePort 理解成“先在每台节点门口开一个固定小窗口”。它适合调试或某些简单环境，但直接作为生产入口通常还不够舒服：</p>
+<ul>
+<li>端口范围不够直观；</li>
+<li>需要知道节点 IP；</li>
+<li>节点故障和外部流量调度还要额外处理；</li>
+<li>暴露面更大，安全策略要更谨慎。</li>
+</ul>
+<p>所以学概念时可以理解它，但真正对外暴露服务时，往往还会继续看 LoadBalancer、Ingress 或 Gateway。</p>
+<h2 id="LoadBalancer：交给外部负载均衡器"><a href="#LoadBalancer：交给外部负载均衡器" class="headerlink" title="LoadBalancer：交给外部负载均衡器"></a>LoadBalancer：交给外部负载均衡器</h2><p><code>LoadBalancer</code> 常见于云环境。它会请求云厂商或负载均衡实现为这个 Service 创建一个外部入口。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">demo-api</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">LoadBalancer</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">demo-api</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure>
+
+<p>访问路径大致是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">用户</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">外部负载均衡器</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">Service</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">Pod A / Pod B / Pod C</span><br></pre></td></tr></table></figure>
+
+<p>这里需要注意：Kubernetes 本身不会凭空变出一个外部负载均衡器。它需要底层环境支持，比如云厂商的负载均衡能力，或者集群里安装了对应实现。</p>
+<p>如果环境不支持，<code>LoadBalancer</code> 可能一直拿不到外部 IP。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Service TYPE: LoadBalancer</span><br><span class="line">EXTERNAL-IP: &lt;pending&gt;</span><br></pre></td></tr></table></figure>
+
+<p>看到 <code>&lt;pending&gt;</code> 时，不一定是 YAML 写错了，也可能是集群没有对应的负载均衡实现。</p>
+<h2 id="Ingress-和-Gateway：HTTP-入口规则"><a href="#Ingress-和-Gateway：HTTP-入口规则" class="headerlink" title="Ingress 和 Gateway：HTTP 入口规则"></a>Ingress 和 Gateway：HTTP 入口规则</h2><p>Service 负责把流量送到一组 Pod，但它本身不擅长表达复杂 HTTP 路由。</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">api.example.com/users  -&gt; user-service</span><br><span class="line">api.example.com/orders -&gt; order-service</span><br><span class="line">static.example.com     -&gt; web-service</span><br></pre></td></tr></table></figure>
+
+<p>这种按域名、路径、TLS 等规则组织 HTTP&#x2F;HTTPS 流量的场景，通常会看到 Ingress 或 Gateway API。</p>
+<p>Ingress 大概像这样：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">外部 HTTP 请求</span><br><span class="line">      |</span><br><span class="line">      v</span><br><span class="line">Ingress / Ingress Controller</span><br><span class="line">      |</span><br><span class="line">      ├─ /users  -&gt; user-service</span><br><span class="line">      └─ /orders -&gt; order-service</span><br></pre></td></tr></table></figure>
+
+<p>有一点我之前容易忽略：创建 Ingress 资源本身还不够，集群里还需要有 Ingress Controller 来真正执行这些规则。</p>
+<p>另外，Kubernetes 官方文档现在也推荐关注 Gateway API。Ingress API 仍然稳定存在，但已经冻结，新的方向更多在 Gateway API 上。这里先点到为止，等 Service 这条线理顺后，再单独整理入口流量会更清楚。</p>
+<h2 id="Service-不等于应用健康"><a href="#Service-不等于应用健康" class="headerlink" title="Service 不等于应用健康"></a>Service 不等于应用健康</h2><p>Service 提供的是访问入口，但它不负责保证应用逻辑一定健康。</p>
+<p>一个常见误解是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Service 存在</span><br><span class="line">  =</span><br><span class="line">服务一定可用</span><br></pre></td></tr></table></figure>
+
+<p>实际链路更长：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Service 存在</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">selector 能匹配 Pod</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">Pod Ready</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">端口 targetPort 正确</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">应用真的能处理请求</span><br></pre></td></tr></table></figure>
+
+<p>其中任何一段断掉，访问都可能失败。</p>
+<p>例如 Service 写的是：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">targetPort:</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure>
+
+<p>但容器实际监听的是 <code>9090</code>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Service -&gt; PodIP:8080</span><br><span class="line"></span><br><span class="line">Pod 实际监听：</span><br><span class="line">9090</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">连接失败</span><br></pre></td></tr></table></figure>
+
+<p>或者 Service selector 写错：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">selector:</span></span><br><span class="line">  <span class="attr">app:</span> <span class="string">demo-api</span></span><br></pre></td></tr></table></figure>
+
+<p>但 Pod 标签是：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">labels:</span></span><br><span class="line">  <span class="attr">app:</span> <span class="string">api</span></span><br></pre></td></tr></table></figure>
+
+<p>结果 Service 找不到后端，入口虽然存在，但后面没人接。</p>
+<h2 id="排查-Service-时我会按这条线看"><a href="#排查-Service-时我会按这条线看" class="headerlink" title="排查 Service 时我会按这条线看"></a>排查 Service 时我会按这条线看</h2><p>如果某个服务访问不通，我现在会按从外到内的顺序拆开看。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">调用方</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">Service DNS / ClusterIP</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">Service selector</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">EndpointSlice</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">Pod Ready</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">containerPort / targetPort</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">应用进程</span><br></pre></td></tr></table></figure>
+
+<p>对应命令可以这样组织：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kubectl get service demo-api</span><br><span class="line">kubectl describe service demo-api</span><br><span class="line">kubectl get endpointslice -l kubernetes.io/service-name=demo-api</span><br><span class="line">kubectl get pods -l app=demo-api</span><br><span class="line">kubectl describe pod &lt;pod-name&gt;</span><br></pre></td></tr></table></figure>
+
+<p>我比较关注几个问题：</p>
+<ul>
+<li>Service 有没有创建成功；</li>
+<li>Service selector 和 Pod labels 是否匹配；</li>
+<li>EndpointSlice 里有没有后端地址；</li>
+<li>Pod 是否 Ready；</li>
+<li><code>port</code>、<code>targetPort</code> 和应用监听端口是否对应；</li>
+<li>跨命名空间访问时 DNS 名称是否写完整。</li>
+</ul>
+<p>这样排查比一上来怀疑网络插件更稳一些。很多时候问题并不在底层网络，而是在标签、端口或 Ready 状态。</p>
+<h2 id="把-Deployment-和-Service-串起来"><a href="#把-Deployment-和-Service-串起来" class="headerlink" title="把 Deployment 和 Service 串起来"></a>把 Deployment 和 Service 串起来</h2><p>现在可以把前几篇的内容连起来：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Deployment</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">ReplicaSet</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">Pod A   Pod B   Pod C</span><br><span class="line">  |      |       |</span><br><span class="line">  | labels: app=demo-api</span><br><span class="line">  v</span><br><span class="line">Service selector: app=demo-api</span><br><span class="line">  |</span><br><span class="line">  v</span><br><span class="line">稳定访问入口：demo-api</span><br></pre></td></tr></table></figure>
+
+<p>Deployment 负责让 Pod 一直维持在期望状态，Service 负责给这些变化中的 Pod 一个稳定入口。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Pod 变化：</span><br><span class="line">  名字可能变</span><br><span class="line">  IP 可能变</span><br><span class="line">  数量可能变</span><br><span class="line"></span><br><span class="line">Service 稳定：</span><br><span class="line">  名字稳定</span><br><span class="line">  ClusterIP 相对稳定</span><br><span class="line">  selector 规则稳定</span><br></pre></td></tr></table></figure>
+
+<p>所以日常部署一个无状态服务时，Deployment 和 Service 经常成对出现：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">demo-api</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">3</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">demo-api</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">demo-api</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">demo-api</span></span><br><span class="line">          <span class="attr">image:</span> <span class="string">example/demo-api:1.0.0</span></span><br><span class="line">          <span class="attr">ports:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">8080</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">demo-api</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">ClusterIP</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">demo-api</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">http</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure>
+
+<p>这里的关键连接点就是 <code>app: demo-api</code>。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Deployment template labels</span><br><span class="line">        |</span><br><span class="line">        v</span><br><span class="line">Pod labels</span><br><span class="line">        |</span><br><span class="line">        v</span><br><span class="line">Service selector</span><br></pre></td></tr></table></figure>
+
+<p>标签一旦对齐，Deployment 负责生产和维护 Pod，Service 负责找到并暴露它们。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>这一篇整理下来，我对 Service 的理解可以概括成几句话：</p>
+<ul>
+<li>Pod IP 会变化，不适合作为长期访问地址；</li>
+<li>Service 为一组 Pod 提供稳定入口；</li>
+<li>Service 通常通过 selector 匹配 Pod labels；</li>
+<li>EndpointSlice 可以理解成 Service 当前后端清单；</li>
+<li><code>port</code> 是 Service 暴露端口，<code>targetPort</code> 是后端 Pod 实际接收端口；</li>
+<li><code>ClusterIP</code> 适合集群内部访问；</li>
+<li><code>NodePort</code> 和 <code>LoadBalancer</code> 可以把服务暴露到集群外，但依赖具体环境；</li>
+<li>Ingress 和 Gateway 更适合表达 HTTP&#x2F;HTTPS 入口路由；</li>
+<li>Service 存在不等于应用一定可用，排查时要继续看 selector、EndpointSlice、Pod Ready 和端口配置。</li>
+</ul>
+<p>下一篇准备继续整理 ConfigMap 和 Secret。Deployment、Pod、Service 解决了“应用怎么运行、怎么被访问”，接下来要看应用配置和敏感信息怎么进入容器。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>Service：<a class="link"   target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/services-networking/service/" >https://kubernetes.io/docs/concepts/services-networking/service/<i class="fas fa-external-link-alt"></i></a></li>
+<li>DNS for Services and Pods：<a class="link"   target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/" >https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/<i class="fas fa-external-link-alt"></i></a></li>
+<li>EndpointSlices：<a class="link"   target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/services-networking/endpoint-slices/" >https://kubernetes.io/docs/concepts/services-networking/endpoint-slices/<i class="fas fa-external-link-alt"></i></a></li>
+<li>Ingress：<a class="link"   target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/services-networking/ingress/" >https://kubernetes.io/docs/concepts/services-networking/ingress/<i class="fas fa-external-link-alt"></i></a></li>
+<li>Gateway API：<a class="link"   target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/services-networking/gateway/" >https://kubernetes.io/docs/concepts/services-networking/gateway/<i class="fas fa-external-link-alt"></i></a></li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Kubernetes-K8s-Service/">#Kubernetes K8s Service</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2026/07/12/2026-07-12-kubernetes-04-deployment-and-replicaset/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Kubernetes 学习笔记（四）：Deployment 如何让 Pod 稳定运行</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="twikoo-container">
+        <script 
+                src="//cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js"
+        ></script>
+        <div id="twikoo-comment"></div>
+        <script >
+            function loadTwikoo() {
+                twikoo.init({
+                    el: '#twikoo-comment',
+                    envId: 'https://comment.hanblog.fun',
+                    region: '',
+                });
+            }
+
+            if ('false') {
+                const loadTwikooTimeout = setTimeout(() => {
+                    loadTwikoo();
+                    clearTimeout(loadTwikooTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadTwikoo);
+            }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2026&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">Han</a>
+			<a href="https://beian.miit.gov.cn/" target="_blank">鲁ICP备19036975号</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+<div class="post-scripts">
+    
+</div>
+
+
+
+</body>
+</html>
